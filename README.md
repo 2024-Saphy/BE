@@ -1,7 +1,7 @@
 # SAPHY BackEnd
 
 ## 📠 Convention
-___
+
 ### 🤝 Branch Naming Convention
 
 | 머릿말  | 설명                               |
