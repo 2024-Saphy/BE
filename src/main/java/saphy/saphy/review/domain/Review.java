@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import saphy.saphy.user.domain.User;
 
 @Entity
 @Getter @Setter
@@ -20,4 +21,8 @@ public class Review {
 
     @Column(nullable = false)
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

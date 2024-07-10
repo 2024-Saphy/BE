@@ -2,7 +2,10 @@ package saphy.saphy.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import saphy.saphy.bookmark.domain.Bookmark;
 import saphy.saphy.user.domain.repository.SocialType;
+
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -37,4 +40,7 @@ public class User {
 
     @Column(nullable = false)
     private Boolean isAdmin;
+
+    @OneToMany(mappedBy = "user")
+    private List<Bookmark> bookmarks;
 }

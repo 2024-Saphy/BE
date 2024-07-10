@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import saphy.saphy.item.domain.Item;
+import saphy.saphy.order.domain.Order;
+import saphy.saphy.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -23,4 +26,9 @@ public class Delivery {
 
     @Column(nullable = false)
     private LocalDateTime end_at;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
 }

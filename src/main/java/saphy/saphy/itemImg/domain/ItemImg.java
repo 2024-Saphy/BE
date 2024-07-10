@@ -1,4 +1,4 @@
-package saphy.saphy.cart.domain;
+package saphy.saphy.itemImg.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,21 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import saphy.saphy.item.domain.Item;
-import saphy.saphy.user.domain.User;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "cart")
-public class Cart {
+@Table(name = "item_img")
+public class ItemImg {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false, name = "img_url")
+    private String imgURL;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")

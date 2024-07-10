@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import saphy.saphy.item.domain.Item;
+import saphy.saphy.user.domain.User;
 
 @Entity
 @Getter
@@ -32,4 +34,8 @@ public class ProductInquiry {
 
     @Column(nullable = false)
     private String answer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
