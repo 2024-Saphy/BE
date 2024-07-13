@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import saphy.saphy.global.BaseEntity;
 import saphy.saphy.repairCenter.domain.RepairCenter;
 import saphy.saphy.user.domain.User;
 
@@ -13,7 +14,7 @@ import saphy.saphy.user.domain.User;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "repair_center_review")
-public class RepairCenterReview {
+public class RepairCenterReview extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
