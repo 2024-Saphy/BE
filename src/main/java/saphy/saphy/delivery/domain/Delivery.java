@@ -22,10 +22,16 @@ public class Delivery {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime start_at;
+    private DeliveryStatus deliveryStatus;
 
     @Column(nullable = false)
-    private LocalDateTime end_at;
+    private String currentLocation;
+
+    @Column(nullable = false)
+    private LocalDateTime startAt;
+
+    @Column(nullable = false)
+    private LocalDateTime endAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")

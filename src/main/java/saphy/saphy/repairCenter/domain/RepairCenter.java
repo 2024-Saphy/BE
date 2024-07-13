@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import saphy.saphy.global.common.Star;
 
 @Entity
 @Getter @Setter
@@ -19,7 +20,17 @@ public class RepairCenter {
     @Column(nullable = false)
     private String address;
 
+    @Column(nullable = false)
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Grade grade;
+    private Star star;
+
+    @Column(name = "opening_time")
+    private String openingTime;  // "09:00"과 같은 형식으로 저장
+
+    @Column(name = "closing_time")
+    private String closingTime;
+
 }

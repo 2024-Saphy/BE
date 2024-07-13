@@ -10,32 +10,28 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "item")
-public class Item {
+@Table(name = "device")
+public class Device {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String modelName;
 
     @Column(nullable = false)
-    private Long price;
+    private String brand;
 
     @Column(nullable = false)
-    private Long discount;
+    private Long capacity;
 
     @Column(nullable = false)
-    private String description;
+    private String color;
 
     @Column(nullable = false)
-    private Long stock;
+    private String grade;
 
-    @Column(nullable = false)
-    private String category;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "device_id")
-    private Device device;
+    @OneToOne(mappedBy = "device", fetch = FetchType.LAZY)
+    private Item item;
 }

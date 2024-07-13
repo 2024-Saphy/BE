@@ -21,8 +21,12 @@ public class Coupon {
     @Column(nullable = false)
     private String rate;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String type;
+    private CouponType couponType;
+
+    @Column
+    private double minimumAmount;
 
     @Column(nullable = false)
     private String content;

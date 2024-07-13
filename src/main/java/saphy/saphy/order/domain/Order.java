@@ -24,14 +24,16 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime orderDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private OrderStatus status;
 
     @Column(nullable = false, name = "total_price")
     private Long totalPrice;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "payment_type")
-    private String paymentType;
+    private PaymentType paymentType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
