@@ -1,4 +1,4 @@
-package saphy.saphy.user.domain.repository;
+package saphy.saphy.user.domain;
 
 public enum SocialType {
     GOOGLE,

@@ -5,13 +5,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import saphy.saphy.global.BaseEntity;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "item")
-public class Item {
+public class Item extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,9 +20,6 @@ public class Item {
 
     @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
-    private String brand;
 
     @Column(nullable = false)
     private Long price;
@@ -38,12 +36,7 @@ public class Item {
     @Column(nullable = false)
     private String category;
 
-    @Column(nullable = false)
-    private String color;
-
-    @Column(nullable = false)
-    private Long capacity;
-
-    @Column(nullable = false)
-    private String grade;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "device_id")
+    private Device device;
 }

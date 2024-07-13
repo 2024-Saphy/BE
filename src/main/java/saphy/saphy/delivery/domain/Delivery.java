@@ -5,6 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import saphy.saphy.global.BaseEntity;
+import saphy.saphy.item.domain.Item;
+import saphy.saphy.order.domain.Order;
+import saphy.saphy.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -12,15 +16,26 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "delivery")
-public class Delivery {
+public class Delivery extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime start_at;
+    private DeliveryStatus deliveryStatus;
 
     @Column(nullable = false)
-    private LocalDateTime end_at;
+    private String currentLocation;
+
+    @Column(nullable = false)
+    private LocalDateTime startAt;
+
+    @Column(nullable = false)
+    private LocalDateTime endAt;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
 }

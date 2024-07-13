@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import saphy.saphy.global.BaseEntity;
+import saphy.saphy.item.domain.Item;
+import saphy.saphy.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "order")
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +25,22 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime orderDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private OrderStatus status;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "total_price")
     private Long totalPrice;
 
-    @Column(nullable = false)
-    private String paymentType;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "payment_type")
+    private PaymentType paymentType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
 }
