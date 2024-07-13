@@ -82,5 +82,3 @@ master(main) ── develop ── feature
 
 </div>
 </details>
-
----
