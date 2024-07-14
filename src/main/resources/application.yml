@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: '0000'
-    url: jdbc:mysql://localhost:13306/saphy
+    password: '00000000'
+    url: jdbc:mysql://saphy-server.cv4c6ysy8cvy.ap-northeast-2.rds.amazonaws.com:3306/saphy
 
   # Spring Data JPA
   jpa:
