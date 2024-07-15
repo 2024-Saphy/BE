@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import saphy.saphy.global.BaseEntity;
+import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.user.domain.User;
 
 @Entity

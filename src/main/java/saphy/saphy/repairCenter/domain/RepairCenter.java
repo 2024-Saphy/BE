@@ -5,8 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import saphy.saphy.global.BaseEntity;
-import saphy.saphy.global.common.Star;
+import saphy.saphy.global.entity.BaseEntity;
+import saphy.saphy.global.entity.Star;
 
 @Entity
 @Getter @Setter
