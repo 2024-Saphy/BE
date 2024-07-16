@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class UserService {
+public class MemberService {
 
 }

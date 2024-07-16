@@ -9,8 +9,8 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users")
-public class User {
+@Table(name = "members")
+public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,6 +40,6 @@ public class User {
     @Column(nullable = false)
     private Boolean isAdmin;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "member")
     private List<Bookmark> bookmarks;
 }
