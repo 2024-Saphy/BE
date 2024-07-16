@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
-import saphy.saphy.user.domain.User;
+import saphy.saphy.user.domain.Member;
 
 @Entity
 @Getter @Setter
@@ -32,7 +32,7 @@ public class Coupon extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
 }
