@@ -1,11 +1,13 @@
 spring:
 
-  # 데이터베이스
+  # Database
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: '0000'
     url: jdbc:mysql://localhost:13306/saphy
+
+  # Spring Data JPA
   jpa:
     show-sql: 'false'
     hibernate:
