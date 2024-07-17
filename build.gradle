@@ -43,7 +43,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// API Documentation
-	implementation 'org.springdoc:springdoc-openapi-ui:1.5.9'
+	// implementation 'org.springdoc:springdoc-openapi-ui:1.5.9'
 
 	// Validation
 	implementation 'org.hibernate.validator:hibernate-validator:6.1.5.Final'
