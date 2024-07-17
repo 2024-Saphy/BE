@@ -1,4 +1,4 @@
-package saphy.saphy.user.domain;
+package saphy.saphy.member.domain;
 
 public enum SocialType {
     GOOGLE,

@@ -1,4 +1,4 @@
-package saphy.saphy.user.service;
+package saphy.saphy.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
