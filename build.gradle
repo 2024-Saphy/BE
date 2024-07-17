@@ -42,7 +42,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// API Documentation
+	// API Documentation - SwaggerConfig 파일 추가 후 활성화
 	// implementation 'org.springdoc:springdoc-openapi-ui:1.5.9'
 
 	// Validation
