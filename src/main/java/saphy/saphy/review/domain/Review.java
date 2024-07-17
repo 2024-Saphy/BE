@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
-import saphy.saphy.user.domain.Member;
+import saphy.saphy.member.domain.Member;
 
 @Entity
 @Getter @Setter
