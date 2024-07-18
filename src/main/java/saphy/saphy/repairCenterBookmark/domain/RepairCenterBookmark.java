@@ -5,10 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import saphy.saphy.global.BaseEntity;
+import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.repairCenter.domain.RepairCenter;
-import saphy.saphy.review.domain.Review;
-import saphy.saphy.user.domain.User;
+import saphy.saphy.member.domain.Member;
 
 @Entity
 @Getter
@@ -26,6 +25,6 @@ public class RepairCenterBookmark extends BaseEntity {
     private RepairCenter repairCenter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

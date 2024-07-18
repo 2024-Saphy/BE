@@ -1,4 +1,4 @@
-package saphy.saphy.user.service;
+package saphy.saphy.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class UserService {
+public class MemberService {
 
 }

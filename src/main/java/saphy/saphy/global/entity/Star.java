@@ -1,4 +1,4 @@
-package saphy.saphy.global.common;
+package saphy.saphy.global.entity;
 
 public enum Star {
     ONE(1),   // 1 별

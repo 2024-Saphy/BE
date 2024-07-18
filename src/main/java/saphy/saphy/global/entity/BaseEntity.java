@@ -1,4 +1,4 @@
-package saphy.saphy.global;
+package saphy.saphy.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
