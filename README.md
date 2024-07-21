@@ -4,7 +4,8 @@
 
 ### 인프라 아키텍쳐
 
-![image](https://github.com/user-attachments/assets/e7647f24-12eb-4c83-acd8-1d950018fc2b)
+![image](https://github.com/user-attachments/assets/bd7a2d27-054d-43ab-9874-759f6e93cf71)
+
 
 
 ## 📠 Convention
