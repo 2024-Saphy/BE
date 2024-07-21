@@ -1,5 +1,12 @@
 # SAPHY BackEnd
 
+## 🛠️ 프로젝트 아키텍처
+
+### 인프라 아키텍쳐
+
+![image](https://github.com/user-attachments/assets/e7647f24-12eb-4c83-acd8-1d950018fc2b)
+
+
 ## 📠 Convention
 
 ### 🤝 Branch Naming Convention
