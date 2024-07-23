@@ -9,15 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthCheck {
 
     @GetMapping
-    public HealthStatus checkHealth(){
-        return new HealthStatus("OK");
+    public String checkHealth(){
+        return "OK";
     }
 
-    static class HealthStatus {
-        private String status;
-
-        public HealthStatus(String status) {
-            this.status = status;
-        }
-    }
 }
