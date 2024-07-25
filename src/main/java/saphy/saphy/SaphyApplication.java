@@ -10,7 +10,7 @@ public class SaphyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SaphyApplication.class, args);
-		//WebHook 테스트를 위한 수정
+		//WebHook 테스트를 위한 수정2
 	}
 
 }
