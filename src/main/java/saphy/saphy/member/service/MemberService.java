@@ -27,6 +27,7 @@ public class MemberService {
                 .password(bCryptPasswordEncoder.encode(joinDto.getPassword()))
                 .socialType(joinDto.getSocialType())
                 .name(joinDto.getName())
+                .nickName(joinDto.getNickName())
                 .address(joinDto.getAddress())
                 .phoneNumber(joinDto.getPhoneNumber())
                 .email(joinDto.getEmail())

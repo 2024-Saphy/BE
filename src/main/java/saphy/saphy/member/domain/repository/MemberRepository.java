@@ -11,8 +11,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Boolean existsByLoginId(String loginId);
 
     Optional<Member> findByLoginId(String loginId);
-//
-//    @Query("SELECT m.isAdmin FROM Member m WHERE m.loginId = ?1")
-//    Optional<Boolean> findIsAdminByLoginId(String loginId);
-
 }

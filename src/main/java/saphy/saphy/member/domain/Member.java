@@ -32,6 +32,9 @@ public class Member {
     private String name;
 
     @Column
+    private String nickName;
+
+    @Column
     private String address;
 
     @Column

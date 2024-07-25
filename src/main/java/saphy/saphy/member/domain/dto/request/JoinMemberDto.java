@@ -22,6 +22,8 @@ public class JoinMemberDto {
 
     private String name;
 
+    private String nickName;
+
     private String address;
 
     private String phoneNumber;
@@ -37,6 +39,7 @@ public class JoinMemberDto {
                 .password(joinMemberDto.getPassword())
                 .socialType(joinMemberDto.getSocialType())
                 .name(joinMemberDto.getName())
+                .nickName(joinMemberDto.getNickName())
                 .address(joinMemberDto.getAddress())
                 .phoneNumber(joinMemberDto.getPhoneNumber())
                 .email(joinMemberDto.getEmail())
