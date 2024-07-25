@@ -4,42 +4,46 @@ import jakarta.persistence.*;
 import lombok.*;
 import saphy.saphy.bookmark.domain.Bookmark;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "members")
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String loginId;
 
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String address;
 
-    @Column(nullable = false)
+    @Column
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column
     private String email;
 
     @Column(nullable = false)
-    private Boolean isAdmin;
+    @Builder.Default
+    private Boolean isAdmin = Boolean.FALSE;
 
-    @OneToMany(mappedBy = "member")
-    private List<Bookmark> bookmarks;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bookmark> bookmarks = new ArrayList<>();
 }
