@@ -4,7 +4,8 @@
 
 ### 👷 인프라 아키텍쳐
 
-![image](https://github.com/user-attachments/assets/bd7a2d27-054d-43ab-9874-759f6e93cf71)
+![image](https://github.com/user-attachments/assets/a58ffc40-b9df-4afd-9014-62029a492a24)
+
 
 
 
