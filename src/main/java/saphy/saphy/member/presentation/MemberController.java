@@ -23,7 +23,7 @@ public class MemberController {
 
     // 회원 가입
     @PostMapping("/join")
-    public ApiResponse<Member> join(@Validated @RequestBody JoinMemberDto joinDto, Errors errors) {
+    public ApiResponse<Void> join(@Validated @RequestBody JoinMemberDto joinDto, Errors errors) {
 
         validateRequest(errors);
         memberService.join(joinDto);

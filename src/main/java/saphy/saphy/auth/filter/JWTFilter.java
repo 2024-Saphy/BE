@@ -20,6 +20,7 @@ import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.repository.MemberRepository;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -85,6 +86,20 @@ public class JWTFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
 
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] excludePath = {
+                "/oauth/**"
+        };
+        String path = request.getRequestURI();
+
+        System.out.println(path);
+        System.out.println(Arrays.toString(excludePath));
+        boolean shouldNotFilter = Arrays.stream(excludePath).anyMatch(path::startsWith);
+
+        return shouldNotFilter;
     }
 
     private void createAPIResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {

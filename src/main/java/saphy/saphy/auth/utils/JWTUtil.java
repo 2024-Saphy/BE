@@ -8,16 +8,23 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JWTUtil {
 
-    private SecretKey secretKey;
+    private final SecretKey secretKey;
+    private final long accessTokenExpiration;
+    private final long refreshTokenExpiration;
 
-    public JWTUtil(@Value("${spring.jwt.secret-key}")String secret) {
+    public JWTUtil(@Value("${spring.jwt.secret-key}")String secret,
+                   @Value("${spring.jwt.access-token-expiration}") long accessTokenExpiration,
+                   @Value("${spring.jwt.refresh-token-expiration}") long refreshTokenExpiration) {
 
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
-                Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.accessTokenExpiration = accessTokenExpiration;
+        this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
     // claim 에서 loginId 정보 추출
@@ -73,5 +80,17 @@ public class JWTUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    // 소셜로그인 토큰 발급용
+    public Map<String, String> initToken(String loginId) {
+        String accessToken = createJwt("access", loginId, accessTokenExpiration);
+        String refreshToken = createJwt("refresh", loginId, refreshTokenExpiration);
+
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("accessToken", accessToken);
+        tokenMap.put("refreshToken", refreshToken);
+
+        return tokenMap;
     }
 }

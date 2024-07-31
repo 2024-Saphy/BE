@@ -15,7 +15,6 @@ public class JoinMemberDto {
     @NotNull(message = "아이디를 입력해주세요!")
     private String loginId;
 
-    @NotNull(message = "비밀번호를 입력해주세요!")
     private String password;
 
     private SocialType socialType;
@@ -33,17 +32,17 @@ public class JoinMemberDto {
     @Builder.Default
     private Boolean isAdmin = Boolean.FALSE;
 
-    public static Member toEntity(JoinMemberDto joinMemberDto) {
+    public static Member toEntity(JoinMemberDto request) {
         return Member.builder()
-                .loginId(joinMemberDto.getLoginId())
-                .password(joinMemberDto.getPassword())
-                .socialType(joinMemberDto.getSocialType())
-                .name(joinMemberDto.getName())
-                .nickName(joinMemberDto.getNickName())
-                .address(joinMemberDto.getAddress())
-                .phoneNumber(joinMemberDto.getPhoneNumber())
-                .email(joinMemberDto.getEmail())
-                .isAdmin(joinMemberDto.getIsAdmin())
+                .loginId(request.getLoginId())
+                .password(request.getPassword())
+                .socialType(request.getSocialType())
+                .name(request.getName())
+                .nickName(request.getNickName())
+                .address(request.getAddress())
+                .phoneNumber(request.getPhoneNumber())
+                .email(request.getEmail())
+                .isAdmin(request.getIsAdmin())
                 .build();
     }
 

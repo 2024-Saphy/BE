@@ -54,10 +54,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String password = loginInfo.get("password");
 
         // 해당 값이 없을시 예외처리
-        if (loginId == null) {
-            throw SaphyException.from(ErrorCode.INVALID_REQUEST);
-        }
-        if (password == null) {
+        if (loginId == null || password == null) {
             throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
 

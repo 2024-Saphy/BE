@@ -49,9 +49,6 @@ dependencies {
 	implementation 'org.hibernate.validator:hibernate-validator:6.1.5.Final'
 	implementation 'javax.validation:validation-api:2.0.1.Final'
 
-	// OAuth2.0
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
 	// JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
