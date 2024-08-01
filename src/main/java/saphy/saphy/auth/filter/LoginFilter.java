@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTUtil jwtUtil;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Value("${jwt.access-token-expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${jwt.refresh-token-expiration}")
+    private long refreshTokenExpiration;
 
     public LoginFilter(AuthenticationManager authenticationManager,
                        RefreshRepository refreshRepository,
@@ -74,9 +81,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String loginId = authResult.getName();
 
         //토큰 생성 - access 토큰 유효기간 30분
-        String accessToken = jwtUtil.createJwt("access", loginId, 30 * 60 * 1000L);
+        String accessToken = jwtUtil.createJwt("access", loginId, accessTokenExpiration);
+        String refresh = jwtUtil.createJwt("refresh", loginId, refreshTokenExpiration);
 
-        String refresh = jwtUtil.createJwt("refresh", "fakeLoginId", 24 * 60 * 60 * 1000L);
         response.addHeader("Authorization", "Bearer " + accessToken);// 헤더에 access 토큰 넣기
         response.addHeader("Set-Cookie", createCookie("refresh", refresh).toString()); // 쿠키 생성일 추가
 
@@ -114,11 +121,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         mapper.writeValue(response.getWriter(), apiResponse);
     }
 
-    // JSON 파일을 읽고 반환
+    // JSON 파일을 읽고 반환하는 메소드
     private Map<String, String> getLoginInfoFromJson(HttpServletRequest request) {
+
+        // 요청의 Content-Type이 "application/json"이 아닌 경우 예외 발생
         if (!"application/json".equals(request.getContentType())) {
             throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
+
+        // 요청의 내용을 한 줄씩 읽어와서 StringBuilder로 추가
         StringBuilder jsonString = new StringBuilder();
         try (BufferedReader reader = request.getReader()) {
             String line;
@@ -129,6 +140,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             System.out.println("json 읽기 실패");
             throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
+
+        // 성공시 JSON 문자열을 Map<String, String> 형식으로 변환하여 반환
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(jsonString.toString(), new TypeReference<Map<String, String>>() {
