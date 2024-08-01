@@ -20,7 +20,8 @@ spring:
   # JWT 설정 추가
   jwt:
     secret-key: ${JWT_SECRET}
-    token-validity: 3600000 # 1시간
+    access-token-expiration: 3600000 # 1시간
+    refresh-token-expiration: 604800000  # 7 days
 
 # p6spy log
 decorator:
