@@ -1,4 +1,4 @@
-package saphy.saphy.global.config;
+package saphy.saphy.auth.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,10 +37,21 @@ public class SecurityConfig {
     private final RefreshRepository refreshRepository;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {return configuration.getAuthenticationManager();}
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {return new BCryptPasswordEncoder();}
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+                "/oauth/**"
+        );
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,10 +65,8 @@ public class SecurityConfig {
 
                                 CorsConfiguration configuration = new CorsConfiguration();
 
-                                // 이 부분 서버 개설 후 수정
-                                configuration.setAllowedOrigins(Collections.singletonList("**"));
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8080"));
+                                // 이 부분 도메인 구매 후 수정(test 환경)
+                                configuration.setAllowedOrigins(Collections.singletonList("*"));
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -77,17 +87,20 @@ public class SecurityConfig {
         http
                 .httpBasic(AbstractHttpConfigurer::disable);
 
+        // 실제 서비스 사용 접근별 인가 작업
 //        http
 //                .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/login", "/", "/members/join").permitAll()
+//                        .requestMatchers("/login", "/", "/members/join", "/oauth/**").permitAll()
 //                        .requestMatchers("/admin").hasRole("ADMIN")
 //                        .anyRequest().authenticated());
 
-        // 개발 test 단계에 사용할 api 접근 권한
+        // 경로별 인가 작업(test 단계에서만 사용 접근 권한)
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
+
+        // JWTFilter 추가
         http
                 .addFilterBefore(new JWTFilter(jwtUtil, memberRepository), LoginFilter.class);
         http
@@ -97,6 +110,10 @@ public class SecurityConfig {
                         new LoginFilter(authenticationManager(authenticationConfiguration), refreshRepository, jwtUtil,
                                 "/login"),
                         UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .logout(logout -> logout.logoutSuccessUrl("/").permitAll());
+
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

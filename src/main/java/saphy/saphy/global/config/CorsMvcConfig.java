@@ -10,11 +10,12 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
 
+        // 서버 도메인 구매 후 수정
         corsRegistry.addMapping("/**")
-                // 이 부분 서버 개설 + 플러터 포트번호 얘기 후 수정
-                .allowedOrigins(
-                        "http://localhost:3000",
-                        "http://localhost:8080"
-                );
+                .exposedHeaders("Set-Cookie")
+                .allowedOrigins("*")
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }
