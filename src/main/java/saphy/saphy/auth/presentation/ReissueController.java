@@ -19,7 +19,7 @@ public class ReissueController {
     private final ReissueService reissueService;
 
     @PostMapping
-    ApiResponse reissue(HttpServletRequest request, HttpServletResponse response){
+    ApiResponse<Void> reissue(HttpServletRequest request, HttpServletResponse response){
 
         String newAccess = reissueService.createNewAccessToken(request,response);
         response.addHeader("Authorization", "Bearer " + newAccess);
