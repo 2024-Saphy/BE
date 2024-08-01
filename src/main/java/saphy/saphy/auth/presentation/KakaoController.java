@@ -35,20 +35,11 @@ public class KakaoController {
         if (isRegistered) {
             // 이미 회원인 경우 - 로그인 처리 및 토큰 발급
             tokenService.addTokensToResponse(request, response);
+            return new ApiResponse<>(ErrorCode.REQUEST_OK);
         } else {
-            // 회원이 아닌 경우 - 회원가입 처리 후 로그인 및 토큰 발급
-            KakaoSignUpDto signUpDto = KakaoSignUpDto.builder()
-                    .email(kakaoDto.getEmail())
-                    .socialType(kakaoDto.getSocialType())
-                    // 여기에 필요한 추가 필드들(name, phoneNumber 등)을 플러터에서 받을 수 있다면 포함
-                    // 뭔가 내 생각엔 null이 많더라도 바로 회원가입이 예뻐보이긴 하는데 일단 아래꺼 있으니 그냥 두고 연동하면서 수정 예정
-                    .build();
-
-            kaKaoService.joinKakao(signUpDto);
-            tokenService.addTokensToResponse(request, response);
+            // 회원이 아닌 경우 - 300 Multiple Choices 리다이렉션 처리
+            return new ApiResponse<>(ErrorCode.MEMBER_JOIN_REQUIRED);
         }
-
-        return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
     @PostMapping("/join")
