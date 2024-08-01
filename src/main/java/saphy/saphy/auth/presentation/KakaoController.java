@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import saphy.saphy.auth.domain.dto.request.KakaoMemberCheckDto;
+import saphy.saphy.auth.domain.dto.request.SocialLoginDTO;
 import saphy.saphy.auth.domain.dto.request.KakaoSignUpDto;
 import saphy.saphy.auth.service.KaKaoService;
 import saphy.saphy.auth.service.TokenService;
@@ -24,7 +24,7 @@ public class KakaoController {
     private final TokenService tokenService;
 
     @PostMapping("/login")
-    public ApiResponse<Void> socialLogin(@RequestBody @Valid KakaoMemberCheckDto kakaoDto, Errors errors,
+    public ApiResponse<Void> socialLogin(@RequestBody @Valid SocialLoginDTO kakaoDto, Errors errors,
                                          HttpServletRequest request, HttpServletResponse response) {
 
         validateRequest(errors);
@@ -40,15 +40,6 @@ public class KakaoController {
             // 회원이 아닌 경우 - 300 Multiple Choices 리다이렉션 처리
             return new ApiResponse<>(ErrorCode.MEMBER_JOIN_REQUIRED);
         }
-    }
-
-    @PostMapping("/join")
-    public ApiResponse<Void> joinKakao(@Validated @RequestBody KakaoSignUpDto joinDto, Errors errors,
-                                       HttpServletRequest request, HttpServletResponse response) {
-        validateRequest(errors);
-        kaKaoService.joinKakao(joinDto);
-        tokenService.addTokensToResponse(request, response);
-        return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
     private void validateRequest(Errors errors) {
