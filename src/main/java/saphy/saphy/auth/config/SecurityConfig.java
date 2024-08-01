@@ -58,15 +58,14 @@ public class SecurityConfig {
 
         http
                 .cors((cors) -> cors
-                        .configurationSource(new CorsConfigurationSource() {
+                        .configurationSource((new CorsConfigurationSource() {
 
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
                                 CorsConfiguration configuration = new CorsConfiguration();
 
-                                // 이 부분 도메인 구매 후 수정(test 환경)
-                                configuration.setAllowedOrigins(Collections.singletonList("*"));
+                                configuration.setAllowedOrigins(Collections.singletonList("*")); // test용
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -76,7 +75,7 @@ public class SecurityConfig {
 
                                 return configuration;
                             }
-                        }));
+                        })));
 
         http
                 .csrf(AbstractHttpConfigurer::disable);

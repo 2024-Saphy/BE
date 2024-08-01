@@ -25,7 +25,7 @@ public class TokenService {
 
         // 응답 헤더에 토큰 삽입
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + tokenMap.get("accessToken"));
-        response.setHeader("Refresh-Token", tokenMap.get("refreshToken"));
+        response.setHeader("Set-Cookie", tokenMap.get("refreshToken"));
     }
 
     // 응답 바디와 함께 헤더에 토큰 삽입
@@ -39,7 +39,7 @@ public class TokenService {
         // 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + tokenMap.get("accessToken"));
-        headers.set("Refresh-Token", tokenMap.get("refreshToken"));
+        headers.set("Set-Cookie", tokenMap.get("refreshToken"));
 
         // 바디와 함께 응답 반환
         return ErrorCode.REQUEST_OK;
