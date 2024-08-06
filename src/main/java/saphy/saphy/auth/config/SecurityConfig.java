@@ -49,8 +49,8 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(
-                "/oauth2/kakao/login",
-                "/members/join"
+                "/oauth2/login",
+                "/oauth2/join"
         );
     }
 
