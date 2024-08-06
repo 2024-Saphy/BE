@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.GenericFilterBean;
 import saphy.saphy.auth.repository.RefreshRepository;
 import saphy.saphy.auth.utils.JWTUtil;
+import saphy.saphy.global.exception.ErrorCode;
+import saphy.saphy.global.exception.SaphyException;
 
 import java.io.IOException;
 
@@ -31,7 +33,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
-    // 실제 커스텀 로그아웃 구현
+    // 실제 커스텀 로그아웃
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
         // 로그아웃 검증 - 경로가 logout인지, POST 요청인지
@@ -63,8 +65,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         // refresh token 없으면 BAD REQUEST
         if (refresh == null) {
 
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+            throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
 
         // refresh token 만료되면 BAD REQUEST
@@ -72,24 +73,21 @@ public class CustomLogoutFilter extends GenericFilterBean {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
 
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+            throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
 
-        // 토큰 종류가 refresh token이 아니면 BEAD REQUEST (발급시 페이로드에 명시)
+        // 토큰 종류가 refresh token이 아니면 BAD REQUEST
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) {
 
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+            throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
 
         // DB에 refresh token 없으면(이미 로그아웃된 상태) BAD REQUEST
         Boolean isExist = refreshRepository.existsByRefresh(refresh);
         if (!isExist) {
 
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
+            throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
 
         // 실제 로그아웃 진행
