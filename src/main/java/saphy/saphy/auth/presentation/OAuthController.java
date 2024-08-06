@@ -43,10 +43,12 @@ public class OAuthController {
     }
 
     @PostMapping("/join")
-    public ApiResponse<Void> join(@Validated @RequestBody OAuthSignUpDto joinDto, Errors errors) {
+    public ApiResponse<Void> join(@RequestBody @Valid OAuthSignUpDto joinDto, Errors errors,
+                                  HttpServletRequest request, HttpServletResponse response) {
 
         validateRequest(errors);
         OAuthService.join(joinDto);
+        tokenService.addTokensToResponse(request, response);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 

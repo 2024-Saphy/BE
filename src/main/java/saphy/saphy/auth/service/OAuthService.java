@@ -30,13 +30,7 @@ public class OAuthService {
     public void join(OAuthSignUpDto joinDto) {
 
         // 회원이 존재하는 경우 로그인 처리하므로 중복 회원 검사 X
-        Member joinMember = Member.builder()
-                .loginId(joinDto.getEmail()) // 소셜 회원가입의 이메일과 아이디는 동일
-                .socialType(joinDto.getSocialType())
-                .name(joinDto.getName())
-                .phoneNumber(joinDto.getPhoneNumber())
-                .email(joinDto.getEmail())
-                .build();
+        Member joinMember = OAuthSignUpDto.toEntity(joinDto);
         memberRepository.save(joinMember);
     }
 }

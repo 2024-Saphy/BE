@@ -22,17 +22,7 @@ public class MemberService {
     public void join(JoinMemberDto joinDto) {
 
         validateExistMember(joinDto);
-        Member joinMember = Member.builder()
-                .loginId(joinDto.getLoginId())
-                .password(bCryptPasswordEncoder.encode(joinDto.getPassword()))
-                .socialType(joinDto.getSocialType())
-                .name(joinDto.getName())
-                .nickName(joinDto.getNickName())
-                .address(joinDto.getAddress())
-                .phoneNumber(joinDto.getPhoneNumber())
-                .email(joinDto.getEmail())
-                .isAdmin(joinDto.getIsAdmin())
-                .build();
+        Member joinMember = JoinMemberDto.toEntity(joinDto);
         memberRepository.save(joinMember);
     }
 

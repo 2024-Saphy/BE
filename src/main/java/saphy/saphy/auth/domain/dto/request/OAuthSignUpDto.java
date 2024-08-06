@@ -30,6 +30,7 @@ public class OAuthSignUpDto {
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())
                 .socialType(request.getSocialType())
+                .isAdmin(Boolean.FALSE)
                 .build();
     }
 }
