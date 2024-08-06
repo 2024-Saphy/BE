@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import saphy.saphy.auth.domain.dto.request.OAuthSignUpDto;
 import saphy.saphy.auth.domain.dto.request.OAuthLoginDTO;
 import saphy.saphy.auth.service.OAuthService;
+import saphy.saphy.auth.service.SecurityService;
+import saphy.saphy.auth.service.SecurityServiceImpl;
 import saphy.saphy.auth.service.TokenService;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
@@ -22,15 +24,16 @@ public class OAuthController {
 
     private final OAuthService OAuthService;
     private final TokenService tokenService;
+    private final SecurityServiceImpl securityService;
 
     @PostMapping("/login")
-    public ApiResponse<Void> socialLogin(@RequestBody @Valid OAuthLoginDTO kakaoDto, Errors errors,
+    public ApiResponse<Void> socialLogin(@RequestBody @Valid OAuthLoginDTO loginDto, Errors errors,
                                          HttpServletRequest request, HttpServletResponse response) {
 
         validateRequest(errors);
 
         // 사용자가 이미 등록된 회원인지 확인
-        boolean isRegistered = OAuthService.isMemberRegistered(kakaoDto);
+        boolean isRegistered = OAuthService.isMemberRegistered(loginDto);
 
         if (isRegistered) {
             // 이미 회원인 경우 - 로그인 처리 및 토큰 발급
@@ -48,6 +51,7 @@ public class OAuthController {
 
         validateRequest(errors);
         OAuthService.join(joinDto);
+        securityService.saveUserInSecurityContext(joinDto);
         tokenService.addTokensToResponse(request, response);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
