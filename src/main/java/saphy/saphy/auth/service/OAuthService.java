@@ -7,7 +7,10 @@ import saphy.saphy.auth.domain.dto.request.OAuthSignUpDto;
 import saphy.saphy.auth.domain.dto.request.OAuthLoginDTO;
 import saphy.saphy.auth.repository.RefreshRepository;
 import saphy.saphy.auth.utils.JWTUtil;
+import saphy.saphy.global.exception.ErrorCode;
+import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
+import saphy.saphy.member.domain.dto.request.JoinMemberDto;
 import saphy.saphy.member.domain.repository.MemberRepository;
 import saphy.saphy.member.service.MemberService;
 
@@ -29,8 +32,16 @@ public class OAuthService {
     @Transactional
     public void join(OAuthSignUpDto joinDto) {
 
-        // 회원이 존재하는 경우 로그인 처리하므로 중복 회원 검사 X
+        validateExistMember(joinDto);
         Member joinMember = OAuthSignUpDto.toEntity(joinDto);
         memberRepository.save(joinMember);
+    }
+
+    private void validateExistMember(OAuthSignUpDto joinDto) {
+
+        String loginId = joinDto.getEmail();
+        if (memberRepository.existsByLoginId(loginId)) {
+            throw SaphyException.from(ErrorCode.DUPLICATE_MEMBER_LOGIN_ID);
+        }
     }
 }
