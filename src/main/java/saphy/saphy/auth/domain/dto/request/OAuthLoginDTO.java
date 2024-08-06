@@ -12,7 +12,7 @@ import saphy.saphy.member.domain.SocialType;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SocialLoginDTO {
+public class OAuthLoginDTO {
 
     @NotNull(message = "소셜 타입은 필수 항목입니다.")
     private SocialType socialType;  // 소셜 로그인 제공자 (예: KAKAO, GOOGLE, NAVER 등)
