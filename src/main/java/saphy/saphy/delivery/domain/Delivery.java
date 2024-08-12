@@ -21,6 +21,7 @@ public class Delivery extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
     @Column(nullable = false)
