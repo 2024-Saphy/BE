@@ -28,6 +28,7 @@ public class MemberController {
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
+    // 회원 정보 조회
     @GetMapping("/info")
     public ApiResponse<MemberInfoDto> getInfo() {
         MemberInfoDto dto = memberService.getInfo();
