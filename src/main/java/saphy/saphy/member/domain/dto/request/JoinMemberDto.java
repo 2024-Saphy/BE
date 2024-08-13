@@ -29,9 +29,6 @@ public class JoinMemberDto {
 
     private String email;
 
-    @Builder.Default
-    private Boolean isAdmin = Boolean.FALSE;
-
     public static Member toEntity(JoinMemberDto request) {
         return Member.builder()
                 .loginId(request.getLoginId())
@@ -42,7 +39,7 @@ public class JoinMemberDto {
                 .address(request.getAddress())
                 .phoneNumber(request.getPhoneNumber())
                 .email(request.getEmail())
-                .isAdmin(request.getIsAdmin())
+                .isAdmin(Boolean.FALSE) // 관리자 권한은 수동 부여
                 .build();
     }
 
