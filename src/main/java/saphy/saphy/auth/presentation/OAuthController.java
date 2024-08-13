@@ -5,12 +5,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.Errors;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import saphy.saphy.auth.domain.dto.request.OAuthSignUpDto;
 import saphy.saphy.auth.domain.dto.request.OAuthLoginDTO;
 import saphy.saphy.auth.service.OAuthService;
-import saphy.saphy.auth.service.SecurityService;
 import saphy.saphy.auth.service.SecurityServiceImpl;
 import saphy.saphy.auth.service.TokenService;
 import saphy.saphy.global.exception.ErrorCode;
@@ -52,7 +50,6 @@ public class OAuthController {
         validateRequest(errors);
         OAuthService.join(joinDto);
         securityService.saveUserInSecurityContext(joinDto);
-        tokenService.addTokensToResponse(request, response);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
