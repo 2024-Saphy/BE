@@ -20,7 +20,8 @@ public class PurchaseHistory extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private PurchaseStatus purchaseStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
