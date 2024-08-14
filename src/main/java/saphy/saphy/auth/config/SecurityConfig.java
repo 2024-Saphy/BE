@@ -1,5 +1,6 @@
 package saphy.saphy.auth.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import saphy.saphy.auth.filter.CustomLogoutFilter;
 import saphy.saphy.auth.filter.JWTFilter;
 import saphy.saphy.auth.filter.LoginFilter;
@@ -35,18 +38,18 @@ public class SecurityConfig {
     private final MemberRepository memberRepository;
     private final RefreshRepository refreshRepository;
 
-    private static final String[] PUBLIC_URLS = {
-            "/health",
-            "/oauth2/**",
-            "/login/**",
-            "/members/join",
-            "/reissue",
-//            "/v3/**",
-//            "/swagger-ui/**", // swagger config 만들고 추가
-            "/error",
-            "/",
-            "/**" // 개발 test용 api 모든 접근 허용 코드 추가
-    };
+//    private static final String[] PUBLIC_URLS = {
+//            "/health",
+//            "/oauth2/**",
+//            "/login/**",
+//            "/members/join",
+//            "/reissue",
+////            "/v3/**",
+////            "/swagger-ui/**", // swagger config 만들고 추가
+//            "/error",
+//            "/",
+//            "/**" // 개발 test용 api 모든 접근 허용 코드 추가
+//    };
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -58,24 +61,49 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+                "/oauth2/login",
+                "/oauth2/join"
+        );
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // CORS 설정
+//        http
+//                .cors((cors) -> cors
+//                        .configurationSource(request -> {
+//                            CorsConfiguration configuration = new CorsConfiguration();
+//                            configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000", "https://saphy.site/"));
+//                            configuration.setAllowCredentials(true);
+//                            configuration.setAllowedHeaders(Collections.singletonList("*"));
+//                            configuration.setMaxAge(3600L);
+//                            configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
+//                            return configuration;
+//                        }));
         http
                 .cors((cors) -> cors
-                        .configurationSource(request -> {
-                            CorsConfiguration configuration = new CorsConfiguration();
-                            configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000",
-                                    "http://3.36.34.122:8080", "https://3.36.34.122", "https://saphy.site/"
-                                    ));
-                            configuration.setAllowCredentials(true);
-                            configuration.setAllowedHeaders(Collections.singletonList("*"));
-                            configuration.setMaxAge(3600L);
-                            configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
-                            return configuration;
-                        }));
+                        .configurationSource((new CorsConfigurationSource() {
+
+                            @Override
+                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                                CorsConfiguration configuration = new CorsConfiguration();
+
+                                configuration.setAllowedOrigins(Collections.singletonList("*"));
+                                configuration.setAllowedMethods(Collections.singletonList("*"));
+                                configuration.setAllowCredentials(true);
+                                configuration.setAllowedHeaders(Collections.singletonList("*"));
+                                configuration.setMaxAge(3600L);
+
+                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
+                                return configuration;
+                            }
+                        })));
 
         http
                 .csrf(AbstractHttpConfigurer::disable);
@@ -87,9 +115,15 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable);
 
         // 경로별 인가 작업(test 단계에서만 사용 접근 권한)
+//        http
+//                .authorizeHttpRequests((auth) -> auth
+//                        .requestMatchers(PUBLIC_URLS).permitAll()
+//                        .anyRequest().authenticated());
+
+        // 경로별 인가 작업(test 단계에서만 사용 접근 권한)
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(PUBLIC_URLS).permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
 
         // JWT, 로그인, 로그아웃 커스텀 필터 삽입
