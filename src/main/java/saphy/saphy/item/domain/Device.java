@@ -32,7 +32,4 @@ public class Device extends BaseEntity {
 
     @Column(nullable = false)
     private String grade;
-
-    @OneToOne(mappedBy = "device", fetch = FetchType.LAZY)
-    private Item item;
 }
