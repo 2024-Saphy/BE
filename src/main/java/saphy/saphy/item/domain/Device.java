@@ -1,35 +1,20 @@
 package saphy.saphy.item.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import saphy.saphy.global.entity.BaseEntity;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "device")
-public class Device extends BaseEntity {
+@DiscriminatorValue("DEVICE")
+@Table(name = "devices")
+public class Device extends Item{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String modelName;
-
-    @Column(nullable = false)
-    private String brand;
-
-    @Column(nullable = false)
-    private Long capacity;
-
-    @Column(nullable = false)
-    private String color;
-
-    @Column(nullable = false)
-    private String grade;
+    @Column(name = "storage", nullable = false)
+    private Storage storage;
 }

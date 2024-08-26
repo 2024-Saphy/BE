@@ -7,36 +7,37 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype")
 @Table(name = "item")
 public class Item extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "brand", nullable = false)
+    private String brand;
+
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private Long price;
-
-    @Column(nullable = false)
-    private Long discount;
-
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private Long stock;
+    @Column(name = "color", nullable = false)
+    private String color;
 
-    @Column(nullable = false)
-    private String category;
+    @Column(name = "grade", nullable = false)
+    private String grade;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "device_id")
-    private Device device;
+    @Column(name = "price", nullable = false)
+    private String price;
+
+    @Column(name = "stock", nullable = false)
+    private String stock;
 }
