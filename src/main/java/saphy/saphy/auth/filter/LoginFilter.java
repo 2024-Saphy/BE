@@ -34,10 +34,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${jwt.access-token-expiration}")
+    @Value("${spring.jwt.access-token-expiration}")
     private long accessTokenExpiration;
 
-    @Value("${jwt.refresh-token-expiration}")
+    @Value("${spring.jwt.refresh-token-expiration}")
     private long refreshTokenExpiration;
 
     public LoginFilter(AuthenticationManager authenticationManager,
@@ -50,12 +50,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         setFilterProcessesUrl(url);
     }
 
-    // 로그인 시도시 작동
+    // 로그인 요청 시 작동
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        // request 받은 json 값을 추출함
+        // request 받은 json 값 추출
         Map<String, String> loginInfo = getLoginInfoFromJson(request);
         String loginId = loginInfo.get("loginId");
         String password = loginInfo.get("password");
@@ -65,10 +64,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
 
-        // 스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
+        // 스프링 시큐리티에서 username과 password를 검증하기 위해 token에 담음
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginId, password);
 
-        // token에 담은 검증을 위한 AuthenticationManager로 전달
+        // 검증을 위해 AuthenticationManager로 전달 토큰 전달
         return authenticationManager.authenticate(authToken);
     }
 
@@ -77,12 +76,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
 
-        //인증에 성공한 loginId 받아오기
+        // 인증에 성공한 loginId 받아오기
         String loginId = authResult.getName();
 
-        //토큰 생성 - access 토큰 유효기간 30분
-        String accessToken = jwtUtil.createJwt("access", loginId, accessTokenExpiration);
-        String refresh = jwtUtil.createJwt("refresh", loginId, refreshTokenExpiration);
+        // 토큰 생성
+        String accessToken = jwtUtil.createJwt("access", loginId, 24 * 60 * 60 * 1000L);
+        String refresh = jwtUtil.createJwt("refresh", loginId, 24 * 60 * 60 * 1000L);
 
         response.addHeader("Authorization", "Bearer " + accessToken);// 헤더에 access 토큰 넣기
         response.addHeader("Set-Cookie", createCookie("refresh", refresh).toString()); // 쿠키 생성일 추가
@@ -97,7 +96,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
 
-        // API 응답 생성 - failed 예외는 BadCredentialsException 하나로만 처리
+//        log.error("Authentication failed: {}", failed.getMessage());
         createAPIResponse(response, ErrorCode.INVALID_AUTH_TOKEN);
     }
 
@@ -107,7 +106,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .sameSite("None") // sameSite 설정 (크롬 전용)
 //                .httpOnly(false) // JS에서 쿠키 접근 가능하도록함
 //                .secure(true) // HTTPS 연결에서만 쿠키 사용 sameSite 설정시 필요
-                .maxAge(24 * 60 * 60)// =refresh 토큰 만료주기
+                .maxAge(24 * 60 * 60) // refresh 토큰 만료주기
                 .build();
     }
 
@@ -137,7 +136,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 jsonString.append(line);
             }
         } catch (IOException e) {
-            System.out.println("json 읽기 실패");
             throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
 
@@ -147,7 +145,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             return objectMapper.readValue(jsonString.toString(), new TypeReference<Map<String, String>>() {
             });
         } catch (JsonProcessingException e) {
-            System.out.println("JSON 형식에 맞지 않는 포맷");
             throw SaphyException.from(ErrorCode.INVALID_REQUEST);
         }
     }
