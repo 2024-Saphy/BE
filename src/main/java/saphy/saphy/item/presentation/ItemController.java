@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import saphy.saphy.global.exception.ErrorCode;
+import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.item.dto.request.ItemCreateRequest;
 import saphy.saphy.item.dto.response.ItemResponse;
 import saphy.saphy.item.service.ItemService;
@@ -22,17 +24,18 @@ public class ItemController {
 	private final ItemService itemService;
 
 	@PostMapping("/items")
-	public void save(@RequestBody ItemCreateRequest request) {
+	public ApiResponse<Void> save(@RequestBody ItemCreateRequest request) {
 		itemService.save(request);
+		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
 
 	@GetMapping("/items/{itemId}")
-	public ItemResponse findPhoneById(@PathVariable Long itemId) {
-		return itemService.findById(itemId);
+	public ApiResponse<ItemResponse> findPhoneById(@PathVariable Long itemId) {
+		return new ApiResponse<>(itemService.findById(itemId));
 	}
 
 	@GetMapping("/items")
-	public List<ItemResponse> findAll() {
-		return itemService.findAll();
+	public ApiResponse<ItemResponse> findAll() {
+		return new ApiResponse<>(itemService.findAll());
 	}
 }
