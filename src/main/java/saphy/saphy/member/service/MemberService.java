@@ -10,7 +10,9 @@ import saphy.saphy.delivery.service.DeliveryService;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
+import saphy.saphy.member.domain.SocialType;
 import saphy.saphy.member.domain.dto.request.JoinMemberDto;
+import saphy.saphy.member.domain.dto.response.MemberDetailDto;
 import saphy.saphy.member.domain.dto.response.MemberInfoDto;
 import saphy.saphy.member.domain.repository.MemberRepository;
 import saphy.saphy.purchaseHistory.domain.PurchaseStatus;
@@ -18,7 +20,9 @@ import saphy.saphy.purchaseHistory.service.PurchaseHistoryService;
 import saphy.saphy.salesHistory.SalesStatus;
 import saphy.saphy.salesHistory.service.SalesHistoryService;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,16 +39,37 @@ public class MemberService {
     public void join(JoinMemberDto joinDto) {
 
         validateExistMember(joinDto);
-        Member joinMember = JoinMemberDto.toEntity(joinDto);
+        Member joinMember = Member.builder()
+                .loginId(joinDto.getLoginId())
+                .password(bCryptPasswordEncoder.encode(joinDto.getPassword()))
+                .socialType(SocialType.LOCAL)
+                .name(joinDto.getName())
+                .nickName(joinDto.getNickName())
+                .address(joinDto.getAddress())
+                .phoneNumber(joinDto.getPhoneNumber())
+                .email(joinDto.getEmail())
+                .isAdmin(Boolean.FALSE)
+                .build();
         memberRepository.save(joinMember);
     }
 
+    // 단일 회원 조회
+    @Transactional(readOnly = true)
+    public MemberDetailDto getMemberDetails(String loginId) {
 
-    private void validateExistMember(JoinMemberDto joinDto) {
-        String loginId = joinDto.getLoginId();
-        if (memberRepository.existsByLoginId(loginId)) {
-            throw SaphyException.from(ErrorCode.DUPLICATE_MEMBER_LOGIN_ID);
-        }
+        Member member = ensureMemberExists(loginId);
+        return MemberDetailDto.toDto(member);
+    }
+
+    // 전체 회원 조회
+    @Transactional(readOnly = true)
+    public List<MemberDetailDto> getAllMemberDetails() {
+
+        return memberRepository
+                .findAll()
+                .stream()
+                .map(MemberDetailDto::toDto)
+                .collect(Collectors.toList());
     }
 
     // 회원 정보 조회
@@ -71,4 +96,17 @@ public class MemberService {
                 .build();
     }
 
+    // 회원 존재 유무 검증
+    private Member ensureMemberExists(String loginId) {
+        return memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    // 중복회원 검증
+    private void validateExistMember(JoinMemberDto joinDto) {
+        String loginId = joinDto.getLoginId();
+        if (memberRepository.existsByLoginId(loginId)) {
+            throw SaphyException.from(ErrorCode.DUPLICATE_MEMBER_LOGIN_ID);
+        }
+    }
 }
