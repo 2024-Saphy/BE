@@ -10,6 +10,7 @@ import saphy.saphy.item.domain.Item;
 import saphy.saphy.member.domain.Member;
 
 import java.time.LocalDateTime;
+import saphy.saphy.payment.domain.Payment;
 
 @Entity
 @Getter
@@ -43,4 +44,7 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+    @OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
+    private Payment payment;
 }
