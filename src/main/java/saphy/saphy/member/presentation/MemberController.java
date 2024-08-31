@@ -2,6 +2,7 @@ package saphy.saphy.member.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -13,10 +14,12 @@ import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.member.domain.dto.request.JoinMemberDto;
+import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
 import saphy.saphy.member.domain.dto.response.MemberDetailDto;
 import saphy.saphy.member.domain.dto.response.MemberInfoDto;
 import saphy.saphy.member.service.MemberService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -61,10 +64,17 @@ public class MemberController {
         return new ApiResponse<>(members);
     }
 
+    // 회원 정보 수정
+    @PatchMapping("/info")
+    public ApiResponse<Void> updateInfo(@RequestBody MemberInfoUpdateDto updateDto) {
+        memberService.updateMemberInfo(updateDto);
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
+
     @GetMapping("/test")
     @Operation(summary = "로그인 유지 test", description = "member가 SecurityContext에 저장되었는지 확인하는 API 입니다.")
-    public ApiResponse loginTest(@AuthenticationPrincipal CustomUserDetails member) {
-        // 서비스 로직
+    public ApiResponse checkFirstLogin(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response) throws IOException {
+        memberService.checkLogin(userDetails.getMember(), response);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
