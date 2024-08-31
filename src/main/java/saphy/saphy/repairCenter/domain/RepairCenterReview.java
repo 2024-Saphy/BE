@@ -1,4 +1,4 @@
-package saphy.saphy.repairCenterReview.domain;
+package saphy.saphy.repairCenter.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

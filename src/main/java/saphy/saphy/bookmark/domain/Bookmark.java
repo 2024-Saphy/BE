@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.member.domain.Member;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "bookmark")
 public class Bookmark extends BaseEntity {
@@ -26,4 +25,5 @@ public class Bookmark extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
 }

@@ -13,7 +13,7 @@ import saphy.saphy.member.domain.Member;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "purchase_history")
-public class PurchaseHistory extends BaseEntity {
+public class PurchaseHistory extends BaseEntity { // 이거 삭제할 생각인데 어떠신지?
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

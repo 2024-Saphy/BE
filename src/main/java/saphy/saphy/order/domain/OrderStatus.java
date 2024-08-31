@@ -1,8 +1,9 @@
 package saphy.saphy.order.domain;
 
 public enum OrderStatus {
-    PENDING("대기 중"),
+    PENDING("처리 대기 중"),
     PROCESSING("처리 중"),
+    START("배송 시작"),
     SHIPPED("배송 중"),
     DELIVERED("배송 완료"),
     CANCELLED("취소됨");

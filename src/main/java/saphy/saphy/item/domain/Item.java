@@ -25,7 +25,7 @@ import saphy.saphy.item.domain.enumeration.Storage;
 
 @Entity
 @Getter
-@Setter
+@Setter // Setter 어노테이션 없애고 로직 수정해야 함!!!
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "items")

@@ -1,4 +1,4 @@
-package saphy.saphy.reviewImg.domain;
+package saphy.saphy.image;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,7 +8,6 @@ import saphy.saphy.review.domain.Review;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "review_img")
 public class ReviewImg {

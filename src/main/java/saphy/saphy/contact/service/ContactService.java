@@ -1,4 +1,4 @@
-package saphy.saphy.cart.service;
+package saphy.saphy.contact.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CartService {
+public class ContactService {
 
 }
