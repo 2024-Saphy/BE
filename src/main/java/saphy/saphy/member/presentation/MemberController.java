@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.global.response.ApiResponse;
-import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.dto.request.JoinMemberDto;
+import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
 import saphy.saphy.member.domain.dto.response.MemberInfoDto;
 import saphy.saphy.member.service.MemberService;
 
@@ -33,6 +33,13 @@ public class MemberController {
     public ApiResponse<MemberInfoDto> getInfo() {
         MemberInfoDto dto = memberService.getInfo();
         return new ApiResponse<>(dto);
+    }
+
+    // 회원 정보 수정
+    @PatchMapping("/info")
+    public ApiResponse<Void> updateInfo(@RequestBody MemberInfoUpdateDto updateDto) {
+        memberService.updateMemberInfo(updateDto);
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
     private void validateRequest(Errors errors) {
