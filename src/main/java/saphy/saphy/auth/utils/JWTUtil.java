@@ -51,6 +51,7 @@ public class JWTUtil {
 
     // claim 에서 토큰 만료 여부 추출
     public Boolean isExpired(String token) {
+
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
@@ -75,7 +76,10 @@ public class JWTUtil {
     // 토큰 검증 로직
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+            Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token);
             return true;
         } catch (Exception e) {
             return false;
