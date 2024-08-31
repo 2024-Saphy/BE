@@ -66,6 +66,7 @@ public class MemberController {
 
     // 회원 정보 수정
     @PatchMapping("/info")
+    @Operation(summary = "회원 정보 수정 API", description = "회원 정보를 수정합니다.")
     public ApiResponse<Void> updateInfo(@RequestBody MemberInfoUpdateDto updateDto) {
         memberService.updateMemberInfo(updateDto);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
@@ -77,7 +78,7 @@ public class MemberController {
         memberService.checkLogin(userDetails.getMember(), response);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
-
+  
     private void validateRequest(Errors errors) {
 
         if (errors.hasErrors()) {
@@ -87,6 +88,5 @@ public class MemberController {
             });
         }
     }
-
 
 }

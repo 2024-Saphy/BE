@@ -128,7 +128,7 @@ public class MemberService {
         memberRepository.save(findMember);
     }
 
-    //주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
+    // 주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
     private <T> void updateIfPresent(T value, java.util.function.Consumer<T> setter) {
         Optional.ofNullable(value).ifPresent(setter);
     }
