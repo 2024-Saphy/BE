@@ -1,5 +1,6 @@
 package saphy.saphy.member.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.SocialType;
 import saphy.saphy.member.domain.dto.request.JoinMemberDto;
+import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
 import saphy.saphy.member.domain.dto.response.MemberDetailDto;
 import saphy.saphy.member.domain.dto.response.MemberInfoDto;
 import saphy.saphy.member.domain.repository.MemberRepository;
@@ -20,9 +22,13 @@ import saphy.saphy.purchaseHistory.service.PurchaseHistoryService;
 import saphy.saphy.salesHistory.SalesStatus;
 import saphy.saphy.salesHistory.service.SalesHistoryService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static saphy.saphy.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +39,13 @@ public class MemberService {
     private final DeliveryService deliveryService;
     private final PurchaseHistoryService purchaseHistoryService;
     private final SalesHistoryService salesHistoryService;
+
+    // 로그인된 회원 체크
+    public void checkLogin(Member member, HttpServletResponse response) throws IOException {
+        if (member == null) {
+            throw SaphyException.from(MEMBER_NOT_FOUND);
+        }
+    }
 
     // 회원 가입
     @Transactional
@@ -72,10 +85,11 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    // 회원 정보 조회
+    // 회원 배달 정보 조회
     public MemberInfoDto getInfo() {
         String loginId = AccessTokenUtils.isPermission();
-        Member findMember = memberRepository.findByLoginId(loginId).orElse(null);
+        Member findMember = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));
 
         Map<DeliveryStatus, Long> deliveryCounts = deliveryService.getDeliveryStatusCounts(findMember.getId());
         Map<PurchaseStatus, Long> purchaseCounts = purchaseHistoryService.getPurchaseCounts(findMember.getId());
@@ -96,10 +110,33 @@ public class MemberService {
                 .build();
     }
 
+    // 회원 정보 수정
+    @Transactional
+    public void updateMemberInfo(MemberInfoUpdateDto updateDto) {
+
+        String loginId = AccessTokenUtils.isPermission();
+        Member findMember = memberRepository.findByLoginId(loginId)
+                .orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));
+
+        updateIfPresent(updateDto.getPassword(), findMember::setPassword);
+        updateIfPresent(updateDto.getName(), findMember::setName);
+        updateIfPresent(updateDto.getNickName(), findMember::setNickName);
+        updateIfPresent(updateDto.getAddress(), findMember::setAddress);
+        updateIfPresent(updateDto.getPhoneNumber(), findMember::setPhoneNumber);
+        updateIfPresent(updateDto.getEmail(), findMember::setEmail);
+
+        memberRepository.save(findMember);
+    }
+
+    //주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
+    private <T> void updateIfPresent(T value, java.util.function.Consumer<T> setter) {
+        Optional.ofNullable(value).ifPresent(setter);
+    }
+
     // 회원 존재 유무 검증
     private Member ensureMemberExists(String loginId) {
         return memberRepository.findByLoginId(loginId)
-                .orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> SaphyException.from(MEMBER_NOT_FOUND));
     }
 
     // 중복회원 검증
