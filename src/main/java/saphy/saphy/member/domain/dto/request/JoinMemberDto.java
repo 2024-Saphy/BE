@@ -2,7 +2,6 @@ package saphy.saphy.member.domain.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.SocialType;
 
 @Getter
@@ -28,19 +27,5 @@ public class JoinMemberDto {
     private String phoneNumber;
 
     private String email;
-
-    public static Member toEntity(JoinMemberDto request) {
-        return Member.builder()
-                .loginId(request.getLoginId())
-                .password(request.getPassword())
-                .socialType(request.getSocialType())
-                .name(request.getName())
-                .nickName(request.getNickName())
-                .address(request.getAddress())
-                .phoneNumber(request.getPhoneNumber())
-                .email(request.getEmail())
-                .isAdmin(Boolean.FALSE) // 관리자 권한은 수동 부여
-                .build();
-    }
 
 }

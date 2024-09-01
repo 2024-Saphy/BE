@@ -59,7 +59,7 @@ public class JWTFilter extends OncePerRequestFilter {
             createAPIResponse(response, ErrorCode.EXPIRED_AUTH_TOKEN);
             return;
         }
-        //access 토큰인지 확인
+        // access 토큰인지 확인
         String category = jwtUtil.getCategory(accessToken);
         if (!category.equals("access")) {
             createAPIResponse(response, ErrorCode.INVALID_AUTH_TOKEN);
@@ -70,7 +70,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String loginId = jwtUtil.getUsername(accessToken);
         Optional<Member> member = memberRepository.findByLoginId(loginId);
 
-        //해당 아이디로 가입한 유저가 존재하는지 확인
+        // 해당 아이디로 가입한 유저가 존재하는지 확인
         if (member.isEmpty()) {
             createAPIResponse(response, ErrorCode.MEMBER_NOT_FOUND);
             return;
@@ -78,28 +78,15 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 찾은 유저 정보로 UserDetails 생성
         CustomUserDetails customUserDetails = new CustomUserDetails(member.get());
-        //스프링 시큐리티 인증 토큰 생성
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null,
-                customUserDetails.getAuthorities());
-        //SecurityContextHolder 에 사용자 등록 (=인가 절차 완료)
+
+        // 스프링 시큐리티 인증 토큰 생성
+        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+
+        // SecurityContextHolder 에 사용자 등록 (=인가 절차 완료)
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
 
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String[] excludePath = {
-                "/oauth/**"
-        };
-        String path = request.getRequestURI();
-
-        System.out.println(path);
-        System.out.println(Arrays.toString(excludePath));
-        boolean shouldNotFilter = Arrays.stream(excludePath).anyMatch(path::startsWith);
-
-        return shouldNotFilter;
     }
 
     private void createAPIResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
