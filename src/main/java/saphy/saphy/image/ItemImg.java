@@ -1,16 +1,14 @@
-package saphy.saphy.itemImg.domain;
+package saphy.saphy.image;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.item.domain.Item;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "item_img")
 public class ItemImg extends BaseEntity {

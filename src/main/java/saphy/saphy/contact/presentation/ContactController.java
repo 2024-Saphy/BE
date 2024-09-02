@@ -1,4 +1,4 @@
-package saphy.saphy.productInquiry.presentation;
+package saphy.saphy.contact.presentation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping
-public class ProductInquiryController {
+public class ContactController {
 
 }

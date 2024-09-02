@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.member.domain.Member;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "orders")
 public class Order extends BaseEntity {
@@ -34,7 +32,7 @@ public class Order extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "payment_type")
-    private PaymentType paymentType;
+    private PaymentType paymentType; // 결제 기능 구현하면서 살릴지 죽일지 알아서 판단
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

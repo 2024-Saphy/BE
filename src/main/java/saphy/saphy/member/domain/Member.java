@@ -35,10 +35,13 @@ public class Member {
     private String nickName;
 
     @Column
-    private String address;
+    private String address; // 임베더블? 이거 해보면 좋을듯?
 
     @Column
     private String phoneNumber;
+
+    @Column
+    private String bankAccount; // 계좌 정보
 
     @Column
     private String email;
