@@ -1,13 +1,19 @@
 package saphy.saphy.member.service;
 
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import static saphy.saphy.global.exception.ErrorCode.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import saphy.saphy.auth.utils.AccessTokenUtils;
-import saphy.saphy.delivery.domain.DeliveryStatus;
-import saphy.saphy.delivery.service.DeliveryService;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
@@ -17,18 +23,12 @@ import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
 import saphy.saphy.member.domain.dto.response.MemberDetailDto;
 import saphy.saphy.member.domain.dto.response.MemberInfoDto;
 import saphy.saphy.member.domain.repository.MemberRepository;
+import saphy.saphy.order.domain.OrderStatus;
+import saphy.saphy.order.service.OrderService;
 import saphy.saphy.purchaseHistory.domain.PurchaseStatus;
 import saphy.saphy.purchaseHistory.service.PurchaseHistoryService;
 import saphy.saphy.salesHistory.SalesStatus;
 import saphy.saphy.salesHistory.service.SalesHistoryService;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static saphy.saphy.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -36,12 +36,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final DeliveryService deliveryService;
+    private final OrderService orderService;
     private final PurchaseHistoryService purchaseHistoryService;
     private final SalesHistoryService salesHistoryService;
 
     // 로그인된 회원 체크
-    public void checkLogin(Member member, HttpServletResponse response) throws IOException {
+    public void checkLogin(Member member, HttpServletResponse response) {
         if (member == null) {
             throw SaphyException.from(MEMBER_NOT_FOUND);
         }
@@ -114,6 +114,7 @@ public class MemberService {
         Member findMember = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));
 
+
         updateIfPresent(updateDto.getPassword(), findMember::setPassword);
         updateIfPresent(updateDto.getName(), findMember::setName);
         updateIfPresent(updateDto.getNickName(), findMember::setNickName);
@@ -121,10 +122,10 @@ public class MemberService {
         updateIfPresent(updateDto.getPhoneNumber(), findMember::setPhoneNumber);
         updateIfPresent(updateDto.getEmail(), findMember::setEmail);
 
-        memberRepository.save(findMember);
+        memberRepository.save(findMember);  // 변경된 내용을 저장합니다.
     }
 
-    // 주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
+    //주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
     private <T> void updateIfPresent(T value, java.util.function.Consumer<T> setter) {
         Optional.ofNullable(value).ifPresent(setter);
     }
