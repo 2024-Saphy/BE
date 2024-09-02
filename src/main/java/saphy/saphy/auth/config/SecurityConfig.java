@@ -24,7 +24,9 @@ import saphy.saphy.auth.repository.RefreshRepository;
 import saphy.saphy.auth.utils.JWTUtil;
 import saphy.saphy.member.domain.repository.MemberRepository;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -71,36 +73,41 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // CORS 설정
-//        http
-//                .cors((cors) -> cors
-//                        .configurationSource(request -> {
-//                            CorsConfiguration configuration = new CorsConfiguration();
-//                            configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000", "https://saphy.site"));
-//                            configuration.setAllowCredentials(true);
-//                            configuration.setAllowedHeaders(Collections.singletonList("*"));
-//                            configuration.setMaxAge(3600L);
-//                            configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
-//                            return configuration;
-//                        }));
         http
                 .cors((cors) -> cors
-                        .configurationSource((new CorsConfigurationSource() {
-
+                        .configurationSource(new CorsConfigurationSource() {
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
                                 CorsConfiguration configuration = new CorsConfiguration();
-
-                                configuration.setAllowedOrigins(Collections.singletonList("*"));
+                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000", "https://saphy.site"));
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                                 configuration.setMaxAge(3600L);
-                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
+                                configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
                                 return configuration;
                             }
-                        })));
+                        }));
+
+//        http
+//                .cors((cors) -> cors
+//                        .configurationSource((new CorsConfigurationSource() {
+//
+//                            @Override
+//                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+//
+//                                CorsConfiguration configuration = new CorsConfiguration();
+//
+//                                configuration.setAllowedOrigins(Collections.singletonList("*"));
+//                                configuration.setAllowedMethods(Collections.singletonList("*"));
+//                                configuration.setAllowCredentials(true);
+//                                configuration.setAllowedHeaders(Collections.singletonList("*"));
+//                                configuration.setMaxAge(3600L);
+//                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+//
+//                                return configuration;
+//                            }
+//                        })));
 
         http
                 .csrf(AbstractHttpConfigurer::disable);
