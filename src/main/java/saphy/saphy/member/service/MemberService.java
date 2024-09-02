@@ -85,22 +85,18 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    // 회원 배달 정보 조회
-    public MemberInfoDto getInfo() {
-        String loginId = AccessTokenUtils.isPermission();
-        Member findMember = memberRepository.findByLoginId(loginId)
-                .orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));
-
-        Map<DeliveryStatus, Long> deliveryCounts = deliveryService.getDeliveryStatusCounts(findMember.getId());
-        Map<PurchaseStatus, Long> purchaseCounts = purchaseHistoryService.getPurchaseCounts(findMember.getId());
-        Map<SalesStatus, Long> salesCounts = salesHistoryService.getPurchaseCounts(findMember.getId());
+    // 회원 정보 조회
+    public MemberInfoDto getInfo(Member loggedInMember) {
+        Map<OrderStatus, Long> deliveryCounts = orderService.getOrderCounts(loggedInMember.getId());
+        Map<PurchaseStatus, Long> purchaseCounts = purchaseHistoryService.getPurchaseCounts(loggedInMember.getId());
+        Map<SalesStatus, Long> salesCounts = salesHistoryService.getPurchaseCounts(loggedInMember.getId());
 
         return MemberInfoDto.builder()
-                .nickname(findMember.getNickName())
+                .nickname(loggedInMember.getNickName())
                 //.profileImgUrl(findMember.getProfileImgUrl)
-                .deliveryStartedCount(deliveryCounts.get(DeliveryStatus.STARTED))
-                .deliveryGoingCount(deliveryCounts.get(DeliveryStatus.GOING))
-                .deliveryDeliveredCount(deliveryCounts.get(DeliveryStatus.DELIVERED))
+                .deliveryStartedCount(deliveryCounts.get(OrderStatus.START))
+                .deliveryGoingCount(deliveryCounts.get(OrderStatus.SHIPPED))
+                .deliveryDeliveredCount(deliveryCounts.get(OrderStatus.DELIVERED))
                 .purchasePendingCount(purchaseCounts.get(PurchaseStatus.PENDING))
                 .purchaseInProgressCount(purchaseCounts.get(PurchaseStatus.IN_PROGRESS))
                 .purchaseCompletedCount(purchaseCounts.get(PurchaseStatus.COMPLETED))
