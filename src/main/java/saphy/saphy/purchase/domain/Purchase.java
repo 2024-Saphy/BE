@@ -43,6 +43,6 @@ public class Purchase extends BaseEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
-    private Payment payment;
+   // @OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
+   // private Payment payment;
 }
