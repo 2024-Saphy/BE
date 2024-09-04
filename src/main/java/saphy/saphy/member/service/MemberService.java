@@ -83,23 +83,20 @@ public class MemberService {
     }
 
     // 회원 정보 조회
+    @Transactional(readOnly = true)
     public MemberInfoDto getInfo(Member loggedInMember) {
-        Map<PurchaseStatus, Long> deliveryCounts = purchaseService.getPurchaseCounts(loggedInMember.getId());
-        Map<saphy.saphy.purchase.domain.PurchaseStatus, Long> purchaseCounts = purchaseService.getPurchaseCounts(loggedInMember.getId());
+        Map<PurchaseStatus, Long> purchaseCounts = purchaseService.getPurchaseCounts(loggedInMember.getId());
         Map<SalesStatus, Long> salesCounts = salesService.getPurchaseCounts(loggedInMember.getId());
 
         return MemberInfoDto.builder()
                 .nickname(loggedInMember.getNickName())
                 //.profileImgUrl(findMember.getProfileImgUrl)
-                .deliveryStartedCount(deliveryCounts.get(PurchaseStatus.START))
-                .deliveryGoingCount(deliveryCounts.get(PurchaseStatus.SHIPPED))
-                .deliveryDeliveredCount(deliveryCounts.get(PurchaseStatus.DELIVERED))
-                .purchasePendingCount(purchaseCounts.get(
-                    saphy.saphy.purchase.domain.PurchaseStatus.PENDING))
-                .purchaseInProgressCount(purchaseCounts.get(
-                    saphy.saphy.purchase.domain.PurchaseStatus.PROCESSING))
-                .purchaseCompletedCount(purchaseCounts.get(
-                    saphy.saphy.purchase.domain.PurchaseStatus.DELIVERED))
+                .deliveryStartedCount(purchaseCounts.get(PurchaseStatus.START))
+                .deliveryGoingCount(purchaseCounts.get(PurchaseStatus.SHIPPED))
+                .deliveryDeliveredCount(purchaseCounts.get(PurchaseStatus.DELIVERED))
+                .purchasePendingCount(purchaseCounts.get(PurchaseStatus.PENDING))
+                .purchaseInProgressCount(purchaseCounts.get(PurchaseStatus.PROCESSING))
+                .purchaseCompletedCount(purchaseCounts.get(PurchaseStatus.DELIVERED))
                 .salesPendingCount(salesCounts.get(SalesStatus.PENDING))
                 .salesInProgressCount(salesCounts.get(SalesStatus.IN_PROGRESS))
                 .salesCompletedCount(salesCounts.get(SalesStatus.COMPLETED))
