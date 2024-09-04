@@ -1,7 +1,8 @@
-package saphy.saphy.auth.domain.dto.request;
+package saphy.saphy.auth.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.SocialType;
 
 @Data
@@ -9,7 +10,6 @@ import saphy.saphy.member.domain.SocialType;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OAuthJoinRequest {
-
     @NotNull
     private String email;
 
@@ -21,4 +21,16 @@ public class OAuthJoinRequest {
     private String phoneNumber;
 
     private SocialType socialType;
+
+    public Member toEntity(String encodedPassword) {
+        return Member.builder()
+                .loginId(email)
+                .password(encodedPassword)
+                .email(email)
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .socialType(socialType)
+                .isAdmin(Boolean.FALSE)
+                .build();
+    }
 }

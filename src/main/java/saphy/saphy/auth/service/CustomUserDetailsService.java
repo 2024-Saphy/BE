@@ -13,12 +13,10 @@ import saphy.saphy.member.domain.repository.MemberRepository;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-
     private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-
         return memberRepository.findByLoginId(loginId)
                 .map(CustomUserDetails::new)
                 .orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));

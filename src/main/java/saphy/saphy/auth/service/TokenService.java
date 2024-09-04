@@ -13,7 +13,6 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class TokenService {
-
     private final JWTUtil jwtUtil;
 
     public void addTokensToResponse(HttpServletRequest request, HttpServletResponse response) {

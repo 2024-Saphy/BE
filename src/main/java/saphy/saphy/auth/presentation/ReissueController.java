@@ -17,15 +17,14 @@ import saphy.saphy.global.response.ApiResponse;
 @RequestMapping("/reissue")
 @Tag(name = "Reissue", description = "토큰 재발급 API")
 public class ReissueController {
-
     private final ReissueService reissueService;
 
     @PostMapping
     @Operation(summary = "토큰 재발급 API", description = "access token이 만료되면 새로운 토큰을 발급받습니다.")
     ApiResponse<Void> reissue(HttpServletRequest request, HttpServletResponse response) {
-
         String newAccess = reissueService.createNewAccessToken(request, response);
         response.addHeader("Authorization", "Bearer " + newAccess);
+
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 }

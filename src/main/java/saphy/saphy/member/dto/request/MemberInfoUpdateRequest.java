@@ -1,4 +1,4 @@
-package saphy.saphy.member.domain.dto.request;
+package saphy.saphy.member.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class MemberInfoUpdateRequest {
-
     private String password;
 
     private String name;

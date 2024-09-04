@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import saphy.saphy.auth.domain.CustomUserDetails;
-import saphy.saphy.auth.domain.dto.request.OAuthJoinRequest;
+import saphy.saphy.auth.dto.request.OAuthJoinRequest;
 import saphy.saphy.auth.utils.JWTUtil;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
