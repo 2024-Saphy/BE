@@ -3,15 +3,14 @@ package saphy.saphy.item.dto.request;
 import java.math.BigDecimal;
 
 import lombok.Getter;
-import saphy.saphy.item.domain.Item;
+import saphy.saphy.item.domain.Phone;
 import saphy.saphy.item.domain.enumeration.Brand;
 import saphy.saphy.item.domain.enumeration.Color;
-import saphy.saphy.item.domain.enumeration.DeviceType;
 import saphy.saphy.item.domain.enumeration.Grade;
 import saphy.saphy.item.domain.enumeration.Storage;
 
 @Getter
-public class ItemCreateRequest {
+public class PhoneCreateRequest {
 
 	private String deviceType;
 
@@ -31,9 +30,9 @@ public class ItemCreateRequest {
 
 	private int stock;
 
-	public Item toEntity() {
-		return Item.builder()
-			.deviceType(DeviceType.PHONE)
+	public Phone toEntity() {
+		return Phone.builder()
+			.deviceType(deviceType)
 			.name(name)
 			.description(description)
 			.brand(Brand.findByName(brand))
