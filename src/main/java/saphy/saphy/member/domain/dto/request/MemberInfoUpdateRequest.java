@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MemberInfoUpdateDto {
+public class MemberInfoUpdateRequest {
 
     private String password;
 
