@@ -1,4 +1,4 @@
-package saphy.saphy.auth.domain.dto.request;
+package saphy.saphy.auth.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +13,6 @@ import saphy.saphy.member.domain.SocialType;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OAuthLoginRequest {
-
     @NotNull(message = "소셜 타입은 필수 항목입니다.")
     private SocialType socialType;  // 소셜 로그인 제공자 (예: KAKAO, GOOGLE, NAVER 등)
 

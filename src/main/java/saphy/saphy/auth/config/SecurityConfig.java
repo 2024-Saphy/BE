@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import saphy.saphy.auth.filter.CustomLogoutFilter;
 import saphy.saphy.auth.filter.JWTFilter;
 import saphy.saphy.auth.filter.LoginFilter;
-import saphy.saphy.auth.repository.RefreshRepository;
+import saphy.saphy.auth.domain.repository.RefreshRepository;
 import saphy.saphy.auth.utils.JWTUtil;
 import saphy.saphy.member.domain.repository.MemberRepository;
 
@@ -32,7 +31,6 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final MemberRepository memberRepository;
@@ -62,14 +60,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(
-                "/oauth2/login",
-                "/oauth2/join"
-        );
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // CORS 설정
@@ -78,15 +68,24 @@ public class SecurityConfig {
                         .configurationSource(new CorsConfigurationSource() {
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
                                 CorsConfiguration configuration = new CorsConfiguration();
-
-                                configuration.setAllowedOrigins(Arrays.asList("https://saphy.site", "http://localhost:8080", "http://localhost:3000"));
+                                configuration.setAllowedOrigins(
+                                        Arrays.asList(
+                                                "https://saphy.site",
+                                                "http://localhost:8080",
+                                                "http://localhost:3000"
+                                        )
+                                );
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                                 configuration.setMaxAge(3600L);
-                                configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
+                                configuration.setExposedHeaders(
+                                        List.of(
+                                                "Authorization",
+                                                "Set-Cookie"
+                                        ));
+
                                 return configuration;
                             }
                         }));
@@ -103,18 +102,21 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(PUBLIC_URLS).permitAll()
-                        .anyRequest().authenticated());
+                        .requestMatchers(PUBLIC_URLS)
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated());
 
         // JWT, 로그인, 로그아웃 커스텀 필터 삽입
         http
                 .addFilterAfter(new JWTFilter(jwtUtil, memberRepository), UsernamePasswordAuthenticationFilter.class);
         http
-                .addFilterAt(
-                        new LoginFilter(authenticationManager(authenticationConfiguration), refreshRepository, jwtUtil, "/login"),
+                .addFilterAt(new LoginFilter(
+                        authenticationManager(authenticationConfiguration), refreshRepository, jwtUtil, "/login"),
                         UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+
         http
                 .logout(logout -> logout.logoutSuccessUrl("/").permitAll());
 

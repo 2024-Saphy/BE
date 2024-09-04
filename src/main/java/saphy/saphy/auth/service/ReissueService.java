@@ -4,9 +4,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
-import saphy.saphy.auth.repository.RefreshRepository;
+import saphy.saphy.auth.domain.repository.RefreshRepository;
 import saphy.saphy.auth.utils.JWTUtil;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
@@ -17,14 +18,19 @@ public class ReissueService {
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
 
-    public String createNewAccessToken(HttpServletRequest request, HttpServletResponse response) {
+    @Value("${spring.jwt.access-token-expiration}")
+    private long accessTokenExpiration;
 
+    @Value("${spring.jwt.refresh-token-expiration}")
+    private long refreshTokenExpiration;
+
+    public String createNewAccessToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = getRefreshTokenFromCookies(request); // 쿠키에서 토큰 추출
         String loginId = validateAndGetUserEmail(refreshToken); // 추출한 토큰 검증 및 유저반환
 
         //토큰 생성
-        String newAccess = jwtUtil.createJwt("access", loginId, 30 * 60 * 1000L);
-        String newRefresh = jwtUtil.createJwt("refresh", "fakeLoginId", 24 * 60 * 60 * 1000L);
+        String newAccess = jwtUtil.createJwt("access", loginId, accessTokenExpiration);
+        String newRefresh = jwtUtil.createJwt("refresh", "fakeLoginId", refreshTokenExpiration);
 
         // 새로운 refresh 토큰 쿠키에 삽입
         response.addHeader("Set-Cookie", createCookie("refresh", newRefresh).toString());

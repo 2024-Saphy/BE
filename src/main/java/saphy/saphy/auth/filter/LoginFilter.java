@@ -15,7 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import saphy.saphy.auth.repository.RefreshRepository;
+import saphy.saphy.auth.domain.repository.RefreshRepository;
 import saphy.saphy.auth.domain.RefreshEntity;
 import saphy.saphy.auth.utils.JWTUtil;
 import saphy.saphy.global.exception.ErrorCode;
@@ -27,11 +27,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
-
     private final AuthenticationManager authenticationManager;
     private final RefreshRepository refreshRepository;
     private final JWTUtil jwtUtil;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${spring.jwt.access-token-expiration}")
@@ -40,10 +38,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Value("${spring.jwt.refresh-token-expiration}")
     private long refreshTokenExpiration;
 
-    public LoginFilter(AuthenticationManager authenticationManager,
-                       RefreshRepository refreshRepository,
-                       JWTUtil jwtUtil, String url) {
-
+    public LoginFilter(
+            AuthenticationManager authenticationManager,
+            RefreshRepository refreshRepository,
+            JWTUtil jwtUtil,
+            String url
+    ) {
         this.authenticationManager = authenticationManager;
         this.refreshRepository = refreshRepository;
         this.jwtUtil = jwtUtil;
@@ -52,8 +52,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     // 로그인 요청 시 작동
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
         // request 받은 json 값 추출
         Map<String, String> loginInfo = getLoginInfoFromJson(request);
         String loginId = loginInfo.get("loginId");
@@ -73,15 +73,18 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     // 로그인 성공
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
-            throws IOException, ServletException {
-
+    protected void successfulAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain,
+            Authentication authResult
+    ) throws IOException, ServletException {
         // 인증에 성공한 loginId 받아오기
         String loginId = authResult.getName();
 
         // 토큰 생성
-        String accessToken = jwtUtil.createJwt("access", loginId, 24 * 60 * 60 * 1000L);
-        String refresh = jwtUtil.createJwt("refresh", loginId, 24 * 60 * 60 * 1000L);
+        String accessToken = jwtUtil.createJwt("access", loginId, accessTokenExpiration);
+        String refresh = jwtUtil.createJwt("refresh", loginId, refreshTokenExpiration);
 
         response.addHeader("Authorization", "Bearer " + accessToken);// 헤더에 access 토큰 넣기
         response.addHeader("Set-Cookie", createCookie("refresh", refresh).toString()); // 쿠키 생성일 추가
@@ -93,10 +96,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     // 로그인 실패
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
-            throws IOException, ServletException {
-
-//        log.error("Authentication failed: {}", failed.getMessage());
+    protected void unsuccessfulAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException failed
+    ) throws IOException, ServletException {
         createAPIResponse(response, ErrorCode.INVALID_AUTH_TOKEN);
     }
 
@@ -111,7 +115,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     private void createAPIResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
-
         ApiResponse apiResponse = new ApiResponse<>(errorCode);
         response.setStatus(errorCode.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -122,7 +125,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     // JSON 파일을 읽고 반환하는 메소드
     private Map<String, String> getLoginInfoFromJson(HttpServletRequest request) {
-
         // 요청의 Content-Type이 "application/json"이 아닌 경우 예외 발생
         if (!"application/json".equals(request.getContentType())) {
             throw SaphyException.from(ErrorCode.INVALID_REQUEST);

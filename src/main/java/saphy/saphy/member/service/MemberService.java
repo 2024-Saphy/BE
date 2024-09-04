@@ -16,11 +16,10 @@ import lombok.RequiredArgsConstructor;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
-import saphy.saphy.member.domain.SocialType;
-import saphy.saphy.member.domain.dto.request.MemberJoinRequest;
-import saphy.saphy.member.domain.dto.request.MemberInfoUpdateRequest;
-import saphy.saphy.member.domain.dto.response.MemberDetailResponse;
-import saphy.saphy.member.domain.dto.response.MemberInfoResponse;
+import saphy.saphy.member.dto.request.MemberJoinRequest;
+import saphy.saphy.member.dto.request.MemberInfoUpdateRequest;
+import saphy.saphy.member.dto.response.MemberDetailResponse;
+import saphy.saphy.member.dto.response.MemberInfoResponse;
 import saphy.saphy.member.domain.repository.MemberRepository;
 import saphy.saphy.purchase.domain.PurchaseStatus;
 import saphy.saphy.purchase.service.PurchaseService;
@@ -30,7 +29,6 @@ import saphy.saphy.sales.service.SalesService;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PurchaseService purchaseService;
@@ -45,27 +43,17 @@ public class MemberService {
 
     // 회원 가입
     @Transactional
-    public void join(MemberJoinRequest joinDto) {
+    public void join(MemberJoinRequest request) {
+        validateExistMember(request);
+        String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
+        Member member = request.toEntity(encodedPassword);
 
-        validateExistMember(joinDto);
-        Member joinMember = Member.builder()
-                .loginId(joinDto.getLoginId())
-                .password(bCryptPasswordEncoder.encode(joinDto.getPassword()))
-                .socialType(SocialType.LOCAL)
-                .name(joinDto.getName())
-                .nickName(joinDto.getNickName())
-                .address(joinDto.getAddress())
-                .phoneNumber(joinDto.getPhoneNumber())
-                .email(joinDto.getEmail())
-                .isAdmin(Boolean.FALSE)
-                .build();
-        memberRepository.save(joinMember);
+        memberRepository.save(member);
     }
 
     // 단일 회원 조회
     @Transactional(readOnly = true)
     public MemberDetailResponse getMemberDetails(String loginId) {
-
         Member member = ensureMemberExists(loginId);
         return MemberDetailResponse.toDto(member);
     }
@@ -73,7 +61,6 @@ public class MemberService {
     // 전체 회원 조회
     @Transactional(readOnly = true)
     public List<MemberDetailResponse> getAllMemberDetails() {
-
         return memberRepository
                 .findAll()
                 .stream()
@@ -104,19 +91,18 @@ public class MemberService {
 
     // 회원 정보 수정
     @Transactional
-    public void updateMemberInfo(Member loggedInMember, MemberInfoUpdateRequest updateRequest) {
+    public void updateMemberInfo(Member member, MemberInfoUpdateRequest request) {
+        updateIfPresent(request.getPassword(), member::setPassword);
+        updateIfPresent(request.getName(), member::setName);
+        updateIfPresent(request.getNickName(), member::setNickName);
+        updateIfPresent(request.getAddress(), member::setAddress);
+        updateIfPresent(request.getPhoneNumber(), member::setPhoneNumber);
+        updateIfPresent(request.getEmail(), member::setEmail);
 
-        updateIfPresent(updateRequest.getPassword(), loggedInMember::setPassword);
-        updateIfPresent(updateRequest.getName(), loggedInMember::setName);
-        updateIfPresent(updateRequest.getNickName(), loggedInMember::setNickName);
-        updateIfPresent(updateRequest.getAddress(), loggedInMember::setAddress);
-        updateIfPresent(updateRequest.getPhoneNumber(), loggedInMember::setPhoneNumber);
-        updateIfPresent(updateRequest.getEmail(), loggedInMember::setEmail);
-
-        memberRepository.save(loggedInMember);  // 변경된 내용을 저장합니다.
+        memberRepository.save(member);  // 변경된 내용을 저장합니다.
     }
 
-    //주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
+    // 주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
     private <T> void updateIfPresent(T value, java.util.function.Consumer<T> setter) {
         Optional.ofNullable(value).ifPresent(setter);
     }

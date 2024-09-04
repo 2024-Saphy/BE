@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RefreshEntity {
-
     @Id
     @Column(name = "refresh_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String refresh;
+
     private String loginId;
 
     public RefreshEntity(String refresh, String loginId) {

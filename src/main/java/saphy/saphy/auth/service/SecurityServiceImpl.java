@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import saphy.saphy.auth.domain.CustomUserDetails;
-import saphy.saphy.auth.domain.dto.request.OAuthJoinRequest;
+import saphy.saphy.auth.dto.request.OAuthJoinRequest;
 import saphy.saphy.auth.utils.JWTUtil;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
@@ -21,7 +21,6 @@ import java.util.Optional;
 
 @Service
 public class SecurityServiceImpl implements SecurityService {
-
     private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
 
@@ -34,10 +33,8 @@ public class SecurityServiceImpl implements SecurityService {
     // 유저 정보 추출
     @Override
     public void saveUserInSecurityContext(OAuthJoinRequest socialLoginDTO) {
-
         String socialId = socialLoginDTO.getEmail();
         String socialProvider = socialLoginDTO.getSocialType().name();
-
         authenticateMember(socialId, SocialType.valueOf(socialProvider));
     }
 
@@ -45,7 +42,6 @@ public class SecurityServiceImpl implements SecurityService {
     // SecurityConfig에서 /oauth2 경로를 ignore하면 시큐리티 필터 체인을 안거침
     // 이로 인해 시큐리티 컨텍스트에 사용자를 저장(인증)하지 못하게 되어 구현
     private void authenticateMember(String socialId, SocialType socialProvider) {
-
         UserDetails userDetails = loadUserBySocialIdAndSocialProvider(socialId, socialProvider);
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
@@ -63,6 +59,7 @@ public class SecurityServiceImpl implements SecurityService {
         if (member.isEmpty()) {
             throw SaphyException.from(ErrorCode.EXPIRED_REFRESH_TOKEN);
         } else {
+
             return new CustomUserDetails(member.get());
         }
     }

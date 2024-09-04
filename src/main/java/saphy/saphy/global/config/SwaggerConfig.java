@@ -1,6 +1,5 @@
 package saphy.saphy.global.config;
 
-
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +15,9 @@ import java.util.ArrayList;
 
 @Configuration
 public class SwaggerConfig {
-
     @Bean
     public OpenAPI openAPI() {
-
         ArrayList<Server> servers = new ArrayList<>();
-
         servers.add(new Server().url("https://saphy.site").description("Saphy Server"));
         servers.add(new Server().url("http://localhost:8080").description("Local Server"));
 

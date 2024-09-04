@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class SaphyException extends RuntimeException {
-
 	private final ErrorCode errorCode;
 
 	private SaphyException(ErrorCode errorCode) {

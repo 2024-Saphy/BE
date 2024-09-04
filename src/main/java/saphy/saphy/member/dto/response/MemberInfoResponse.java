@@ -1,4 +1,4 @@
-package saphy.saphy.member.domain.dto.response;
+package saphy.saphy.member.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

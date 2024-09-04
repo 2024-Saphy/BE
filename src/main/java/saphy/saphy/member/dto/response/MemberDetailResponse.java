@@ -1,4 +1,4 @@
-package saphy.saphy.member.domain.dto.response;
+package saphy.saphy.member.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import saphy.saphy.member.domain.Member;
 @Getter
 @Builder
 public class MemberDetailResponse {
-
     private String loginId;
     private String name;
     private String nickName;

@@ -12,7 +12,6 @@ import saphy.saphy.item.domain.Item;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "item_img")
 public class ItemImg extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
