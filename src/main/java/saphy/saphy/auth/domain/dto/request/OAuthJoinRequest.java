@@ -2,14 +2,13 @@ package saphy.saphy.auth.domain.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.SocialType;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OAuthSignUpDto {
+public class OAuthJoinRequest {
 
     @NotNull
     private String email;
@@ -22,15 +21,4 @@ public class OAuthSignUpDto {
     private String phoneNumber;
 
     private SocialType socialType;
-
-    public static Member toEntity(OAuthSignUpDto request){
-        return Member.builder()
-                .loginId(request.getEmail())
-                .email(request.getEmail())
-                .name(request.getName())
-                .phoneNumber(request.getPhoneNumber())
-                .socialType(request.getSocialType())
-                .isAdmin(Boolean.FALSE)
-                .build();
-    }
 }
