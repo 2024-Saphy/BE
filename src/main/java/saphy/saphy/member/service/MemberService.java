@@ -23,12 +23,10 @@ import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
 import saphy.saphy.member.domain.dto.response.MemberDetailDto;
 import saphy.saphy.member.domain.dto.response.MemberInfoDto;
 import saphy.saphy.member.domain.repository.MemberRepository;
-import saphy.saphy.order.domain.OrderStatus;
-import saphy.saphy.order.service.OrderService;
-import saphy.saphy.purchaseHistory.domain.PurchaseStatus;
-import saphy.saphy.purchaseHistory.service.PurchaseHistoryService;
-import saphy.saphy.salesHistory.SalesStatus;
-import saphy.saphy.salesHistory.service.SalesHistoryService;
+import saphy.saphy.purchase.domain.PurchaseStatus;
+import saphy.saphy.purchase.service.PurchaseService;
+import saphy.saphy.sales.SalesStatus;
+import saphy.saphy.sales.service.SalesService;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +34,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final OrderService orderService;
-    private final PurchaseHistoryService purchaseHistoryService;
-    private final SalesHistoryService salesHistoryService;
+    private final PurchaseService purchaseService;
+    private final SalesService salesService;
 
     // 로그인된 회원 체크
     public void checkLogin(Member member, HttpServletResponse response) {
@@ -87,19 +84,22 @@ public class MemberService {
 
     // 회원 정보 조회
     public MemberInfoDto getInfo(Member loggedInMember) {
-        Map<OrderStatus, Long> deliveryCounts = orderService.getOrderCounts(loggedInMember.getId());
-        Map<PurchaseStatus, Long> purchaseCounts = purchaseHistoryService.getPurchaseCounts(loggedInMember.getId());
-        Map<SalesStatus, Long> salesCounts = salesHistoryService.getPurchaseCounts(loggedInMember.getId());
+        Map<PurchaseStatus, Long> deliveryCounts = purchaseService.getPurchaseCounts(loggedInMember.getId());
+        Map<saphy.saphy.purchase.domain.PurchaseStatus, Long> purchaseCounts = purchaseService.getPurchaseCounts(loggedInMember.getId());
+        Map<SalesStatus, Long> salesCounts = salesService.getPurchaseCounts(loggedInMember.getId());
 
         return MemberInfoDto.builder()
                 .nickname(loggedInMember.getNickName())
                 //.profileImgUrl(findMember.getProfileImgUrl)
-                .deliveryStartedCount(deliveryCounts.get(OrderStatus.START))
-                .deliveryGoingCount(deliveryCounts.get(OrderStatus.SHIPPED))
-                .deliveryDeliveredCount(deliveryCounts.get(OrderStatus.DELIVERED))
-                .purchasePendingCount(purchaseCounts.get(PurchaseStatus.PENDING))
-                .purchaseInProgressCount(purchaseCounts.get(PurchaseStatus.IN_PROGRESS))
-                .purchaseCompletedCount(purchaseCounts.get(PurchaseStatus.COMPLETED))
+                .deliveryStartedCount(deliveryCounts.get(PurchaseStatus.START))
+                .deliveryGoingCount(deliveryCounts.get(PurchaseStatus.SHIPPED))
+                .deliveryDeliveredCount(deliveryCounts.get(PurchaseStatus.DELIVERED))
+                .purchasePendingCount(purchaseCounts.get(
+                    saphy.saphy.purchase.domain.PurchaseStatus.PENDING))
+                .purchaseInProgressCount(purchaseCounts.get(
+                    saphy.saphy.purchase.domain.PurchaseStatus.PROCESSING))
+                .purchaseCompletedCount(purchaseCounts.get(
+                    saphy.saphy.purchase.domain.PurchaseStatus.DELIVERED))
                 .salesPendingCount(salesCounts.get(SalesStatus.PENDING))
                 .salesInProgressCount(salesCounts.get(SalesStatus.IN_PROGRESS))
                 .salesCompletedCount(salesCounts.get(SalesStatus.COMPLETED))
