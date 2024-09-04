@@ -22,9 +22,9 @@ import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.dto.request.MemberJoinRequest;
-import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
+import saphy.saphy.member.domain.dto.request.MemberInfoUpdateRequest;
 import saphy.saphy.member.domain.dto.response.MemberDetailResponse;
-import saphy.saphy.member.domain.dto.response.MemberInfoDto;
+import saphy.saphy.member.domain.dto.response.MemberInfoResponse;
 import saphy.saphy.member.service.MemberService;
 
 @RestController
@@ -46,10 +46,10 @@ public class MemberController {
     // 회원 정보 조회
     @GetMapping("/info")
     @Operation(summary = "회원 정보 조회 API", description = "배달, 구매, 판매와 관련된 회원 정보를 조회합니다.")
-    public ApiResponse<MemberInfoDto> getInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ApiResponse<MemberInfoResponse> getInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Member loggedInMember = customUserDetails.getMember();
-        MemberInfoDto dto = memberService.getInfo(loggedInMember);
-        return new ApiResponse<>(dto);
+        MemberInfoResponse response = memberService.getInfo(loggedInMember);
+        return new ApiResponse<>(response);
     }
 
     @GetMapping("/me")
@@ -71,8 +71,9 @@ public class MemberController {
 
     // 회원 정보 수정
     @PatchMapping("/info")
-    public ApiResponse<Void> updateInfo(@RequestBody MemberInfoUpdateDto updateDto) {
-        memberService.updateMemberInfo(updateDto);
+    public ApiResponse<Void> updateInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody MemberInfoUpdateRequest updateRequest) {
+        Member loggedInMember = customUserDetails.getMember();
+        memberService.updateMemberInfo(loggedInMember, updateRequest);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 

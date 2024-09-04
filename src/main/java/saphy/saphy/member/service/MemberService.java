@@ -13,15 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import saphy.saphy.auth.utils.AccessTokenUtils;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.SocialType;
 import saphy.saphy.member.domain.dto.request.MemberJoinRequest;
-import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
+import saphy.saphy.member.domain.dto.request.MemberInfoUpdateRequest;
 import saphy.saphy.member.domain.dto.response.MemberDetailResponse;
-import saphy.saphy.member.domain.dto.response.MemberInfoDto;
+import saphy.saphy.member.domain.dto.response.MemberInfoResponse;
 import saphy.saphy.member.domain.repository.MemberRepository;
 import saphy.saphy.purchase.domain.PurchaseStatus;
 import saphy.saphy.purchase.service.PurchaseService;
@@ -84,11 +83,11 @@ public class MemberService {
 
     // 회원 정보 조회
     @Transactional(readOnly = true)
-    public MemberInfoDto getInfo(Member loggedInMember) {
+    public MemberInfoResponse getInfo(Member loggedInMember) {
         Map<PurchaseStatus, Long> purchaseCounts = purchaseService.getPurchaseCounts(loggedInMember.getId());
         Map<SalesStatus, Long> salesCounts = salesService.getPurchaseCounts(loggedInMember.getId());
 
-        return MemberInfoDto.builder()
+        return MemberInfoResponse.builder()
                 .nickname(loggedInMember.getNickName())
                 //.profileImgUrl(findMember.getProfileImgUrl)
                 .deliveryStartedCount(purchaseCounts.get(PurchaseStatus.START))
@@ -105,21 +104,16 @@ public class MemberService {
 
     // 회원 정보 수정
     @Transactional
-    public void updateMemberInfo(MemberInfoUpdateDto updateDto) {
+    public void updateMemberInfo(Member loggedInMember, MemberInfoUpdateRequest updateRequest) {
 
-        String loginId = AccessTokenUtils.isPermission();
-        Member findMember = memberRepository.findByLoginId(loginId)
-                .orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));
+        updateIfPresent(updateRequest.getPassword(), loggedInMember::setPassword);
+        updateIfPresent(updateRequest.getName(), loggedInMember::setName);
+        updateIfPresent(updateRequest.getNickName(), loggedInMember::setNickName);
+        updateIfPresent(updateRequest.getAddress(), loggedInMember::setAddress);
+        updateIfPresent(updateRequest.getPhoneNumber(), loggedInMember::setPhoneNumber);
+        updateIfPresent(updateRequest.getEmail(), loggedInMember::setEmail);
 
-
-        updateIfPresent(updateDto.getPassword(), findMember::setPassword);
-        updateIfPresent(updateDto.getName(), findMember::setName);
-        updateIfPresent(updateDto.getNickName(), findMember::setNickName);
-        updateIfPresent(updateDto.getAddress(), findMember::setAddress);
-        updateIfPresent(updateDto.getPhoneNumber(), findMember::setPhoneNumber);
-        updateIfPresent(updateDto.getEmail(), findMember::setEmail);
-
-        memberRepository.save(findMember);  // 변경된 내용을 저장합니다.
+        memberRepository.save(loggedInMember);  // 변경된 내용을 저장합니다.
     }
 
     //주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
