@@ -9,15 +9,13 @@ public class MemberInfoDto {
     private String nickname;
     private String profileImgUrl;
 
-    //배달 상태 개수들
-    private Long deliveryStartedCount;
-    private Long deliveryGoingCount;
-    private Long deliveryDeliveredCount;
-
     //구매 상태 개수들
     private Long purchasePendingCount;
     private Long purchaseInProgressCount;
     private Long purchaseCompletedCount;
+    private Long deliveryStartedCount;
+    private Long deliveryGoingCount;
+    private Long deliveryDeliveredCount;
 
     //판매 상태 개수들
     private Long salesPendingCount;
