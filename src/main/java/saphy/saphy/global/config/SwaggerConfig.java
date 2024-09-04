@@ -20,7 +20,6 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
 
-        // https:// 접근 가능하게 설정, 로컬 테스트는 아래 2줄 주석처리
         ArrayList<Server> servers = new ArrayList<>();
 
         servers.add(new Server().url("http://localhost:8080").description("Local Server"));
@@ -36,6 +35,7 @@ public class SwaggerConfig {
                                 .in(SecurityScheme.In.HEADER)
                                 .description("access token을 넣어주세요!")))
                 .info(apiInfo())
+                .servers(servers)
                 .addSecurityItem(new SecurityRequirement().addList("bearer-jwt"));
     }
 
