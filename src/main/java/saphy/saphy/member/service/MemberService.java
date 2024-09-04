@@ -70,23 +70,11 @@ public class MemberService {
 
     // 회원 정보 조회
     @Transactional(readOnly = true)
-    public MemberInfoResponse getInfo(Member loggedInMember) {
-        Map<PurchaseStatus, Long> purchaseCounts = purchaseService.getPurchaseCounts(loggedInMember.getId());
-        Map<SalesStatus, Long> salesCounts = salesService.getPurchaseCounts(loggedInMember.getId());
+    public MemberInfoResponse getInfo(Member member) {
+        Map<PurchaseStatus, Long> purchaseCounts = purchaseService.getPurchaseCounts(member.getId());
+        Map<SalesStatus, Long> salesCounts = salesService.getPurchaseCounts(member.getId());
 
-        return MemberInfoResponse.builder()
-                .nickname(loggedInMember.getNickName())
-                //.profileImgUrl(findMember.getProfileImgUrl)
-                .deliveryStartedCount(purchaseCounts.get(PurchaseStatus.START))
-                .deliveryGoingCount(purchaseCounts.get(PurchaseStatus.SHIPPED))
-                .deliveryDeliveredCount(purchaseCounts.get(PurchaseStatus.DELIVERED))
-                .purchasePendingCount(purchaseCounts.get(PurchaseStatus.PENDING))
-                .purchaseInProgressCount(purchaseCounts.get(PurchaseStatus.PROCESSING))
-                .purchaseCompletedCount(purchaseCounts.get(PurchaseStatus.DELIVERED))
-                .salesPendingCount(salesCounts.get(SalesStatus.PENDING))
-                .salesInProgressCount(salesCounts.get(SalesStatus.IN_PROGRESS))
-                .salesCompletedCount(salesCounts.get(SalesStatus.COMPLETED))
-                .build();
+        return MemberInfoResponse.toDto(member, purchaseCounts, salesCounts);
     }
 
     // 회원 정보 수정
