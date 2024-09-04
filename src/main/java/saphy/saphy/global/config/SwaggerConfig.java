@@ -12,6 +12,8 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
+import java.util.ArrayList;
+
 @Configuration
 public class SwaggerConfig {
 
@@ -19,8 +21,10 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
 
         // https:// 접근 가능하게 설정, 로컬 테스트는 아래 2줄 주석처리
-        Server server = new Server();
-        server.setUrl("https://saphy.site");
+        ArrayList<Server> servers = new ArrayList<>();
+
+        servers.add(new Server().url("http://localhost:8080").description("Local Server"));
+        servers.add(new Server().url("https://saphy.saphy.com").description("Saphy Server"));
 
         return new OpenAPI()
                 .components(new Components()
