@@ -9,7 +9,6 @@ import saphy.saphy.item.domain.Item;
 import saphy.saphy.member.domain.Member;
 
 import java.time.LocalDateTime;
-import saphy.saphy.payment.domain.Payment;
 
 @Entity
 @Getter
