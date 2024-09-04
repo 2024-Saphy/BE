@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import saphy.saphy.auth.domain.CustomUserDetails;
-import saphy.saphy.auth.domain.dto.request.OAuthSignUpDto;
+import saphy.saphy.auth.domain.dto.request.OAuthJoinRequest;
 import saphy.saphy.auth.utils.JWTUtil;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
@@ -33,7 +33,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     // 유저 정보 추출
     @Override
-    public void saveUserInSecurityContext(OAuthSignUpDto socialLoginDTO) {
+    public void saveUserInSecurityContext(OAuthJoinRequest socialLoginDTO) {
 
         String socialId = socialLoginDTO.getEmail();
         String socialProvider = socialLoginDTO.getSocialType().name();
