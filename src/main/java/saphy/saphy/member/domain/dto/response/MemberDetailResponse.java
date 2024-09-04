@@ -6,7 +6,7 @@ import saphy.saphy.member.domain.Member;
 
 @Getter
 @Builder
-public class MemberDetailDto {
+public class MemberDetailResponse {
 
     private String loginId;
     private String name;
@@ -14,8 +14,8 @@ public class MemberDetailDto {
     private String phoneNumber;
     private String email;
 
-    public static MemberDetailDto toDto(Member member) {
-        return MemberDetailDto.builder()
+    public static MemberDetailResponse toDto(Member member) {
+        return MemberDetailResponse.builder()
                 .loginId(member.getLoginId())
                 .name(member.getName())
                 .nickName(member.getNickName())
