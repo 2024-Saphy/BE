@@ -78,7 +78,9 @@ public class SecurityConfig {
                         .configurationSource(new CorsConfigurationSource() {
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
                                 CorsConfiguration configuration = new CorsConfiguration();
+
                                 configuration.setAllowedOrigins(Arrays.asList("https://saphy.site", "http://localhost:8080", "http://localhost:3000"));
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
