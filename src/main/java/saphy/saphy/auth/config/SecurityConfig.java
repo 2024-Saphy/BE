@@ -78,9 +78,10 @@ public class SecurityConfig {
                         .configurationSource(new CorsConfigurationSource() {
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
                                 CorsConfiguration configuration = new CorsConfiguration();
-//                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000", "https://saphy.site"));
-                                configuration.setAllowedOrigins(Collections.singletonList("*"));
+
+                                configuration.setAllowedOrigins(Arrays.asList("https://saphy.site", "http://localhost:8080", "http://localhost:3000"));
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -89,26 +90,6 @@ public class SecurityConfig {
                                 return configuration;
                             }
                         }));
-
-//        http
-//                .cors((cors) -> cors
-//                        .configurationSource((new CorsConfigurationSource() {
-//
-//                            @Override
-//                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-//
-//                                CorsConfiguration configuration = new CorsConfiguration();
-//
-//                                configuration.setAllowedOrigins(Collections.singletonList("*"));
-//                                configuration.setAllowedMethods(Collections.singletonList("*"));
-//                                configuration.setAllowCredentials(true);
-//                                configuration.setAllowedHeaders(Collections.singletonList("*"));
-//                                configuration.setMaxAge(3600L);
-//                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-//
-//                                return configuration;
-//                            }
-//                        })));
 
         http
                 .csrf(AbstractHttpConfigurer::disable);
