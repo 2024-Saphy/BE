@@ -22,8 +22,8 @@ public class SwaggerConfig {
 
         ArrayList<Server> servers = new ArrayList<>();
 
-        servers.add(new Server().url("http://localhost:8080").description("Local Server"));
         servers.add(new Server().url("https://saphy.site").description("Saphy Server"));
+        servers.add(new Server().url("http://localhost:8080").description("Local Server"));
 
         return new OpenAPI()
                 .components(new Components()
