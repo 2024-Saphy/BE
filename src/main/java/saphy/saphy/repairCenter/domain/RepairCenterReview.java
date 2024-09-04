@@ -1,29 +1,34 @@
-package saphy.saphy.bookmark.domain;
+package saphy.saphy.repairCenter.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
-import saphy.saphy.item.domain.Item;
+import saphy.saphy.repairCenter.domain.RepairCenter;
 import saphy.saphy.member.domain.Member;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "bookmark")
-public class Bookmark extends BaseEntity {
+@Table(name = "repair_center_review")
+public class RepairCenterReview extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "repair_center_id")
+    private RepairCenter repairCenter;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @Column(nullable = false)
+    private String content;
 
 }

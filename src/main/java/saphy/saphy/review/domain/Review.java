@@ -3,12 +3,11 @@ package saphy.saphy.review.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.member.domain.Member;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @Table(name = "review")
 public class Review extends BaseEntity {

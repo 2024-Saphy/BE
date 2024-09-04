@@ -2,6 +2,7 @@ spring:
   # .env import
   config:
     import: optional:file:.env[.properties]
+
   # Database
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -20,7 +21,7 @@ spring:
   # JWT 설정 추가
   jwt:
     secret-key: ${JWT_SECRET}
-    access-token-expiration: 3600000 # 1시간
+    access-token-expiration: 604800000 # 7 days
     refresh-token-expiration: 604800000  # 7 days
 
   # PortOne
@@ -46,3 +47,17 @@ logging:
       hibernate:
         sql: debug
     p6spy: info
+
+# Swagger 설정 추가
+springdoc:
+  show-login-endpoint: true
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+# 추가적으로 필요한 Swagger 설정 (예: CORS 등)
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"

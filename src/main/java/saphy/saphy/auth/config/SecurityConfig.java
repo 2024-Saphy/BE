@@ -38,18 +38,18 @@ public class SecurityConfig {
     private final MemberRepository memberRepository;
     private final RefreshRepository refreshRepository;
 
-//    private static final String[] PUBLIC_URLS = {
-//            "/health",
-//            "/oauth2/**",
-//            "/login/**",
-//            "/members/join",
-//            "/reissue",
-////            "/v3/**",
-////            "/swagger-ui/**", // swagger config 만들고 추가
-//            "/error",
-//            "/",
-//            "/**" // 개발 test용 api 모든 접근 허용 코드 추가
-//    };
+    private static final String[] PUBLIC_URLS = {
+            "/health",
+            "/oauth2/**",
+            "/login/**",
+            "/members/join",
+            "/reissue",
+            "/v3/**",
+            "/swagger-ui/**",
+            "/error",
+            "/",
+            "/**" // 개발 test용 api 모든 접근 허용 코드 추가
+    };
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -73,37 +73,42 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // CORS 설정
-//        http
-//                .cors((cors) -> cors
-//                        .configurationSource(request -> {
-//                            CorsConfiguration configuration = new CorsConfiguration();
-//                            configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000", "https://saphy.site/"));
-//                            configuration.setAllowCredentials(true);
-//                            configuration.setAllowedHeaders(Collections.singletonList("*"));
-//                            configuration.setMaxAge(3600L);
-//                            configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
-//                            return configuration;
-//                        }));
         http
                 .cors((cors) -> cors
-                        .configurationSource((new CorsConfigurationSource() {
-
+                        .configurationSource(new CorsConfigurationSource() {
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
                                 CorsConfiguration configuration = new CorsConfiguration();
-
+//                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000", "https://saphy.site"));
                                 configuration.setAllowedOrigins(Collections.singletonList("*"));
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                                 configuration.setMaxAge(3600L);
-
-                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
+                                configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
                                 return configuration;
                             }
-                        })));
+                        }));
+
+//        http
+//                .cors((cors) -> cors
+//                        .configurationSource((new CorsConfigurationSource() {
+//
+//                            @Override
+//                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+//
+//                                CorsConfiguration configuration = new CorsConfiguration();
+//
+//                                configuration.setAllowedOrigins(Collections.singletonList("*"));
+//                                configuration.setAllowedMethods(Collections.singletonList("*"));
+//                                configuration.setAllowCredentials(true);
+//                                configuration.setAllowedHeaders(Collections.singletonList("*"));
+//                                configuration.setMaxAge(3600L);
+//                                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+//
+//                                return configuration;
+//                            }
+//                        })));
 
         http
                 .csrf(AbstractHttpConfigurer::disable);
@@ -114,16 +119,10 @@ public class SecurityConfig {
         http
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        // 경로별 인가 작업(test 단계에서만 사용 접근 권한)
-//        http
-//                .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers(PUBLIC_URLS).permitAll()
-//                        .anyRequest().authenticated());
-
-        // 경로별 인가 작업(test 단계에서만 사용 접근 권한)
+        // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers(PUBLIC_URLS).permitAll()
                         .anyRequest().authenticated());
 
         // JWT, 로그인, 로그아웃 커스텀 필터 삽입
@@ -131,8 +130,7 @@ public class SecurityConfig {
                 .addFilterAfter(new JWTFilter(jwtUtil, memberRepository), UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterAt(
-                        new LoginFilter(authenticationManager(authenticationConfiguration), refreshRepository, jwtUtil,
-                                "/login"),
+                        new LoginFilter(authenticationManager(authenticationConfiguration), refreshRepository, jwtUtil, "/login"),
                         UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
