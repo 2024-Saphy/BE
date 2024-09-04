@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import saphy.saphy.auth.dto.request.OAuthJoinRequest;
 import saphy.saphy.auth.dto.request.OAuthLoginRequest;
@@ -19,7 +18,7 @@ import saphy.saphy.global.response.ApiResponse;
 @RestController
 @RequestMapping("/oauth2")
 @RequiredArgsConstructor
-@Tag(name = "Oauth2", description = "참고: OAuth2 관련 인증은 플러터에서 이루어짐")
+@Tag(name = "OauthController", description = "OAuth 관련 API, 참고로 OAuth2 관련 인증은 플러터에서 이루어짐")
 public class OAuthController {
     private final OAuthService OAuthService;
     private final TokenService tokenService;
@@ -29,7 +28,6 @@ public class OAuthController {
     @Operation(summary = "소셜 로그인 API", description = "회원 O: 로그인 처리 및 토큰 발급 / 회원 X: 300 리다이렉션 처리")
     public ApiResponse<Void> socialLogin(
             @RequestBody @Valid OAuthLoginRequest loginDto,
-            Errors errors,
             HttpServletRequest request,
             HttpServletResponse response
     ) {

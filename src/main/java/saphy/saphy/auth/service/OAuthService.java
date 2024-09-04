@@ -8,8 +8,6 @@ import saphy.saphy.auth.dto.request.OAuthJoinRequest;
 import saphy.saphy.auth.dto.request.OAuthLoginRequest;
 import saphy.saphy.auth.domain.repository.RefreshRepository;
 import saphy.saphy.auth.utils.JWTUtil;
-import saphy.saphy.global.exception.ErrorCode;
-import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.repository.MemberRepository;
 import saphy.saphy.member.service.MemberService;
@@ -31,7 +29,8 @@ public class OAuthService {
     // 회원 가입
     @Transactional
     public void join(OAuthJoinRequest request) {
-        Member joinMember = request.toEntity(bCryptPasswordEncoder);
-        memberRepository.save(joinMember);
+        String encodedPassword = bCryptPasswordEncoder.encode("default");
+        Member member = request.toEntity(encodedPassword);
+        memberRepository.save(member);
     }
 }

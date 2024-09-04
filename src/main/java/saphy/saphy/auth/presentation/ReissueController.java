@@ -15,7 +15,7 @@ import saphy.saphy.global.response.ApiResponse;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reissue")
-@Tag(name = "Reissue", description = "토큰 재발급 API")
+@Tag(name = "ReissueController", description = "토큰 재발급 API")
 public class ReissueController {
     private final ReissueService reissueService;
 

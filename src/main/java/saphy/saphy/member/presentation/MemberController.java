@@ -2,8 +2,8 @@ package saphy.saphy.member.presentation;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,9 +29,9 @@ import saphy.saphy.member.service.MemberService;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
+@Tag(name = "MemberController", description = "회원 관련 API")
 public class MemberController {
     private final MemberService memberService;
-
 
     @GetMapping("/test")
     @Operation(summary = "로그인 유지 test", description = "member가 SecurityContext에 저장되었는지 확인하는 API 입니다.")

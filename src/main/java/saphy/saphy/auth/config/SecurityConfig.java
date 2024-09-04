@@ -111,7 +111,8 @@ public class SecurityConfig {
         http
                 .addFilterAfter(new JWTFilter(jwtUtil, memberRepository), UsernamePasswordAuthenticationFilter.class);
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshRepository, jwtUtil, "/login"),
+                .addFilterAt(new LoginFilter(
+                        authenticationManager(authenticationConfiguration), refreshRepository, jwtUtil, "/login"),
                         UsernamePasswordAuthenticationFilter.class);
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
