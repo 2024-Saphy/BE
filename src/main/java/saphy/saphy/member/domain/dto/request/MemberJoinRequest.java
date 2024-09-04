@@ -9,7 +9,7 @@ import saphy.saphy.member.domain.SocialType;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinMemberDto {
+public class MemberJoinRequest {
 
     @NotNull(message = "아이디를 입력해주세요!")
     private String loginId;

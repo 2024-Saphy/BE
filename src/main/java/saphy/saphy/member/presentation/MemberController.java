@@ -21,9 +21,9 @@ import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.member.domain.Member;
-import saphy.saphy.member.domain.dto.request.JoinMemberDto;
+import saphy.saphy.member.domain.dto.request.MemberJoinRequest;
 import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
-import saphy.saphy.member.domain.dto.response.MemberDetailDto;
+import saphy.saphy.member.domain.dto.response.MemberDetailResponse;
 import saphy.saphy.member.domain.dto.response.MemberInfoDto;
 import saphy.saphy.member.service.MemberService;
 
@@ -36,7 +36,7 @@ public class MemberController {
 
     // 회원 가입
     @PostMapping("/join")
-    public ApiResponse<Void> join(@Validated @RequestBody JoinMemberDto joinDto, Errors errors) {
+    public ApiResponse<Void> join(@Validated @RequestBody MemberJoinRequest joinDto, Errors errors) {
 
         validateRequest(errors);
         memberService.join(joinDto);
@@ -54,18 +54,18 @@ public class MemberController {
 
     @GetMapping("/me")
     @Operation(summary = "단일 회원 상세 조회 API", description = "한명의 회원에 대한 필드 정보를 조회합니다.(관리자)")
-    public ApiResponse<MemberDetailDto> getMemberDetail() {
+    public ApiResponse<MemberDetailResponse> getMemberDetail() {
 
         String loginId = AccessTokenUtils.isPermission();
-        MemberDetailDto memberDetail = memberService.getMemberDetails(loginId);
+        MemberDetailResponse memberDetail = memberService.getMemberDetails(loginId);
         return new ApiResponse<>(memberDetail);
     }
 
     @GetMapping
     @Operation(summary = "전체 회원 상세 조회 API", description = "전체 회원에 대한 필드 정보를 조회합니다.(관리자)")
-    public ApiResponse<MemberDetailDto> getAllMemberDetails() {
+    public ApiResponse<MemberDetailResponse> getAllMemberDetails() {
 
-        List<MemberDetailDto> members = memberService.getAllMemberDetails();
+        List<MemberDetailResponse> members = memberService.getAllMemberDetails();
         return new ApiResponse<>(members);
     }
 

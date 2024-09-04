@@ -18,9 +18,9 @@ import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.SocialType;
-import saphy.saphy.member.domain.dto.request.JoinMemberDto;
+import saphy.saphy.member.domain.dto.request.MemberJoinRequest;
 import saphy.saphy.member.domain.dto.request.MemberInfoUpdateDto;
-import saphy.saphy.member.domain.dto.response.MemberDetailDto;
+import saphy.saphy.member.domain.dto.response.MemberDetailResponse;
 import saphy.saphy.member.domain.dto.response.MemberInfoDto;
 import saphy.saphy.member.domain.repository.MemberRepository;
 import saphy.saphy.purchase.domain.PurchaseStatus;
@@ -46,7 +46,7 @@ public class MemberService {
 
     // 회원 가입
     @Transactional
-    public void join(JoinMemberDto joinDto) {
+    public void join(MemberJoinRequest joinDto) {
 
         validateExistMember(joinDto);
         Member joinMember = Member.builder()
@@ -65,20 +65,20 @@ public class MemberService {
 
     // 단일 회원 조회
     @Transactional(readOnly = true)
-    public MemberDetailDto getMemberDetails(String loginId) {
+    public MemberDetailResponse getMemberDetails(String loginId) {
 
         Member member = ensureMemberExists(loginId);
-        return MemberDetailDto.toDto(member);
+        return MemberDetailResponse.toDto(member);
     }
 
     // 전체 회원 조회
     @Transactional(readOnly = true)
-    public List<MemberDetailDto> getAllMemberDetails() {
+    public List<MemberDetailResponse> getAllMemberDetails() {
 
         return memberRepository
                 .findAll()
                 .stream()
-                .map(MemberDetailDto::toDto)
+                .map(MemberDetailResponse::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -134,7 +134,7 @@ public class MemberService {
     }
 
     // 중복회원 검증
-    private void validateExistMember(JoinMemberDto joinDto) {
+    private void validateExistMember(MemberJoinRequest joinDto) {
         String loginId = joinDto.getLoginId();
         if (memberRepository.existsByLoginId(loginId)) {
             throw SaphyException.from(ErrorCode.DUPLICATE_MEMBER_LOGIN_ID);
