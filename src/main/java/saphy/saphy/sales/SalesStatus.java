@@ -1,4 +1,4 @@
-package saphy.saphy.salesHistory;
+package saphy.saphy.sales;
 
 public enum SalesStatus {
     PENDING,       // 판매 대기

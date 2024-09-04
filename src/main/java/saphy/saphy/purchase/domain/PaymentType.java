@@ -1,4 +1,4 @@
-package saphy.saphy.order.domain;
+package saphy.saphy.purchase.domain;
 
 public enum PaymentType {
     CARD("카드"),

@@ -1,6 +1,6 @@
-package saphy.saphy.order.domain;
+package saphy.saphy.purchase.domain;
 
-public enum OrderStatus {
+public enum PurchaseStatus {
     PENDING("처리 대기 중"),
     PROCESSING("처리 중"),
     START("배송 시작"),
@@ -10,7 +10,7 @@ public enum OrderStatus {
 
     private final String description; // 상태에 대한 설명
 
-    OrderStatus(String description) {
+    PurchaseStatus(String description) {
         this.description = description;
     }
 

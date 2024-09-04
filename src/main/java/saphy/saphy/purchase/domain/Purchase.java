@@ -1,4 +1,4 @@
-package saphy.saphy.order.domain;
+package saphy.saphy.purchase.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "orders")
-public class Order extends BaseEntity {
+@Table(name = "purchases")
+public class Purchase extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class Order extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OrderStatus status;
+    private PurchaseStatus status;
 
     @Column(nullable = false, name = "total_price")
     private Long totalPrice;
@@ -41,4 +41,7 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+   // @OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
+   // private Payment payment;
 }

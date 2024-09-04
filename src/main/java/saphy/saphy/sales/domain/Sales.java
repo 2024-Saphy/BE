@@ -1,4 +1,4 @@
-package saphy.saphy.purchaseHistory.domain;
+package saphy.saphy.sales.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,14 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
-import saphy.saphy.order.domain.Order;
 import saphy.saphy.member.domain.Member;
+import saphy.saphy.purchase.domain.Purchase;
+import saphy.saphy.sales.SalesStatus;
 
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "purchase_history")
-public class PurchaseHistory extends BaseEntity { // 이거 삭제할 생각인데 어떠신지?
+@Table(name = "sales")
+public class Sales extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,7 @@ public class PurchaseHistory extends BaseEntity { // 이거 삭제할 생각인�
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PurchaseStatus purchaseStatus;
+    private SalesStatus salesStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -29,5 +30,5 @@ public class PurchaseHistory extends BaseEntity { // 이거 삭제할 생각인�
 
     @OneToOne(fetch = FetchType.LAZY) //여기 애매하긴 한데, 일단 1:1관계로 생각함.
     @JoinColumn(name = "order_id")
-    private Order order;
+    private Purchase purchase;
 }

@@ -24,6 +24,13 @@ spring:
     access-token-expiration: 604800000 # 7 days
     refresh-token-expiration: 604800000  # 7 days
 
+  # PortOne
+  portone:
+    code: ${PORTONE_CODE}
+    api:
+      key: ${PORTONE_KEY}
+      secretkey: ${PORTONE_SECRETKEY}
+
 # p6spy log
 decorator:
   datasource:
