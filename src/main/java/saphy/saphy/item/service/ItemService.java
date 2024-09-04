@@ -7,30 +7,33 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import saphy.saphy.item.domain.Item;
-import saphy.saphy.item.dto.request.ItemCreateRequest;
-import saphy.saphy.item.dto.response.ItemResponse;
+import saphy.saphy.item.domain.Phone;
+import saphy.saphy.item.dto.request.PhoneCreateRequest;
+import saphy.saphy.item.dto.response.PhoneResponse;
 import saphy.saphy.item.repository.ItemRepository;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ItemService {
-	private final ItemRepository itemRepository;
+	private final ItemRepository<Item> itemRepository;
 
-	public void save(ItemCreateRequest request) {
+	public void save(PhoneCreateRequest request) {
 		Item phone = request.toEntity();
 		itemRepository.save(phone);
 	}
 
-	public ItemResponse findById(Long itemId) {
+	public PhoneResponse findPhoneById(Long itemId) {
 		return itemRepository.findById(itemId)
-			.map(ItemResponse::from)
+			.map(Phone.class::cast)
+			.map(PhoneResponse::from)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 휴대폰입니다."));
 	}
 
-	public List<ItemResponse> findAll() {
+	public List<PhoneResponse> findAllPhones() {
 		return itemRepository.findAll().stream()
-			.map(ItemResponse::from)
+			.map(Phone.class::cast)
+			.map(PhoneResponse::from)
 			.toList();
 	}
 }
