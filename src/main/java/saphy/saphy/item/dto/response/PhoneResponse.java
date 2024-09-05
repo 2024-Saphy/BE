@@ -29,9 +29,10 @@ public class PhoneResponse {
 
 	private int stock;
 
-	public static PhoneResponse from(Phone phone) {
+	public static PhoneResponse from(Item item) {
 		PhoneResponse response = new PhoneResponse();
 
+		Phone phone = (Phone) item;
 		response.id = phone.getId();
 		response.deviceType = phone.getDeviceType();
 		response.name = phone.getName();
