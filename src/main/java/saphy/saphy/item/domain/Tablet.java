@@ -5,9 +5,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,20 +21,9 @@ import saphy.saphy.item.domain.enumeration.Storage;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("TABLET")
+@PrimaryKeyJoinColumn(name = "tablet_id")
 @Table(name = "tablets")
 public class Tablet extends Item {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tablet_id")
-    private Long id;
-
-    @Column(insertable = false, updatable = false)
-    private String deviceType;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "brand", nullable = false)
     private Brand brand;
