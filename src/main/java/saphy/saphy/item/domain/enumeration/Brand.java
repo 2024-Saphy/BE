@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Brand {
-	APPLE("애플"),
-	SAMSUNG("삼성"),
-	GOOGLE("구글");
+	APPLE("Apple"),
+	SAMSUNG("Samsung"),
+	GOOGLE("Google");
 
 	private final String name;
 
