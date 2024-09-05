@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +22,7 @@ import saphy.saphy.global.entity.BaseEntity;
 @Getter
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "device_type")
+@DiscriminatorColumn(name = "deviceType")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "items")
 public class Item extends BaseEntity {
@@ -32,6 +31,9 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
+
+    @Column(insertable = false, updatable = false)
+    private String deviceType;
 
     @Column(name = "name", nullable = false)
     private String name;

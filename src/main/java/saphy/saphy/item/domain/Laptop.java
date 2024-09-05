@@ -5,9 +5,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,45 +24,34 @@ import saphy.saphy.item.domain.enumeration.Storage;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("LAPTOP")
+@PrimaryKeyJoinColumn(name = "laptop_id")
 @Table(name = "labtops")
 public class Laptop extends Item {
+	@Enumerated(EnumType.STRING)
+	@Column(name = "brand", nullable = false)
+	private Brand brand;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "laptop_id")
-    private Long id;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "color", nullable = false)
+	private Color color;
 
-    @Column(insertable = false, updatable = false)
-    private String deviceType;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "storage", nullable = false)
+	private Storage storage;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "processor", nullable = false)
+	private Processor processor;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "brand", nullable = false)
-    private Brand brand;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "memory", nullable = false)
+	private Memory memory;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "color", nullable = false)
-    private Color color;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "graphics", nullable = false)
+	private Graphics graphics;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "storage", nullable = false)
-    private Storage storage;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "processor", nullable = false)
-    private Processor processor;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "memory", nullable = false)
-    private Memory memory;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "graphics", nullable = false)
-    private Graphics graphics;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "grade", nullable = false)
-    private Grade grade;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "grade", nullable = false)
+	private Grade grade;
 }
