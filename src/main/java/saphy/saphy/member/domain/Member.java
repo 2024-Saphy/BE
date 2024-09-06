@@ -2,6 +2,8 @@ package saphy.saphy.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.itemWish.domain.ItemWish;
 
 import java.util.ArrayList;
@@ -9,11 +11,10 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "members")
-public class Member {
+public class Member extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
