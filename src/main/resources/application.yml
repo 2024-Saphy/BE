@@ -21,6 +21,8 @@ spring:
   # JWT 설정 추가
   jwt:
     secret-key: ${JWT_SECRET}
+    access-token-expiration: 604800000
+    refresh-token-expiration: 604800000
 
   # PortOne
   portone:
