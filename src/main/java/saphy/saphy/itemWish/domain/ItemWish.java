@@ -2,13 +2,14 @@ package saphy.saphy.itemWish.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.member.domain.Member;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "item_wishes")
 public class ItemWish extends BaseEntity {
