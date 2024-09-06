@@ -2,7 +2,7 @@ package saphy.saphy.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import saphy.saphy.bookmark.domain.Bookmark;
+import saphy.saphy.itemWish.domain.ItemWish;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,5 +50,5 @@ public class Member {
     private Boolean isAdmin = Boolean.FALSE;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Bookmark> bookmarks = new ArrayList<>();
+    private List<ItemWish> itemWishes = new ArrayList<>();
 }
