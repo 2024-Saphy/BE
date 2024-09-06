@@ -7,7 +7,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,12 +30,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final RefreshRepository refreshRepository;
     private final JWTUtil jwtUtil;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    @Value("${spring.jwt.access-token-expiration}")
-    private long accessTokenExpiration;
-
-    @Value("${spring.jwt.refresh-token-expiration}")
-    private long refreshTokenExpiration;
 
     public LoginFilter(
             AuthenticationManager authenticationManager,
@@ -82,9 +75,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 인증에 성공한 loginId 받아오기
         String loginId = authResult.getName();
 
-        // 토큰 생성
-        String accessToken = jwtUtil.createJwt("access", loginId, accessTokenExpiration);
-        String refresh = jwtUtil.createJwt("refresh", loginId, refreshTokenExpiration);
+        // 토큰 생성(스프링 내부 로직에 접근하기 전,
+        String accessToken = jwtUtil.createJwt("access", loginId, 604800000L);
+        String refresh = jwtUtil.createJwt("refresh", loginId, 604800000L);
 
         response.addHeader("Authorization", "Bearer " + accessToken);// 헤더에 access 토큰 넣기
         response.addHeader("Set-Cookie", createCookie("refresh", refresh).toString()); // 쿠키 생성일 추가
