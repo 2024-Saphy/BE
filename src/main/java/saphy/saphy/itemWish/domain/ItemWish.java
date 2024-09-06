@@ -1,18 +1,18 @@
-package saphy.saphy.bookmark.domain;
+package saphy.saphy.itemWish.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.member.domain.Member;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "bookmark")
-public class Bookmark extends BaseEntity {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Table(name = "item_wishes")
+public class ItemWish extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
