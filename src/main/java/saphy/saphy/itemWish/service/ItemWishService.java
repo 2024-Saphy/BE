@@ -32,4 +32,12 @@ public class ItemWishService {
                         .item(findItem)
                         .build());
     }
+
+    @Transactional
+    public void delete(Member member, Long itemId) {
+        Item findItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
+
+        itemWishRepository.deleteByMemberAndItem(member, findItem);
+    }
 }
