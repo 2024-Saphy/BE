@@ -61,3 +61,16 @@ cors:
   allowed-origins: "*"
   allowed-methods: "*"
   allowed-headers: "*"
+
+# AWS S3
+cloud:
+  aws:
+    s3:
+      bucket: ${CLOUD_AWS_S3_BUCKET}
+    credentials:
+      access-key: ${CLOUD_AWS_ACCESS_KEY}
+      secret-key: ${CLOUD_AWS_SECRET_KEY}
+    region:
+      static: ${CLOUD_AWS_REGION}
+    stack:
+      auto: false
