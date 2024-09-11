@@ -1,8 +1,11 @@
 package saphy.saphy.item.dto.response;
 
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import saphy.saphy.image.dto.response.ImageResponse;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.domain.Phone;
 
@@ -29,6 +32,8 @@ public class PhoneResponse {
 
 	private int stock;
 
+	private List<ImageResponse> images;
+
 	public static PhoneResponse from(Item item) {
 		PhoneResponse response = new PhoneResponse();
 
@@ -43,6 +48,9 @@ public class PhoneResponse {
 		response.grade = phone.getGrade().getName();
 		response.price = phone.getPrice().intValue();
 		response.stock = phone.getStock();
+		response.images = item.getImages().stream()
+			.map(itemImage -> ImageResponse.from(itemImage.getImage()))
+			.toList();
 
 		return response;
 	}
