@@ -86,6 +86,7 @@ public class JWTUtil {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
+        // 인증된 사용자 가져오기
         String loginId = authResult.getName();
 
         // access Token 생성
