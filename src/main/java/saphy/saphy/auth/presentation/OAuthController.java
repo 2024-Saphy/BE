@@ -21,7 +21,7 @@ import saphy.saphy.global.response.ApiResponse;
 @RestController
 @RequestMapping("/oauth2")
 @RequiredArgsConstructor
-@Tag(name = "OauthController", description = "OAuth 관련 API, 참고로 OAuth2 관련 인증은 플러터에서 이루어짐")
+@Tag(name = "OauthController", description = "OAuth 관련 API")
 public class OAuthController {
     private final JWTUtil jwtUtil;
     private final OAuthService OAuthService;
@@ -37,18 +37,13 @@ public class OAuthController {
         // 사용자가 이미 등록된 회원인지 확인
         boolean isRegistered = OAuthService.isMemberRegistered(loginDto);
 
+        // 이미 회원인 경우 - 로그인 처리 및 토큰 발급
         if (isRegistered) {
-            // 이미 회원인 경우 - 로그인 처리 및 토큰 발급
-
-            // 1. 카카오 계정 이메일을 기반으로 Authentication 객체 생성
-            // 이때 authentication 은 인증 여부를 확인하는 authenticated 값이 false
+            // email을 기반의 인증을 위한 토큰 생성(이 토큰은 Spring Security 검증을 위한 것)
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), "default");
-
-            // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
-            // authenticate 메서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드 실행
+            // AuthenticationManager를 통한 실제 인증 수행
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+            // 토큰 발급 후 response header에 삽입
             jwtUtil.generateToken(authentication, response);
 
             return new ApiResponse<>(ErrorCode.REQUEST_OK);
