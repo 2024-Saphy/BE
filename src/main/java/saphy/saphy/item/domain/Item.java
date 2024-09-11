@@ -1,7 +1,10 @@
 package saphy.saphy.item.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -11,12 +14,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import saphy.saphy.global.entity.BaseEntity;
+import saphy.saphy.image.domain.ItemImage;
 
 @Entity
 @Getter
@@ -47,4 +52,7 @@ public class Item extends BaseEntity {
 
     @Column(name = "stock", nullable = false)
     private int stock;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<ItemImage> images = new ArrayList<>();
 }
