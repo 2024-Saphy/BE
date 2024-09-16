@@ -5,12 +5,7 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,7 +31,7 @@ public class MemberController {
     @GetMapping("/test")
     @Operation(summary = "로그인 유지 test", description = "member가 SecurityContext에 저장되었는지 확인하는 API 입니다.")
     public ApiResponse checkFirstLogin(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response) {
-        memberService.checkLogin(userDetails.getMember(), response);
+        memberService.isCurrentMember(userDetails.getMember().getLoginId());
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
@@ -75,6 +70,15 @@ public class MemberController {
     public ApiResponse<Void> updateInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody MemberInfoUpdateRequest updateRequest) {
         Member loggedInMember = customUserDetails.getMember();
         memberService.updateMemberInfo(loggedInMember, updateRequest);
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "회원 서비스 탈퇴 API", description = "회원을 삭제합니다.")
+    public ApiResponse<Void> deleteMember(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Member member = customUserDetails.getMember();
+        memberService.validateMemberForDeletion(member);
+        memberService.deleteMember(member);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 }
