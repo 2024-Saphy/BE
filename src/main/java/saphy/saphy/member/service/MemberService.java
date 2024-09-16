@@ -42,7 +42,7 @@ public class MemberService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentLoginId = ((CustomUserDetails) authentication.getPrincipal()).getMember().getLoginId();
 
-        if(!loginId.equals(currentLoginId))
+        if (!loginId.equals(currentLoginId))
             throw SaphyException.from(ErrorCode.MEMBER_NOT_AUTHENTICATED);
     }
 
