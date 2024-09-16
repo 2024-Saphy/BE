@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import saphy.saphy.global.exception.ErrorCode;
+import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.domain.Laptop;
 import saphy.saphy.item.domain.Phone;
@@ -17,6 +19,7 @@ import saphy.saphy.item.dto.response.LaptopResponse;
 import saphy.saphy.item.dto.response.PhoneResponse;
 import saphy.saphy.item.dto.response.TabletResponse;
 import saphy.saphy.item.repository.ItemRepository;
+import saphy.saphy.member.domain.Member;
 
 @Service
 @RequiredArgsConstructor
@@ -83,5 +86,12 @@ public class ItemService {
 		return itemRepository.findAll().stream()
 			.map(LaptopResponse::from)
 			.toList();
+	}
+
+	public void delete(Member member, Long itemId) {
+		if(!member.getIsAdmin()){
+			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
+		}
+		itemRepository.deleteById(itemId);
 	}
 }

@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.image.service.ImageService;
@@ -23,6 +25,7 @@ import saphy.saphy.item.dto.request.PhoneCreateRequest;
 import saphy.saphy.item.dto.request.TabletCreateRequest;
 import saphy.saphy.item.dto.response.PhoneResponse;
 import saphy.saphy.item.service.ItemService;
+import saphy.saphy.member.domain.Member;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,5 +73,14 @@ public class ItemController {
 	@Operation(summary = "상품 전체 조회 API", description = "전체 상품을 조회하는 API 입니다.")
 	public ApiResponse<PhoneResponse> findAllPhones() {
 		return new ApiResponse<>(itemService.findAllPhones());
+	}
+
+	@DeleteMapping("/items/{itemId}")
+	@Operation(summary = "상품 삭제 API", description = "상품을 삭제하는 API 입니다.")
+	public ApiResponse<Void> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long itemId) {
+		Member loggedInMember = customUserDetails.getMember();
+		itemService.delete(loggedInMember, itemId);
+
+		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
 }
