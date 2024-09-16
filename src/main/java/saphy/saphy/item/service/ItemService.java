@@ -30,9 +30,10 @@ public class ItemService {
 	/**
 	 * 휴대폰
 	 */
-	public void savePhone(PhoneCreateRequest request) {
+	public Item savePhone(PhoneCreateRequest request) {
 		Phone phone = request.toEntity();
-		itemRepository.save(phone);
+
+		return itemRepository.save(phone);
 	}
 
 	public PhoneResponse findPhoneById(Long itemId) {

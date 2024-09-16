@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import saphy.saphy.global.entity.BaseEntity;
+import saphy.saphy.image.domain.ProfileImage;
 import saphy.saphy.itemWish.domain.ItemWish;
 
 import java.util.ArrayList;
@@ -52,4 +53,8 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemWish> itemWishes = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "profile_image_id")
+    private ProfileImage profileImage;
 }

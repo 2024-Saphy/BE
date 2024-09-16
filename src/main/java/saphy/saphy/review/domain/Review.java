@@ -1,9 +1,13 @@
 package saphy.saphy.review.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import saphy.saphy.global.entity.BaseEntity;
+import saphy.saphy.image.domain.ReviewImage;
 import saphy.saphy.member.domain.Member;
 
 @Entity
@@ -25,4 +29,7 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    private List<ReviewImage> images = new ArrayList<>();
 }
