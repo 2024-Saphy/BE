@@ -7,12 +7,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.member.domain.Member;
@@ -35,10 +37,13 @@ public class MemberService {
     private final SalesService salesService;
 
     // 로그인된 회원 체크
-    public void checkLogin(Member member, HttpServletResponse response) {
-        if (member == null) {
-            throw SaphyException.from(MEMBER_NOT_FOUND);
-        }
+    public void isCurrentMember(String loginId) {
+        // 현재 로그인된 사용자의 정보를 가져와서 비교
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentLoginId = ((CustomUserDetails) authentication.getPrincipal()).getMember().getLoginId();
+
+        if(!loginId.equals(currentLoginId))
+            throw SaphyException.from(ErrorCode.MEMBER_NOT_AUTHENTICATED);
     }
 
     // 회원 가입
@@ -92,9 +97,15 @@ public class MemberService {
 
     // 회원 탈퇴
     @Transactional
-    public void deleteMember(String loginId) {
-        Member member = ensureMemberExists(loginId);
+    public void deleteMember(Member member) {
         memberRepository.delete(member);
+    }
+
+    // 회원 탈퇴 전 검증 메서드
+    public void validateMemberForDeletion(Member member) {
+        ensureMemberExists(member);
+        isCurrentMember(member.getLoginId());
+        // 관리자 관련 로직 추가될 수 있음
     }
 
     // 주어진 값(value)이 null이 아닐 경우에만 특정 작업(setter)을 수행하도록 설계된 메서드, null 체크를 간단히 할 수 있음!
@@ -102,10 +113,17 @@ public class MemberService {
         Optional.ofNullable(value).ifPresent(setter);
     }
 
-    // 회원 존재 유무 검증
+    // 회원 존재 유무 검증(member 반환)
     private Member ensureMemberExists(String loginId) {
         return memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> SaphyException.from(MEMBER_NOT_FOUND));
+    }
+
+    // 회원 존재 유무 검증만
+    private void ensureMemberExists(Member member) {
+        if (!memberRepository.existsByLoginId(member.getLoginId())) {
+            throw SaphyException.from(MEMBER_NOT_FOUND);
+        }
     }
 
     // 중복회원 검증

@@ -31,7 +31,7 @@ public class MemberController {
     @GetMapping("/test")
     @Operation(summary = "로그인 유지 test", description = "member가 SecurityContext에 저장되었는지 확인하는 API 입니다.")
     public ApiResponse checkFirstLogin(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response) {
-        memberService.checkLogin(userDetails.getMember(), response);
+        memberService.isCurrentMember(userDetails.getMember().getLoginId());
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
@@ -76,8 +76,9 @@ public class MemberController {
     @DeleteMapping("/delete")
     @Operation(summary = "회원 서비스 탈퇴 API", description = "회원을 삭제합니다.")
     public ApiResponse<Void> deleteMember(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String loginId = customUserDetails.getMember().getLoginId();
-        memberService.deleteMember(loginId);
+        Member member = customUserDetails.getMember();
+        memberService.validateMemberForDeletion(member);
+        memberService.deleteMember(member);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 }
