@@ -1,5 +1,7 @@
 package saphy.saphy.image.repository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,8 +45,9 @@ public class ImageStoreProcessor {
 		validateImageFileExtension(extension);
 
 		final String uuid = UUID.randomUUID().toString();
+		final String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
-		return uuid + EXTENSION_FILE_CHARACTER + extension;
+		return timestamp + "_" + uuid + EXTENSION_FILE_CHARACTER + extension;
 	}
 
 	private String extractExtension(String originalFilename) {
