@@ -3,6 +3,7 @@ package saphy.saphy.item.dto.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import saphy.saphy.image.dto.response.ImageResponse;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.domain.Laptop;
 
@@ -40,6 +41,9 @@ public class LaptopResponse extends ItemResponse {
 		response.grade = laptop.getGrade().getName();
 		response.price = laptop.getPrice().intValue();
 		response.stock = laptop.getStock();
+		response.images = item.getImages().stream()
+			.map(itemImage -> ImageResponse.from(itemImage.getImage()))
+			.toList();
 
 		return response;
 	}
