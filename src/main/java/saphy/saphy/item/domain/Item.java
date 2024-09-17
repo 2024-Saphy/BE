@@ -8,6 +8,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.image.domain.ItemImage;
+import saphy.saphy.item.domain.enumeration.DeviceType;
 
 @Entity
 @Getter
@@ -37,8 +40,9 @@ public class Item extends BaseEntity {
     @Column(name = "item_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(insertable = false, updatable = false)
-    private String deviceType;
+    private DeviceType deviceType;
 
     @Column(name = "name", nullable = false)
     private String name;

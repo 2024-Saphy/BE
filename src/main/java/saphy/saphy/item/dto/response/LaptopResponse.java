@@ -40,7 +40,7 @@ public class LaptopResponse {
 
 		Laptop laptop = (Laptop) item;
 		response.id = laptop.getId();
-		response.deviceType = laptop.getDeviceType();
+		response.deviceType = laptop.getDeviceType().getName();
 		response.name = laptop.getName();
 		response.description = laptop.getDescription();
 		response.brand = laptop.getBrand().getName();

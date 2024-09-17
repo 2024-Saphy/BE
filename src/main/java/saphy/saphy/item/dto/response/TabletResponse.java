@@ -34,7 +34,7 @@ public class TabletResponse {
 
 		Tablet tablet = (Tablet) item;
 		response.id = tablet.getId();
-		response.deviceType = tablet.getDeviceType();
+		response.deviceType = tablet.getDeviceType().getName();
 		response.name = tablet.getName();
 		response.description = tablet.getDescription();
 		response.brand = tablet.getBrand().getName();

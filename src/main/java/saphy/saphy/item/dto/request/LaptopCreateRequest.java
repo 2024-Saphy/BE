@@ -6,6 +6,7 @@ import lombok.Getter;
 import saphy.saphy.item.domain.Laptop;
 import saphy.saphy.item.domain.enumeration.Brand;
 import saphy.saphy.item.domain.enumeration.Color;
+import saphy.saphy.item.domain.enumeration.DeviceType;
 import saphy.saphy.item.domain.enumeration.Grade;
 import saphy.saphy.item.domain.enumeration.Graphics;
 import saphy.saphy.item.domain.enumeration.Memory;
@@ -41,7 +42,7 @@ public class LaptopCreateRequest {
 
 	public Laptop toEntity() {
 		return Laptop.builder()
-			.deviceType(deviceType)
+			.deviceType(DeviceType.findByName(deviceType))
 			.name(name)
 			.description(description)
 			.brand(Brand.findByName(brand))

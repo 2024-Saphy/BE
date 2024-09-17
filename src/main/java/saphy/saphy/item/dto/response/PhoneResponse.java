@@ -39,7 +39,7 @@ public class PhoneResponse {
 
 		Phone phone = (Phone) item;
 		response.id = phone.getId();
-		response.deviceType = phone.getDeviceType();
+		response.deviceType = phone.getDeviceType().getName();
 		response.name = phone.getName();
 		response.description = phone.getDescription();
 		response.brand = phone.getBrand().getName();
