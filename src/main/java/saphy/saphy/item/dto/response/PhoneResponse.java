@@ -1,7 +1,5 @@
 package saphy.saphy.item.dto.response;
 
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +9,7 @@ import saphy.saphy.item.domain.Phone;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PhoneResponse {
-	private Long id;
-
-	private String deviceType;
-
-	private String name;
-
-	private String description;
-
+public class PhoneResponse extends ItemResponse {
 	private String brand;
 
 	private String color;
@@ -27,12 +17,6 @@ public class PhoneResponse {
 	private String storage;
 
 	private String grade;
-
-	private int price;
-
-	private int stock;
-
-	private List<ImageResponse> images;
 
 	public static PhoneResponse from(Item item) {
 		PhoneResponse response = new PhoneResponse();

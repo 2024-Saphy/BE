@@ -8,15 +8,7 @@ import saphy.saphy.item.domain.Tablet;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TabletResponse {
-	private Long id;
-
-	private String deviceType;
-
-	private String name;
-
-	private String description;
-
+public class TabletResponse extends ItemResponse{
 	private String brand;
 
 	private String color;
@@ -24,10 +16,6 @@ public class TabletResponse {
 	private String storage;
 
 	private String grade;
-
-	private int price;
-
-	private int stock;
 
 	public static TabletResponse from(Item item) {
 		TabletResponse response = new TabletResponse();
