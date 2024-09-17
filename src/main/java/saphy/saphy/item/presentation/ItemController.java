@@ -50,16 +50,24 @@ public class ItemController {
 
 	@PostMapping("/items/tablets")
 	@Operation(summary = "태블릿 생성 API", description = "상품을 생성하는 API 입니다.")
-	public ApiResponse<Void> save(@RequestBody TabletCreateRequest request) {
-		itemService.saveTablet(request);
+	public ApiResponse<Void> save(
+		@RequestPart("request") TabletCreateRequest request,
+		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+	) {
+		Item item = itemService.saveTablet(request);
+		imageService.saveItemImages(multipartFiles, item.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
 
 	@PostMapping("/items/laptops")
 	@Operation(summary = "노트북 생성 API", description = "상품을 생성하는 API 입니다.")
-	public ApiResponse<Void> save(@RequestBody LaptopCreateRequest request) {
-		itemService.saveLaptop(request);
+	public ApiResponse<Void> save(
+		@RequestPart("request") LaptopCreateRequest request,
+		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+	) {
+		Item item = itemService.saveLaptop(request);
+		imageService.saveItemImages(multipartFiles, item.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}

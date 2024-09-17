@@ -51,9 +51,10 @@ public class ItemService {
 	/**
 	 * 태블릿
 	 */
-	public void saveTablet(TabletCreateRequest request) {
+	public Item saveTablet(TabletCreateRequest request) {
 		Tablet tablet = request.toEntity();
-		itemRepository.save(tablet);
+
+		return itemRepository.save(tablet);
 	}
 
 	public TabletResponse findTabletById(Long itemId) {
@@ -71,9 +72,10 @@ public class ItemService {
 	/**
 	 * 노트북
 	 */
-	public void saveLaptop(LaptopCreateRequest request) {
+	public Item saveLaptop(LaptopCreateRequest request) {
 		Laptop laptop = request.toEntity();
-		itemRepository.save(laptop);
+
+		return itemRepository.save(laptop);
 	}
 
 	public LaptopResponse findLaptopById(Long itemId) {
