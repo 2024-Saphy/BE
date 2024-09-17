@@ -6,9 +6,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import saphy.saphy.image.dto.response.ImageResponse;
+import saphy.saphy.item.domain.Item;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // ItemResponse는 상속을 위한 클래스로, 그 자체로 사용되지 않기 떄문에 생성자를 private로 설정한다.
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemResponse {
 	protected Long id;
 
@@ -23,4 +24,20 @@ public class ItemResponse {
 	protected int stock;
 
 	protected List<ImageResponse> images;
+
+	public static ItemResponse from(Item item) {
+		ItemResponse response = new ItemResponse();
+
+		response.id = item.getId();
+		response.deviceType = item.getDeviceType().getName();
+		response.name = item.getName();
+		response.description = item.getDescription();
+		response.price = item.getPrice().intValue();
+		response.stock = item.getStock();
+		response.images = item.getImages().stream()
+			.map(itemImage -> ImageResponse.from(itemImage.getImage()))
+			.toList();
+
+		return response;
+	}
 }
