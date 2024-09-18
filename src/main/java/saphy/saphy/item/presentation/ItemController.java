@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,13 +18,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.ErrorCode;
+import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.image.service.ImageService;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.dto.request.LaptopCreateRequest;
 import saphy.saphy.item.dto.request.PhoneCreateRequest;
 import saphy.saphy.item.dto.request.TabletCreateRequest;
+import saphy.saphy.item.dto.response.ItemResponse;
+import saphy.saphy.item.dto.response.LaptopResponse;
 import saphy.saphy.item.dto.response.PhoneResponse;
+import saphy.saphy.item.dto.response.TabletResponse;
 import saphy.saphy.item.service.ItemService;
 import saphy.saphy.member.domain.Member;
 
@@ -74,8 +78,18 @@ public class ItemController {
 
 	@GetMapping("/items/{itemId}")
 	@Operation(summary = "상품 단건 조회 API", description = "상품을 단건으로 조회하는 API 입니다.")
-	public ApiResponse<PhoneResponse> findPhoneById(@PathVariable Long itemId) {
-		return new ApiResponse<>(itemService.findPhoneById(itemId));
+	public ApiResponse<? extends ItemResponse> findItemById(@PathVariable Long itemId) {
+		ItemResponse response = itemService.findItemById(itemId);
+
+		if (response instanceof PhoneResponse) {
+			return new ApiResponse<>((PhoneResponse) response);
+		} else if (response instanceof TabletResponse) {
+			return new ApiResponse<>((TabletResponse) response);
+		} else if (response instanceof LaptopResponse) {
+			return new ApiResponse<>((LaptopResponse) response);
+		} else {
+			throw SaphyException.from(ErrorCode.INVALID_DEVICE_TYPE);
+		}
 	}
 
 	@GetMapping("/items/all")
