@@ -48,7 +48,7 @@ public class ItemService {
 		return createResponseByDeviceType(deviceType, item);
 	}
 
-	public List<PhoneResponse> findAllPhones() {
+	public List<ItemResponse> findAllItems() {
 		return itemRepository.findAll().stream()
 			.map(PhoneResponse::from)
 			.toList();
