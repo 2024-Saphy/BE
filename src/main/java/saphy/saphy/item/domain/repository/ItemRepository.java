@@ -1,4 +1,4 @@
-package saphy.saphy.item.repository;
+package saphy.saphy.item.domain.repository;
 
 import java.util.List;
 

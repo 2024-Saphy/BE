@@ -25,7 +25,7 @@ import saphy.saphy.image.repository.ItemImageRepository;
 import saphy.saphy.image.repository.ProfileImageRepository;
 import saphy.saphy.image.repository.ReviewImageRepository;
 import saphy.saphy.item.domain.Item;
-import saphy.saphy.item.repository.ItemRepository;
+import saphy.saphy.item.domain.repository.ItemRepository;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.repository.MemberRepository;
 import saphy.saphy.review.domain.Review;

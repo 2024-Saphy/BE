@@ -21,7 +21,7 @@ import saphy.saphy.item.dto.response.ItemResponse;
 import saphy.saphy.item.dto.response.LaptopResponse;
 import saphy.saphy.item.dto.response.PhoneResponse;
 import saphy.saphy.item.dto.response.TabletResponse;
-import saphy.saphy.item.repository.ItemRepository;
+import saphy.saphy.item.domain.repository.ItemRepository;
 import saphy.saphy.member.domain.Member;
 
 @Service
