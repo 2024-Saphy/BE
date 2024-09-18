@@ -71,6 +71,7 @@ public enum ErrorCode {
     ITEM_SIZE_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, "해당 사이즈의 제품이 재고가 없습니다."),
     ITEM_MODEL_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, "해당 모델의 제품이 재고가 없습니다."),
     ITEM_DISCONTINUED(HttpStatus.BAD_REQUEST, "단종된 제품입니다."),
+    INVALID_DEVICE_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 기기 타입입니다."),
 
     // chat
     CHAT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다."),

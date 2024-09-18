@@ -6,15 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.item.domain.Item;
-import saphy.saphy.item.domain.Phone;
-import saphy.saphy.item.domain.Tablet;
-import saphy.saphy.item.repository.ItemRepository;
+import saphy.saphy.item.domain.repository.ItemRepository;
 import saphy.saphy.itemWish.domain.ItemWish;
 import saphy.saphy.itemWish.domain.repository.ItemWishRepository;
 import saphy.saphy.member.domain.Member;
-import saphy.saphy.member.domain.repository.MemberRepository;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

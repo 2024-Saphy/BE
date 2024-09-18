@@ -2,6 +2,7 @@ package saphy.saphy.item.service;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +13,15 @@ import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.domain.Laptop;
 import saphy.saphy.item.domain.Phone;
 import saphy.saphy.item.domain.Tablet;
+import saphy.saphy.item.domain.enumeration.DeviceType;
 import saphy.saphy.item.dto.request.LaptopCreateRequest;
 import saphy.saphy.item.dto.request.PhoneCreateRequest;
 import saphy.saphy.item.dto.request.TabletCreateRequest;
+import saphy.saphy.item.dto.response.ItemResponse;
 import saphy.saphy.item.dto.response.LaptopResponse;
 import saphy.saphy.item.dto.response.PhoneResponse;
 import saphy.saphy.item.dto.response.TabletResponse;
-import saphy.saphy.item.repository.ItemRepository;
+import saphy.saphy.item.domain.repository.ItemRepository;
 import saphy.saphy.member.domain.Member;
 
 @Service
@@ -36,24 +39,35 @@ public class ItemService {
 		return itemRepository.save(phone);
 	}
 
-	public PhoneResponse findPhoneById(Long itemId) {
-		return itemRepository.findById(itemId)
-			.map(PhoneResponse::from)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 휴대폰입니다."));
+	// deviceType 에 따라 각기 다른 응답을 반환하지만, 최종 반환형은 ItemResponse 로 통일. 이후 다시 자식 클래스로 형변환하여 자세한 정보를 전달
+	public ItemResponse findItemById(Long itemId) {
+		Item item = itemRepository.findById(itemId)
+			.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
+		DeviceType deviceType = item.getDeviceType();
+
+		return createResponseByDeviceType(deviceType, item);
 	}
 
-	public List<PhoneResponse> findAllPhones() {
+	public List<ItemResponse> findAllItems() {
 		return itemRepository.findAll().stream()
-			.map(PhoneResponse::from)
+			.map(ItemResponse::from)
+			.toList();
+	}
+
+	public List<ItemResponse> findByDeviceType(String deviceType) {
+		return itemRepository.findByDeviceType(DeviceType.valueOf(deviceType))
+			.stream()
+			.map(ItemResponse::from)
 			.toList();
 	}
 
 	/**
 	 * 태블릿
 	 */
-	public void saveTablet(TabletCreateRequest request) {
+	public Item saveTablet(TabletCreateRequest request) {
 		Tablet tablet = request.toEntity();
-		itemRepository.save(tablet);
+
+		return itemRepository.save(tablet);
 	}
 
 	public TabletResponse findTabletById(Long itemId) {
@@ -71,9 +85,10 @@ public class ItemService {
 	/**
 	 * 노트북
 	 */
-	public void saveLaptop(LaptopCreateRequest request) {
+	public Item saveLaptop(LaptopCreateRequest request) {
 		Laptop laptop = request.toEntity();
-		itemRepository.save(laptop);
+
+		return itemRepository.save(laptop);
 	}
 
 	public LaptopResponse findLaptopById(Long itemId) {
@@ -89,9 +104,22 @@ public class ItemService {
 	}
 
 	public void delete(Member member, Long itemId) {
-		if(!member.getIsAdmin()){
+		if (!member.getIsAdmin()) {
 			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
 		}
 		itemRepository.deleteById(itemId);
+	}
+
+	// 이거 분명 더 깔끔하게 할 수 있을 것 같은데... 일단은 이렇게 구현해놓고 나중에 고쳐보겠습니다
+	private @NotNull ItemResponse createResponseByDeviceType(DeviceType deviceType, Item item) {
+		if (deviceType.equals(DeviceType.PHONE)) {
+			return PhoneResponse.from(item);
+		} else if (deviceType.equals(DeviceType.TABLET)) {
+			return TabletResponse.from(item);
+		} else if (deviceType.equals(DeviceType.LAPTOP)) {
+			return LaptopResponse.from(item);
+		} else {
+			throw SaphyException.from(ErrorCode.INVALID_DEVICE_TYPE);
+		}
 	}
 }
