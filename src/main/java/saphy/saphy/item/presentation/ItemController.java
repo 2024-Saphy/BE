@@ -79,14 +79,20 @@ public class ItemController {
 	}
 
 	@GetMapping("/items/all")
-	@Operation(summary = "상품 전체 조회 API", description = "전체 상품을 조회하는 API 입니다.")
-	public ApiResponse<PhoneResponse> findAllPhones() {
-		return new ApiResponse<>(itemService.findAllPhones());
+	@Operation(summary = "기기 종류에 따른 상품 조회 API", description = "기기 종류에 따라 상품 목록을 조회하는 API 입니다.")
+	public ApiResponse<ItemResponse> findAllItems(@RequestParam("type") String type) {
+		if (type.equals("ALL")) {
+			return new ApiResponse<>(itemService.findAllItems());
+		}
+		return new ApiResponse<>(itemService.findByDeviceType(type));
 	}
 
 	@DeleteMapping("/items/{itemId}")
 	@Operation(summary = "상품 삭제 API", description = "상품을 삭제하는 API 입니다.")
-	public ApiResponse<Void> delete(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Long itemId) {
+	public ApiResponse<Void> delete(
+		@AuthenticationPrincipal CustomUserDetails customUserDetails,
+		@PathVariable Long itemId
+	) {
 		Member loggedInMember = customUserDetails.getMember();
 		itemService.delete(loggedInMember, itemId);
 
