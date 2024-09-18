@@ -50,7 +50,14 @@ public class ItemService {
 
 	public List<ItemResponse> findAllItems() {
 		return itemRepository.findAll().stream()
-			.map(PhoneResponse::from)
+			.map(ItemResponse::from)
+			.toList();
+	}
+
+	public List<ItemResponse> findByDeviceType(String deviceType) {
+		return itemRepository.findByDeviceType(DeviceType.valueOf(deviceType))
+			.stream()
+			.map(ItemResponse::from)
 			.toList();
 	}
 
