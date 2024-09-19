@@ -43,9 +43,8 @@ public class ItemService {
 	public ItemResponse findItemById(Long itemId) {
 		Item item = itemRepository.findById(itemId)
 			.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
-		DeviceType deviceType = item.getDeviceType();
 
-		return createResponseByDeviceType(deviceType, item);
+		return item.getDeviceType().mapResponse(item);
 	}
 
 	public List<ItemResponse> findAllItems() {
@@ -108,18 +107,5 @@ public class ItemService {
 			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
 		}
 		itemRepository.deleteById(itemId);
-	}
-
-	// 이거 분명 더 깔끔하게 할 수 있을 것 같은데... 일단은 이렇게 구현해놓고 나중에 고쳐보겠습니다
-	private @NotNull ItemResponse createResponseByDeviceType(DeviceType deviceType, Item item) {
-		if (deviceType.equals(DeviceType.PHONE)) {
-			return PhoneResponse.from(item);
-		} else if (deviceType.equals(DeviceType.TABLET)) {
-			return TabletResponse.from(item);
-		} else if (deviceType.equals(DeviceType.LAPTOP)) {
-			return LaptopResponse.from(item);
-		} else {
-			throw SaphyException.from(ErrorCode.INVALID_DEVICE_TYPE);
-		}
 	}
 }

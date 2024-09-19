@@ -46,6 +46,7 @@ logging:
           LocalVariableTableParameterNameDiscoverer: error
       hibernate:
         sql: debug
+      hibernate.sql.results.internal.ResultsHelper: INFO
     p6spy: info
 
 # Swagger 설정 추가

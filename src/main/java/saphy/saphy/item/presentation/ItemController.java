@@ -79,17 +79,7 @@ public class ItemController {
 	@GetMapping("/items/{itemId}")
 	@Operation(summary = "상품 단건 조회 API", description = "상품을 단건으로 조회하는 API 입니다.")
 	public ApiResponse<? extends ItemResponse> findItemById(@PathVariable Long itemId) {
-		ItemResponse response = itemService.findItemById(itemId);
-
-		if (response instanceof PhoneResponse) {
-			return new ApiResponse<>((PhoneResponse) response);
-		} else if (response instanceof TabletResponse) {
-			return new ApiResponse<>((TabletResponse) response);
-		} else if (response instanceof LaptopResponse) {
-			return new ApiResponse<>((LaptopResponse) response);
-		} else {
-			throw SaphyException.from(ErrorCode.INVALID_DEVICE_TYPE);
-		}
+		return new ApiResponse<>(itemService.findItemById(itemId));
 	}
 
 	@GetMapping("/items/all")
