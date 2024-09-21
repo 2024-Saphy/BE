@@ -59,4 +59,8 @@ public class Item extends BaseEntity {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<ItemImage> images = new ArrayList<>();
+
+    public void decreaseStock(int i) {
+        this.stock = this.stock - i;
+    }
 }
