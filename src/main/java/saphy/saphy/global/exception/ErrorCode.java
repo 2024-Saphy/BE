@@ -41,7 +41,6 @@ public enum ErrorCode {
     TRANSACTION_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "해당 거래에 권한이 없습니다."),
     TRANSACTION_EXPIRED(HttpStatus.BAD_REQUEST, "거래 기간이 만료되었습니다."),
     TRANSACTION_INVALID_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 거래 상태입니다."),
-    TRANSACTION_PAYMENT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "결제 처리에 실패했습니다."),
     TRANSACTION_SHIPPING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "배송 처리에 실패했습니다."),
     TRANSACTION_CANCEL_NOT_ALLOWED(HttpStatus.FORBIDDEN, "거래를 취소할 수 없습니다."),
     TRANSACTION_REFUND_NOT_ALLOWED(HttpStatus.FORBIDDEN, "환불을 처리할 수 없습니다."),
@@ -49,7 +48,6 @@ public enum ErrorCode {
     TRANSACTION_ITEM_DAMAGED(HttpStatus.BAD_REQUEST, "상품이 손상되었습니다."),
     TRANSACTION_INVALID_QUANTITY(HttpStatus.BAD_REQUEST, "유효하지 않은 수량입니다."),
     TRANSACTION_DUPLICATE_REQUEST(HttpStatus.CONFLICT, "중복된 거래 요청입니다."),
-    TRANSACTION_INVALID_PAYMENT_METHOD(HttpStatus.BAD_REQUEST, "유효하지 않은 결제 방법입니다."),
     TRANSACTION_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "배송 주소를 찾을 수 없습니다."),
     TRANSACTION_DELIVERY_DELAYED(HttpStatus.INTERNAL_SERVER_ERROR, "배송이 지연되었습니다."),
     TRANSACTION_SELLER_NOT_RESPONSIVE(HttpStatus.INTERNAL_SERVER_ERROR, "판매자가 응답하지 않습니다."),
@@ -94,6 +92,13 @@ public enum ErrorCode {
     IMAGE_STORE_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 저장에 실패했습니다."),
     IMAGE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "이미지 파일 크기가 너무 큽니다."),
     S3_UPLOAD_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "S3 버킷에 파일을 업로드하는 중 에러가 발생했습니다."),
+
+    // pay
+    PAY_FAILURE(HttpStatus.BAD_REQUEST, "결제를 실패했습니다."),
+    PAY_INVALID(HttpStatus.BAD_REQUEST, "유효하지 않은 결제입니다."),
+    PAY_PRICE_MISMATCH(HttpStatus.BAD_REQUEST, "상품 금액과 결제 금액이 일치하지 않습니다."),
+    PAY_INVALID_METHOD(HttpStatus.BAD_REQUEST, "유효하지 않은 결제 방법입니다."),
+
 
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 요청입니다."),
     NOT_ENOUGH_PERMISSION(HttpStatus.FORBIDDEN, "해당 권한이 없습니다."),
