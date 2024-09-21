@@ -2,11 +2,15 @@ package saphy.saphy.global.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +49,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
           at com.festago.admin.presentation.AdminController.getError(AdminController.java:129)
      */
 
-	@ExceptionHandler(RuntimeException.class)
+	@ExceptionHandler(SaphyException.class)
 	public ApiResponse<Void> handle(SaphyException exception, HttpServletRequest request) {
 		logInfo(exception, request);
 
@@ -56,11 +60,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		log.info(LOG_FORMAT_INFO, request.getMethod(), request.getRequestURI(), exception.getErrorCode(), exception.getClass().getName(), exception.getMessage());
 	}
 
-	@ExceptionHandler(MethodArgumentNotValidException.class) // MethodArgumentNotValidException 예외가 발생했을 때 아래 메소드를 실행
-	public String processValidationError(MethodArgumentNotValidException exception) {
-		// 유효성 검사 결과를 포함, 어떤 필드에서 어떤 오류가 발생했는지 확인
-		BindingResult bindingResult = exception.getBindingResult();
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+		MethodArgumentNotValidException ex,
+		HttpHeaders headers,
+		HttpStatusCode status,
+		WebRequest request) {
 
+		BindingResult bindingResult = ex.getBindingResult();
 		StringBuilder builder = new StringBuilder();
 		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			builder.append("[");
@@ -71,6 +78,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			builder.append("]");
 		}
 
-		return builder.toString();
+		ApiResponse<String> apiResponse = new ApiResponse<>(builder.toString());
+		log.warn(ex.getMessage(), ex);
+
+		return new ResponseEntity<>(apiResponse, headers, status);
 	}
+
 }
