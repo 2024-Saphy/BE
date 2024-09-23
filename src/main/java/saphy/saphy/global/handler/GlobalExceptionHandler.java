@@ -2,8 +2,15 @@ package saphy.saphy.global.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,9 +49,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
           at com.festago.admin.presentation.AdminController.getError(AdminController.java:129)
      */
 
-	@ExceptionHandler(RuntimeException.class)
+	@ExceptionHandler(SaphyException.class)
 	public ApiResponse<Void> handle(SaphyException exception, HttpServletRequest request) {
 		logInfo(exception, request);
+
 		return new ApiResponse<>(exception);
 	}
 
@@ -52,11 +60,28 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		log.info(LOG_FORMAT_INFO, request.getMethod(), request.getRequestURI(), exception.getErrorCode(), exception.getClass().getName(), exception.getMessage());
 	}
 
-	private void logWarn(SaphyException exception, HttpServletRequest request) {
-		log.warn(LOG_FORMAT_WARN, request.getMethod(), request.getRequestURI(), exception);
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+		MethodArgumentNotValidException ex,
+		HttpHeaders headers,
+		HttpStatusCode status,
+		WebRequest request) {
+
+		BindingResult bindingResult = ex.getBindingResult();
+		StringBuilder builder = new StringBuilder();
+		for (FieldError fieldError : bindingResult.getFieldErrors()) {
+			builder.append("[");
+			builder.append(fieldError.getField());
+			builder.append("]의 값이 잘못됐습니다. ");
+			builder.append("입력된 값: [");
+			builder.append(fieldError.getRejectedValue());
+			builder.append("]");
+		}
+
+		ApiResponse<String> apiResponse = new ApiResponse<>(builder.toString());
+		log.warn(ex.getMessage(), ex);
+
+		return new ResponseEntity<>(apiResponse, headers, status);
 	}
 
-	private void logError(Exception e, HttpServletRequest request) {
-		log.error(LOG_FORMAT_ERROR, request.getMethod(), request.getRequestURI(), e);
-	}
 }

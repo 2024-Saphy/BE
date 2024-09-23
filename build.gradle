@@ -64,7 +64,7 @@ dependencies {
 	implementation 'javax.activation:activation:1.1.1'
 
 	// PortOne
-	implementation 'com.github.iamport:iamport-rest-client-java:0.1.6'
+	implementation 'com.github.iamport:iamport-rest-client-java:0.2.3'
 }
 
 tasks.named('test') {
