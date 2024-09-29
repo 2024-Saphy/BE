@@ -2,7 +2,6 @@ package saphy.saphy.item.service;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +13,9 @@ import saphy.saphy.item.domain.Laptop;
 import saphy.saphy.item.domain.Phone;
 import saphy.saphy.item.domain.Tablet;
 import saphy.saphy.item.domain.enumeration.DeviceType;
-import saphy.saphy.item.dto.request.LaptopCreateRequest;
-import saphy.saphy.item.dto.request.PhoneCreateRequest;
-import saphy.saphy.item.dto.request.TabletCreateRequest;
+import saphy.saphy.item.dto.request.*;
 import saphy.saphy.item.dto.response.ItemResponse;
 import saphy.saphy.item.dto.response.LaptopResponse;
-import saphy.saphy.item.dto.response.PhoneResponse;
 import saphy.saphy.item.dto.response.TabletResponse;
 import saphy.saphy.item.domain.repository.ItemRepository;
 import saphy.saphy.member.domain.Member;
@@ -37,6 +33,18 @@ public class ItemService {
 		Phone phone = request.toEntity();
 
 		return itemRepository.save(phone);
+	}
+
+	public void updatePhone(Member member, Long itemId, PhoneUpdateRequest request) {
+		if (!member.getIsAdmin()) {
+			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
+		}
+
+		Phone findPhone = (Phone) itemRepository.findById(itemId)
+				.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
+		Phone updatePhone = request.toEntity();
+
+		findPhone.update(updatePhone);
 	}
 
 	// deviceType 에 따라 각기 다른 응답을 반환하지만, 최종 반환형은 ItemResponse 로 통일. 이후 다시 자식 클래스로 형변환하여 자세한 정보를 전달

@@ -39,4 +39,12 @@ public class Phone extends Item {
     @Enumerated(EnumType.STRING)
     @Column(name = "grade", nullable = false)
     private Grade grade;
+
+    public void update(Phone updatedPhone) {
+        super.update(updatedPhone);
+        this.brand = updatedPhone.getBrand();
+        this.color = updatedPhone.getColor();
+        this.storage = updatedPhone.getStorage();
+        this.grade = updatedPhone.getGrade();
+    }
 }
