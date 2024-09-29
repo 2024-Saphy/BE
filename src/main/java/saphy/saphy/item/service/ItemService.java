@@ -110,6 +110,18 @@ public class ItemService {
 		return itemRepository.save(laptop);
 	}
 
+	public void updateLaptop(Member member, Long itemId, LaptopUpdateRequest request) {
+		if (!member.getIsAdmin()) {
+			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
+		}
+
+		Laptop findLaptop = (Laptop) itemRepository.findById(itemId)
+				.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
+		Laptop updateLaptop = request.toEntity();
+
+		findLaptop.update(updateLaptop);
+	}
+
 	public LaptopResponse findLaptopById(Long itemId) {
 		return itemRepository.findById(itemId)
 			.map(LaptopResponse::from)
