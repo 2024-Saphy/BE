@@ -36,9 +36,7 @@ public class ItemService {
 	}
 
 	public void updatePhone(Member member, Long itemId, PhoneUpdateRequest request) {
-		if (!member.getIsAdmin()) {
-			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
-		}
+		isAdmin(member);
 
 		Phone findPhone = (Phone) itemRepository.findById(itemId)
 				.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
@@ -78,9 +76,7 @@ public class ItemService {
 	}
 
 	public void updateTablet(Member member, Long itemId, TabletUpdateRequest request) {
-		if (!member.getIsAdmin()) {
-			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
-		}
+		isAdmin(member);
 
 		Tablet findTablet = (Tablet) itemRepository.findById(itemId)
 				.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
@@ -111,9 +107,7 @@ public class ItemService {
 	}
 
 	public void updateLaptop(Member member, Long itemId, LaptopUpdateRequest request) {
-		if (!member.getIsAdmin()) {
-			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
-		}
+		isAdmin(member);
 
 		Laptop findLaptop = (Laptop) itemRepository.findById(itemId)
 				.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
@@ -135,9 +129,14 @@ public class ItemService {
 	}
 
 	public void delete(Member member, Long itemId) {
-		if (!member.getIsAdmin()) {
+		isAdmin(member);
+
+		itemRepository.deleteById(itemId);
+	}
+
+	public void isAdmin(Member member) {
+		if(!member.getIsAdmin()) {
 			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
 		}
-		itemRepository.deleteById(itemId);
 	}
 }
