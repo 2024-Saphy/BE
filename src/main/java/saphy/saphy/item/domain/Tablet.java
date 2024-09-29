@@ -39,4 +39,12 @@ public class Tablet extends Item {
     @Enumerated(EnumType.STRING)
     @Column(name = "grade", nullable = false)
     private Grade grade;
+
+    public void update(Tablet updatedTablet) {
+        super.update(updatedTablet);
+        this.brand = updatedTablet.getBrand();
+        this.color = updatedTablet.getColor();
+        this.storage = updatedTablet.getStorage();
+        this.grade = updatedTablet.getGrade();
+    }
 }
