@@ -56,7 +56,7 @@ public class ReissueService {
     private String getRefreshToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            throw SaphyException.from(ErrorCode.TOKEN_NOT_FOUND); // refresh token 없으면 예외처리
+            throw SaphyException.from(ErrorCode.TOKEN_NOT_FOUND);
         }
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("refresh")) {
