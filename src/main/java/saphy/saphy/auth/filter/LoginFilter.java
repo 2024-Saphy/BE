@@ -76,7 +76,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String loginId = authResult.getName();
 
         // 토큰 생성(스프링 내부 로직에 접근하기 전,
-        String accessToken = jwtUtil.createJwt("access", loginId, 20000L);
+        String accessToken = jwtUtil.createJwt("access", loginId, 604800000L);
         String refresh = jwtUtil.createJwt("refresh", loginId, 604800000L);
 
         // Redis에 refreshToken 저장
