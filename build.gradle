@@ -21,9 +21,9 @@ configurations {
 
 repositories {
 	mavenCentral()
-	maven { url 'https://jitpack.io' } // ProtOne 라이브러리는 maven 기반으로 의존성을 추가하도록 되어 있습니다.
-										// 이 기능을 추가하조가 gradle -> maven으로 수정할 수 없기에 reposioties에 jitpack.io를 추가하여
-										// gradle에서도 iamport 라이브러리를 추가할 수 있게 해줍니다.
+	maven { url 'https://jitpack.io' } // PortOne 라이브러리는 maven 기반으로 의존성을 추가하도록 되어 있습니다.
+	 								   // 이 기능을 추가하조가 gradle -> maven으로 수정할 수 없기에 repositories에 jitpack.io를 추가하여
+									   // gradle에서도 iamport 라이브러리를 추가할 수 있게 해줍니다.
 }
 
 dependencies {
@@ -65,6 +65,11 @@ dependencies {
 
 	// PortOne
 	implementation 'com.github.iamport:iamport-rest-client-java:0.2.3'
+
+	// Redis
+	implementation 'redis.clients:jedis:4.4.3'
+	implementation 'org.springframework.data:spring-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
