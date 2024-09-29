@@ -2,14 +2,7 @@ package saphy.saphy.item.presentation;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -22,9 +15,7 @@ import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.image.service.ImageService;
 import saphy.saphy.item.domain.Item;
-import saphy.saphy.item.dto.request.LaptopCreateRequest;
-import saphy.saphy.item.dto.request.PhoneCreateRequest;
-import saphy.saphy.item.dto.request.TabletCreateRequest;
+import saphy.saphy.item.dto.request.*;
 import saphy.saphy.item.dto.response.ItemResponse;
 import saphy.saphy.item.dto.response.LaptopResponse;
 import saphy.saphy.item.dto.response.PhoneResponse;
@@ -102,4 +93,56 @@ public class ItemController {
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
+
+	@PatchMapping("/items/phones/{itemId}")
+	@Operation(summary = "핸드폰 수정 API", description = "상품을 수정하는 API 입니다.")
+	public ApiResponse<Void> update(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@PathVariable Long itemId,
+			@RequestPart("request") PhoneUpdateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+	) {
+		Member loggedInMember = customUserDetails.getMember();
+		itemService.updatePhone(loggedInMember, itemId, request);
+
+		imageService.deleteItemImages(itemId);
+		imageService.saveItemImages(multipartFiles, itemId);
+
+		return new ApiResponse<>(ErrorCode.REQUEST_OK);
+	}
+
+	@PatchMapping("/items/tablets/{itemId}")
+	@Operation(summary = "태블릿 수정 API", description = "상품을 수정하는 API 입니다.")
+	public ApiResponse<Void> update(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@PathVariable Long itemId,
+			@RequestPart("request") TabletUpdateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+	) {
+		Member loggedInMember = customUserDetails.getMember();
+		itemService.updateTablet(loggedInMember, itemId, request);
+
+		imageService.deleteItemImages(itemId);
+		imageService.saveItemImages(multipartFiles, itemId);
+
+		return new ApiResponse<>(ErrorCode.REQUEST_OK);
+	}
+
+	@PatchMapping("/items/laptops/{itemId}")
+	@Operation(summary = "노트북 수정 API", description = "상품을 수정하는 API 입니다.")
+	public ApiResponse<Void> update(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@PathVariable Long itemId,
+			@RequestPart("request") LaptopUpdateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+	) {
+		Member loggedInMember = customUserDetails.getMember();
+		itemService.updateLaptop(loggedInMember, itemId, request);
+
+		imageService.deleteItemImages(itemId);
+		imageService.saveItemImages(multipartFiles, itemId);
+
+		return new ApiResponse<>(ErrorCode.REQUEST_OK);
+	}
+
 }

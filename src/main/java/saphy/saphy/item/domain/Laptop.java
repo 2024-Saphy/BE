@@ -54,4 +54,15 @@ public class Laptop extends Item {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "grade", nullable = false)
 	private Grade grade;
+
+	public void update(Laptop updatedLaptop) {
+		super.update(updatedLaptop);
+		this.brand = updatedLaptop.getBrand();
+		this.color = updatedLaptop.getColor();
+		this.storage = updatedLaptop.getStorage();
+		this.processor = updatedLaptop.getProcessor();
+		this.memory = updatedLaptop.getMemory();
+		this.graphics = updatedLaptop.getGraphics();
+		this.grade = updatedLaptop.getGrade();
+	}
 }
