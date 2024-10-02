@@ -29,7 +29,9 @@ public class ItemService {
 	/**
 	 * 휴대폰
 	 */
-	public Item savePhone(PhoneCreateRequest request) {
+	public Item savePhone(Member member, PhoneCreateRequest request) {
+		isAdmin(member);
+
 		Phone phone = request.toEntity();
 
 		return itemRepository.save(phone);
@@ -69,7 +71,9 @@ public class ItemService {
 	/**
 	 * 태블릿
 	 */
-	public Item saveTablet(TabletCreateRequest request) {
+	public Item saveTablet(Member member, TabletCreateRequest request) {
+		isAdmin(member);
+
 		Tablet tablet = request.toEntity();
 
 		return itemRepository.save(tablet);
@@ -100,7 +104,9 @@ public class ItemService {
 	/**
 	 * 노트북
 	 */
-	public Item saveLaptop(LaptopCreateRequest request) {
+	public Item saveLaptop(Member member, LaptopCreateRequest request) {
+		isAdmin(member);
+
 		Laptop laptop = request.toEntity();
 
 		return itemRepository.save(laptop);
