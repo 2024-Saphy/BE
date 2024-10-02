@@ -29,6 +29,6 @@ public class Sales extends BaseEntity {
     private Member member;
 
     @OneToOne(fetch = FetchType.LAZY) //여기 애매하긴 한데, 일단 1:1관계로 생각함.
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id") // 여기 이름 바꿔야 함
     private Purchase purchase;
 }
