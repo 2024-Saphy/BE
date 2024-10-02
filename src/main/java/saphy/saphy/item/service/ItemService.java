@@ -47,9 +47,8 @@ public class ItemService {
 	}
 
 	public void delete(Member member, Long itemId) {
-		if (!member.getIsAdmin()) {
-			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
-		}
+		isAdmin(member);
+
 		itemRepository.deleteById(itemId);
 	}
 
@@ -109,13 +108,7 @@ public class ItemService {
 		findLaptop.update(updateLaptop);
 	}
 
-	public void delete(Member member, Long itemId) {
-		isAdmin(member);
-
-		itemRepository.deleteById(itemId);
-	}
-
-	public void isAdmin(Member member) {
+	private void isAdmin(Member member) {
 		if(!member.getIsAdmin()) {
 			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
 		}
