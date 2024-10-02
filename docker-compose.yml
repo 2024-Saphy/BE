@@ -1,16 +1,28 @@
+version: '3.8'
+
 services:
-  db: # 서비스 이름
+  db: # MySQL 서비스
     image: mysql:8.0.33
     restart: always
     container_name: saphy-mysql-container
     ports:
       - 13306:3306
-    environment: # -e 옵션
+    environment: # 환경 변수 설정
       - MYSQL_DATABASE=saphy
-      - MYSQL_ROOT_PASSWORD=${DOCKER_DB_PASS}  # MYSQL 패스워드 설정 옵션
+      - MYSQL_ROOT_PASSWORD=${DOCKER_DB_PASS}  # MYSQL 패스워드 설정
       - TZ=Asia/Seoul
     command: # 명령어 실행
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
 
-
+  redis: # Redis 서비스
+    image: redis:6.2.4
+    container_name: saphy-redis-container
+    restart: always
+    ports:
+      - 16379:6379
+    environment: # 환경 변수 설정
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD} # REDIS 패스워드 설정
+      - TZ=Asia/Seoul
+    command: redis-server --requirepass ${REDIS_PASSWORD} --port 16379

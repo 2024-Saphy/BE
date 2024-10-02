@@ -23,7 +23,9 @@ public class RedisConfig {
     @Bean // RedisConnectionFactory 빈 생성: Redis 서버와 연결을 위한 설정을 관리하는 객체
     public RedisConnectionFactory redisConnectionFactory() {
         // RedisStandaloneConfiguration 객체를 생성하고 호스트, 포트, 비밀번호 설정
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(host);
+        config.setPort(port);
         config.setPassword(password);
         // 설정을 통해 Redis 연결 생성
         return new JedisConnectionFactory(config);
