@@ -2,6 +2,7 @@ package saphy.saphy.pay.presentation;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +18,13 @@ import saphy.saphy.pay.dto.response.PayResponse;
 @RequestMapping("/payments")
 @RequiredArgsConstructor
 @Tag(name = "PaymentController", description = "결제 관련 API")
+@Slf4j
 public class PayController {
     private final PayService payService;
 
     @PostMapping
     public ApiResponse<PayResponse> processPayment(@RequestBody PayRequest request){
+        log.warn("impId >> " + request.getImpUid());
         PayResponse response = payService.processPayment(request);
 
         return new ApiResponse<>(response);
