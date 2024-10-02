@@ -53,8 +53,15 @@ logging:
           LocalVariableTableParameterNameDiscoverer: error
       hibernate:
         sql: debug
-      hibernate.sql.results.internal.ResultsHelper: INFO
-    p6spy: info
+        type.descriptor.sql: trace # 파라미터 값 출력
+        sql.results.internal.ResultsHelper: INFO # OneToMany 조회 관련 로그 숨김
+    p6spy:
+
+# p6spy log
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
 
 # Swagger 설정 추가
 springdoc:
