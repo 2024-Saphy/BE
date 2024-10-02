@@ -3,7 +3,6 @@ package saphy.saphy.pay.domain;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +26,12 @@ public class Pay extends BaseEntity {
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
+    @Column(name = "merchant_id", unique = true)
+    private String merchantUid;
+
+    @Column(name = "imp_uid", unique = true)
+    private String impUid;
+
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
@@ -38,10 +43,12 @@ public class Pay extends BaseEntity {
     @Column(name = "status", nullable = false)
     private PayStatus status;
 
-    @Column(name = "transaction_id", unique = true)
-    private String transactionId;
+    public void setImpUid(String impUid) {
+        this.impUid = impUid;
+    }
 
-    @Column(name = "payment_date")
-    private LocalDateTime payDate;
+    public void setStatus(PayStatus status) {
+        this.status = status;
+    }
 
 }
