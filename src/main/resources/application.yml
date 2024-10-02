@@ -18,7 +18,14 @@ spring:
     open-in-view: 'false'
     database-platform: org.hibernate.dialect.MySQLDialect
 
-  # JWT 설정 추가
+  # 페이징 설정
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true # 기본 0부터 시작하는 페이징 번호를 1로 설정
+        default-page-size: 40 # 한 페이지당 기본 아이템 수
+
+  # JWT 설정
   jwt:
     secret-key: ${JWT_SECRET}
     access-token-expiration: 604800000
