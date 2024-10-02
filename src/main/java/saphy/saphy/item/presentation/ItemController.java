@@ -34,10 +34,12 @@ public class ItemController {
 	@PostMapping("/items/phones")
 	@Operation(summary = "휴대폰 생성 API", description = "상품을 생성하는 API 입니다.")
 	public ApiResponse<Void> save(
-		@RequestPart("request") PhoneCreateRequest request,
-		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@RequestPart("request") PhoneCreateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
 	){
-		Item item = itemService.savePhone(request);
+		Member loggedInMember = customUserDetails.getMember();
+		Item item = itemService.savePhone(loggedInMember, request);
 		imageService.saveItemImages(multipartFiles, item.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
@@ -46,10 +48,12 @@ public class ItemController {
 	@PostMapping("/items/tablets")
 	@Operation(summary = "태블릿 생성 API", description = "상품을 생성하는 API 입니다.")
 	public ApiResponse<Void> save(
-		@RequestPart("request") TabletCreateRequest request,
-		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@RequestPart("request") TabletCreateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
 	) {
-		Item item = itemService.saveTablet(request);
+		Member loggedInMember = customUserDetails.getMember();
+		Item item = itemService.saveTablet(loggedInMember, request);
 		imageService.saveItemImages(multipartFiles, item.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
@@ -58,10 +62,12 @@ public class ItemController {
 	@PostMapping("/items/laptops")
 	@Operation(summary = "노트북 생성 API", description = "상품을 생성하는 API 입니다.")
 	public ApiResponse<Void> save(
-		@RequestPart("request") LaptopCreateRequest request,
-		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@RequestPart("request") LaptopCreateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
 	) {
-		Item item = itemService.saveLaptop(request);
+		Member loggedInMember = customUserDetails.getMember();
+		Item item = itemService.saveLaptop(loggedInMember, request);
 		imageService.saveItemImages(multipartFiles, item.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
