@@ -2,6 +2,10 @@ package saphy.saphy.global.response;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +29,18 @@ public class ApiResponse<T> {
 		this.results = results;
 	}
 
+	public ApiResponse(Page<T> results) {
+		this.status = new Status(ErrorCode.REQUEST_OK);
+		this.metadata = new Metadata(results.getContent().size(), results.getPageable(), false);
+		this.results = results.getContent();
+	}
+
+	public ApiResponse(Slice<T> results) {
+		this.status = new Status(ErrorCode.REQUEST_OK);
+		this.metadata = new Metadata(results.getContent().size(), results.getPageable(), results.hasNext());
+		this.results = results.getContent();
+	}
+
 	public ApiResponse(T data) {
 		this.status = new Status(ErrorCode.REQUEST_OK);
 		this.metadata = new Metadata(1);
@@ -43,6 +59,12 @@ public class ApiResponse<T> {
 	@AllArgsConstructor
 	private static class Metadata {
 		private int resultCount = 0;
+		private Pageable pageable;
+		private boolean hasNext;
+
+		public Metadata(int resultCount) {
+			this.resultCount = resultCount;
+		}
 	}
 
 	@Getter
