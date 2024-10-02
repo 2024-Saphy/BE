@@ -62,5 +62,15 @@ public class Item extends BaseEntity {
 
     public boolean canOrder() {
         return stock < 0;
+  
+    public void decreaseStock(int i) {
+        this.stock = this.stock - i;
+    }
+
+    public void update(Item item) {
+        this.name = item.getName();
+        this.description = item.getDescription();
+        this.price = item.getPrice();
+        this.stock = item.getStock();
     }
 }

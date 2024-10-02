@@ -112,4 +112,56 @@ public class ItemController {
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
+
+	@PatchMapping("/items/phones/{itemId}")
+	@Operation(summary = "핸드폰 수정 API", description = "상품을 수정하는 API 입니다.")
+	public ApiResponse<Void> update(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@PathVariable Long itemId,
+			@RequestPart("request") PhoneUpdateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+	) {
+		Member loggedInMember = customUserDetails.getMember();
+		itemService.updatePhone(loggedInMember, itemId, request);
+
+		imageService.deleteItemImages(itemId);
+		imageService.saveItemImages(multipartFiles, itemId);
+
+		return new ApiResponse<>(ErrorCode.REQUEST_OK);
+	}
+
+	@PatchMapping("/items/tablets/{itemId}")
+	@Operation(summary = "태블릿 수정 API", description = "상품을 수정하는 API 입니다.")
+	public ApiResponse<Void> update(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@PathVariable Long itemId,
+			@RequestPart("request") TabletUpdateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+	) {
+		Member loggedInMember = customUserDetails.getMember();
+		itemService.updateTablet(loggedInMember, itemId, request);
+
+		imageService.deleteItemImages(itemId);
+		imageService.saveItemImages(multipartFiles, itemId);
+
+		return new ApiResponse<>(ErrorCode.REQUEST_OK);
+	}
+
+	@PatchMapping("/items/laptops/{itemId}")
+	@Operation(summary = "노트북 수정 API", description = "상품을 수정하는 API 입니다.")
+	public ApiResponse<Void> update(
+			@AuthenticationPrincipal CustomUserDetails customUserDetails,
+			@PathVariable Long itemId,
+			@RequestPart("request") LaptopUpdateRequest request,
+			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+	) {
+		Member loggedInMember = customUserDetails.getMember();
+		itemService.updateLaptop(loggedInMember, itemId, request);
+
+		imageService.deleteItemImages(itemId);
+		imageService.saveItemImages(multipartFiles, itemId);
+
+		return new ApiResponse<>(ErrorCode.REQUEST_OK);
+	}
+
 }

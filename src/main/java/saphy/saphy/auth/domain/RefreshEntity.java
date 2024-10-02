@@ -1,26 +1,15 @@
 package saphy.saphy.auth.domain;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
-@Entity
 @Getter
-@NoArgsConstructor
+@RedisHash(value = "RefreshToken", timeToLive = 604800) // TTL 7일 설정
 @AllArgsConstructor
 public class RefreshEntity {
-    @Id
-    @Column(name = "refresh_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String refresh;
-
+    @Id // JPA 의존성이 필요하지 않기 때문에 persistence.id를 import하면 오류남
     private String loginId;
-
-    public RefreshEntity(String refresh, String loginId) {
-        this.refresh = refresh;
-        this.loginId = loginId;
-    }
+    private String refreshToken;
 }

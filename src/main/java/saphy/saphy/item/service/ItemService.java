@@ -2,6 +2,7 @@ package saphy.saphy.item.service;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +15,8 @@ import saphy.saphy.item.domain.Phone;
 import saphy.saphy.item.domain.Tablet;
 import saphy.saphy.item.domain.enumeration.DeviceType;
 import saphy.saphy.item.domain.repository.ItemRepository;
-import saphy.saphy.item.dto.request.LaptopCreateRequest;
-import saphy.saphy.item.dto.request.PhoneCreateRequest;
-import saphy.saphy.item.dto.request.SearchParam;
-import saphy.saphy.item.dto.request.TabletCreateRequest;
 import saphy.saphy.item.dto.response.ItemResponse;
+import saphy.saphy.item.dto.request.*;
 import saphy.saphy.member.domain.Member;
 
 @Service
@@ -63,6 +61,16 @@ public class ItemService {
 
 		return itemRepository.save(phone);
 	}
+  
+  public void updatePhone(Member member, Long itemId, PhoneUpdateRequest request) {
+		isAdmin(member);
+
+		Phone findPhone = (Phone) itemRepository.findById(itemId)
+				.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
+		Phone updatePhone = request.toEntity();
+
+		findPhone.update(updatePhone);
+	}
 
 	/**
 	 * 태블릿
@@ -73,6 +81,15 @@ public class ItemService {
 		return itemRepository.save(tablet);
 	}
 
+	public void updateTablet(Member member, Long itemId, TabletUpdateRequest request) {
+		isAdmin(member);
+
+		Tablet findTablet = (Tablet) itemRepository.findById(itemId)
+				.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
+		Tablet updateTablet = request.toEntity();
+
+		findTablet.update(updateTablet);
+	}
 	/**
 	 * 노트북
 	 */
@@ -80,5 +97,27 @@ public class ItemService {
 		Laptop laptop = request.toEntity();
 
 		return itemRepository.save(laptop);
+	}
+
+	public void updateLaptop(Member member, Long itemId, LaptopUpdateRequest request) {
+		isAdmin(member);
+
+		Laptop findLaptop = (Laptop) itemRepository.findById(itemId)
+				.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
+		Laptop updateLaptop = request.toEntity();
+
+		findLaptop.update(updateLaptop);
+	}
+
+	public void delete(Member member, Long itemId) {
+		isAdmin(member);
+
+		itemRepository.deleteById(itemId);
+	}
+
+	public void isAdmin(Member member) {
+		if(!member.getIsAdmin()) {
+			throw SaphyException.from(ErrorCode.MEMBER_NOT_ADMIN);
+		}
 	}
 }

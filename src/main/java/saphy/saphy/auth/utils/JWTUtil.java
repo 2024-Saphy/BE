@@ -82,7 +82,8 @@ public class JWTUtil {
     // 소셜로그인 토큰 발급
     public void generateToken(Authentication authResult, HttpServletResponse response) {
         // 권한 가져오기
-        String authorities = authResult.getAuthorities().stream()
+        String authorities = authResult.getAuthorities()
+                .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
