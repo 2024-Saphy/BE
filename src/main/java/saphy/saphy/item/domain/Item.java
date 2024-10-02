@@ -59,4 +59,8 @@ public class Item extends BaseEntity {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<ItemImage> images = new ArrayList<>();
+
+    public boolean canOrder() {
+        return stock < 0;
+    }
 }

@@ -17,6 +17,11 @@ spring:
       ddl-auto: update
     open-in-view: 'false'
     database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        format_sql: true # SQL 포맷팅
+        highlight_sql: true # ANSI 코드에 색을 나타낸다
+        use_sql_comments: true # SQL 내부에 /* */ 주석 추가
 
   # 페이징 설정
   data:
@@ -38,12 +43,6 @@ spring:
       key: ${PORTONE_KEY}
       secretkey: ${PORTONE_SECRETKEY}
 
-# p6spy log
-decorator:
-  datasource:
-    p6spy:
-      enable-logging: 'true'
-
 # logging
 logging:
   level:
@@ -61,7 +60,7 @@ logging:
 decorator:
   datasource:
     p6spy:
-      enable-logging: true
+      enable-logging: false
 
 # Swagger 설정 추가
 springdoc:
