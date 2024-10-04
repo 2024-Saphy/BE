@@ -18,7 +18,9 @@ public enum ErrorCode {
     DUPLICATE_MEMBER_PHONE_NUMBER(HttpStatus.CONFLICT, "중복된 전화번호입니다"),
     PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "프로필 이미지를 찾을 수 없습니다"),
     MEMBER_NOT_ADMIN(HttpStatus.FORBIDDEN, "관리자가 아닙니다"),
-
+    ADDRESS_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 주소가 등록되어 있습니다"),
+    DUPLICATE_ADDRESS(HttpStatus.CONFLICT, "이미 동일한 주소가 등록되어 있습니다"),
+    ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 주소가 존재하지 않습니다."),
 
     // auth
     MEMBER_JOIN_REQUIRED(HttpStatus.MULTIPLE_CHOICES, "회원가입이 필요합니다."),
