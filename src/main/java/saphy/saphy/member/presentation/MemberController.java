@@ -16,6 +16,7 @@ import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.dto.request.MemberAccountAddRequest;
+import saphy.saphy.member.dto.request.MemberAccountUpdateRequest;
 import saphy.saphy.member.dto.request.MemberAddressAddRequest;
 import saphy.saphy.member.dto.request.MemberAddressUpdateRequest;
 import saphy.saphy.member.dto.request.MemberJoinRequest;
@@ -35,7 +36,8 @@ public class MemberController {
 
     @GetMapping("/test")
     @Operation(summary = "로그인 유지 test", description = "member가 SecurityContext에 저장되었는지 확인하는 API 입니다.")
-    public ApiResponse checkFirstLogin(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletResponse response) {
+    public ApiResponse checkFirstLogin(@AuthenticationPrincipal CustomUserDetails userDetails,
+        HttpServletResponse response) {
         memberService.isCurrentMember(userDetails.getMember().getLoginId());
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
@@ -72,7 +74,8 @@ public class MemberController {
 
     @PatchMapping("/info")
     @Operation(summary = "회원 정보 수정 API", description = "회원 정보를 수정합니다.")
-    public ApiResponse<Void> updateInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody MemberInfoUpdateRequest updateRequest) {
+    public ApiResponse<Void> updateInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody MemberInfoUpdateRequest updateRequest) {
         Member loggedInMember = customUserDetails.getMember();
         memberService.updateMemberInfo(loggedInMember, updateRequest);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
@@ -143,7 +146,7 @@ public class MemberController {
         return new ApiResponse<>(memberService.findMemberAccount(loggedInMember));
     }
 
-    @PostMapping("/info/address")
+    @PostMapping("/info/account")
     @Operation(summary = "회원 계좌 추가 API", description = "회원의 계좌를 추가합니다.")
     public ApiResponse<Void> addAccount(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -151,6 +154,18 @@ public class MemberController {
     ) {
         Member loggedInMember = customUserDetails.getMember();
         memberService.addMemberAccount(loggedInMember, request);
+
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
+
+    @PatchMapping("/info/account")
+    @Operation(summary = "회원 계좌 수정 API", description = "회원의 계좌를 수정합니다.")
+    public ApiResponse<Void> updateAccount(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody MemberAccountUpdateRequest request
+    ) {
+        Member loggedInMember = customUserDetails.getMember();
+        memberService.updateMemberAccount(loggedInMember, request);
 
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
