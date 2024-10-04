@@ -15,6 +15,7 @@ import saphy.saphy.auth.utils.AccessTokenUtils;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.member.domain.Member;
+import saphy.saphy.member.dto.request.MemberAddressAddRequest;
 import saphy.saphy.member.dto.request.MemberJoinRequest;
 import saphy.saphy.member.dto.request.MemberInfoUpdateRequest;
 import saphy.saphy.member.dto.response.MemberAccountResponse;
@@ -94,4 +95,18 @@ public class MemberController {
 
         return new ApiResponse<>(memberService.findMemberAddress(loggedInMember));
     }
+
+    @PostMapping("/info/address")
+    @Operation(summary = "회원 주소 추가 API", description = "회원의 주소를 추가합니다.")
+    public ApiResponse<Void> addAddress(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody MemberAddressAddRequest request
+    ) {
+        Member loggedInMember = customUserDetails.getMember();
+        memberService.addMemberAddress(loggedInMember, request);
+
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
+
+
 }
