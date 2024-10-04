@@ -21,7 +21,7 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @GetMapping
-    @Operation(summary = "구매 현황 전체 조회 API", description = "사용자의 모든 구매 현황을 조회하는 API 입니다.")
+    @Operation(summary = "구매 현황 목록 조회 API", description = "사용자의 구매 현황 목록을 조회하는 API 입니다.")
     public ApiResponse<PurchaseResponse> findAll(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
