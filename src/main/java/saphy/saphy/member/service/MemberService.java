@@ -17,7 +17,13 @@ import lombok.RequiredArgsConstructor;
 import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
+import saphy.saphy.member.domain.Account;
+import saphy.saphy.member.domain.Address;
 import saphy.saphy.member.domain.Member;
+import saphy.saphy.member.dto.request.MemberAccountAddRequest;
+import saphy.saphy.member.dto.request.MemberAccountUpdateRequest;
+import saphy.saphy.member.dto.request.MemberAddressAddRequest;
+import saphy.saphy.member.dto.request.MemberAddressUpdateRequest;
 import saphy.saphy.member.dto.request.MemberJoinRequest;
 import saphy.saphy.member.dto.request.MemberInfoUpdateRequest;
 import saphy.saphy.member.dto.response.MemberDetailResponse;
@@ -88,7 +94,6 @@ public class MemberService {
         updateIfPresent(request.getPassword(), member::setPassword);
         updateIfPresent(request.getName(), member::setName);
         updateIfPresent(request.getNickName(), member::setNickName);
-        updateIfPresent(request.getAddress(), member::setAddress);
         updateIfPresent(request.getPhoneNumber(), member::setPhoneNumber);
         updateIfPresent(request.getEmail(), member::setEmail);
 
@@ -132,5 +137,25 @@ public class MemberService {
         if (memberRepository.existsByLoginId(loginId)) {
             throw SaphyException.from(ErrorCode.DUPLICATE_MEMBER_LOGIN_ID);
         }
+    }
+
+    /**
+     * 회원 주소
+     */
+    @Transactional
+    public void addMemberAddress(Member member, MemberAddressAddRequest request) {
+        Address address = Address.of(request.getAddress(), request.getDetailAddress());
+        member.addAddress(address);
+    }
+
+    @Transactional
+    public void updateMemberAddress(Member member, MemberAddressUpdateRequest request) {
+        Address address = Address.of(request.getAddress(), request.getDetailAddress());
+        member.updateAddress(address);
+    }
+
+    @Transactional
+    public void removeMemberAddress(Member member) {
+        member.removeAddress();
     }
 }
