@@ -17,6 +17,8 @@ import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.dto.request.MemberJoinRequest;
 import saphy.saphy.member.dto.request.MemberInfoUpdateRequest;
+import saphy.saphy.member.dto.response.MemberAccountResponse;
+import saphy.saphy.member.dto.response.MemberAddressResponse;
 import saphy.saphy.member.dto.response.MemberDetailResponse;
 import saphy.saphy.member.dto.response.MemberInfoResponse;
 import saphy.saphy.member.service.MemberService;
@@ -80,5 +82,16 @@ public class MemberController {
         memberService.validateMemberForDeletion(member);
         memberService.deleteMember(member);
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
+
+    /**
+     * 주소
+     */
+    @GetMapping("/info/address")
+    @Operation(summary = "회원 주소 조회 API", description = "회원의 주소를 조회합니다.")
+    public ApiResponse<MemberAddressResponse> getAddress(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Member loggedInMember = customUserDetails.getMember();
+
+        return new ApiResponse<>(memberService.findMemberAddress(loggedInMember));
     }
 }
