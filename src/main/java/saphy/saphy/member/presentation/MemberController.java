@@ -110,7 +110,7 @@ public class MemberController {
     }
 
     @PatchMapping("/info/address")
-    @Operation(summary = "회원 주소 수정 API", description = "회원의 주소를 수합니다.")
+    @Operation(summary = "회원 주소 수정 API", description = "회원의 주소를 수정합니다.")
     public ApiResponse<Void> updateAddress(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody MemberAddressUpdateRequest request
@@ -121,5 +121,13 @@ public class MemberController {
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 
+    @DeleteMapping("/info/address")
+    @Operation(summary = "회원 주소 삭제 API", description = "회원의 주소를 삭제합니다.")
+    public ApiResponse<Void> deleteAddress(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Member loggedInMember = customUserDetails.getMember();
+        memberService.deleteMemberAddress(loggedInMember);
 
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
 }

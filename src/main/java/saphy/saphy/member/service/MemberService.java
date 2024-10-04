@@ -161,7 +161,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void removeMemberAddress(Member member) {
+    public void deleteMemberAddress(Member member) {
         member.removeAddress();
     }
 
@@ -185,7 +185,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void removeMemberAccount(Member member) {
+    public void deleteMemberAccount(Member member) {
         member.removeAccount();
     }
 }
