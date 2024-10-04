@@ -35,39 +35,43 @@ import saphy.saphy.item.domain.enumeration.DeviceType;
 @Table(name = "items")
 public class Item extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "item_id")
+	private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(insertable = false, updatable = false)
-    private DeviceType deviceType;
+	@Enumerated(EnumType.STRING)
+	@Column(insertable = false, updatable = false)
+	private DeviceType deviceType;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @Lob
-    @Column(name = "description", nullable = false)
-    private String description;
+	@Lob
+	@Column(name = "description", nullable = false)
+	private String description;
 
-    @Column(name = "price", nullable = false)
-    private BigDecimal price;
+	@Column(name = "price", nullable = false)
+	private BigDecimal price;
 
-    @Column(name = "stock", nullable = false)
-    private int stock;
+	@Column(name = "stock", nullable = false)
+	private int stock;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<ItemImage> images = new ArrayList<>();
+	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+	private List<ItemImage> images = new ArrayList<>();
 
-    public void decreaseStock(int i) {
-        this.stock = this.stock - i;
-    }
+	public boolean canOrder() {
+		return stock < 0;
+	}
 
-    public void update(Item item) {
-        this.name = item.getName();
-        this.description = item.getDescription();
-        this.price = item.getPrice();
-        this.stock = item.getStock();
-    }
+	public void decreaseStock(int i) {
+		this.stock = this.stock - i;
+	}
+
+	public void update(Item item) {
+		this.name = item.getName();
+		this.description = item.getDescription();
+		this.price = item.getPrice();
+		this.stock = item.getStock();
+	}
 }

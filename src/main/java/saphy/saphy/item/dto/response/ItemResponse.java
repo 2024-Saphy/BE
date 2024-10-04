@@ -23,21 +23,24 @@ public class ItemResponse {
 
 	protected int stock;
 
+	protected boolean canOrder;
+
 	protected List<ImageResponse> images;
 
-	public static ItemResponse from(Item item) {
-		ItemResponse response = new ItemResponse();
-
-		response.id = item.getId();
-		response.deviceType = item.getDeviceType().getName();
-		response.name = item.getName();
-		response.description = item.getDescription();
-		response.price = item.getPrice().intValue();
-		response.stock = item.getStock();
-		response.images = item.getImages().stream()
+	public ItemResponse(Item item) {
+		this.id = item.getId();
+		this.deviceType = item.getDeviceType().getName();
+		this.name = item.getName();
+		this.description = item.getDescription();
+		this.price = item.getPrice().intValue();
+		this.stock = item.getStock();
+		this.canOrder = item.canOrder();
+		this.images = item.getImages().stream()
 			.map(itemImage -> ImageResponse.from(itemImage.getImage()))
 			.toList();
+	}
 
-		return response;
+	public static ItemResponse from(Item item) {
+		return new ItemResponse(item);
 	}
 }
