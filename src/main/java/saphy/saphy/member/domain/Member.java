@@ -85,4 +85,28 @@ public class Member extends BaseEntity {
         }
         this.address = null;
     }
+
+    /**
+     * 계좌
+     */
+    public void addAccount(Account account) {
+        if (this.account != null) {
+            throw SaphyException.from(ErrorCode.ACCOUNT_ALREADY_EXIST);
+        }
+        this.account = account;
+    }
+
+    public void updateAccount(Account account) {
+        if (this.account.equals(account)) {
+            throw SaphyException.from(ErrorCode.DUPLICATE_ACCOUNT);
+        }
+        this.account = account;
+    }
+
+    public void removeAccount() {
+        if (this.account == null) {
+            throw SaphyException.from(ErrorCode.ACCOUNT_NOT_FOUND);
+        }
+        this.account = null;
+    }
 }
