@@ -130,4 +130,15 @@ public class MemberController {
 
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
+
+    /**
+     * 계좌
+     */
+    @GetMapping("/info/account")
+    @Operation(summary = "회원 계좌 조회 API", description = "회원의 계좌를 조회합니다.")
+    public ApiResponse<MemberAccountResponse> getAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Member loggedInMember = customUserDetails.getMember();
+
+        return new ApiResponse<>(memberService.findMemberAccount(loggedInMember));
+    }
 }
