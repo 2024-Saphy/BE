@@ -169,4 +169,14 @@ public class MemberController {
 
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
+
+    @DeleteMapping("/info/account")
+    @Operation(summary = "회원 계좌 삭제 API", description = "회원의 계좌를 삭제합니다.")
+    public ApiResponse<Void> deleteAccount(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Member loggedInMember = customUserDetails.getMember();
+        memberService.deleteMemberAccount(loggedInMember);
+
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
 }
