@@ -26,6 +26,8 @@ import saphy.saphy.member.dto.request.MemberAddressAddRequest;
 import saphy.saphy.member.dto.request.MemberAddressUpdateRequest;
 import saphy.saphy.member.dto.request.MemberJoinRequest;
 import saphy.saphy.member.dto.request.MemberInfoUpdateRequest;
+import saphy.saphy.member.dto.response.MemberAccountResponse;
+import saphy.saphy.member.dto.response.MemberAddressResponse;
 import saphy.saphy.member.dto.response.MemberDetailResponse;
 import saphy.saphy.member.dto.response.MemberInfoResponse;
 import saphy.saphy.member.domain.repository.MemberRepository;
@@ -142,6 +144,10 @@ public class MemberService {
     /**
      * 회원 주소
      */
+    public MemberAddressResponse findMemberAddress(Member member) {
+        return MemberAddressResponse.toDto(member);
+    }
+
     @Transactional
     public void addMemberAddress(Member member, MemberAddressAddRequest request) {
         Address address = Address.of(request.getAddress(), request.getDetailAddress());
