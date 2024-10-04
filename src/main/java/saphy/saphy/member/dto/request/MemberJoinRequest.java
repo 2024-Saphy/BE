@@ -22,8 +22,6 @@ public class MemberJoinRequest {
 
     private String nickName;
 
-    private String address;
-
     private String phoneNumber;
 
     private String email;
@@ -35,7 +33,6 @@ public class MemberJoinRequest {
                 .socialType(socialType)
                 .name(name)
                 .nickName(nickName)
-                .address(address)
                 .phoneNumber(phoneNumber)
                 .email(email)
                 .isAdmin(Boolean.FALSE) // 기본값 설정
