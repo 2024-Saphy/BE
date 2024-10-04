@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.member.domain.Member;
@@ -22,12 +19,19 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
 
     @GetMapping
-    @Operation(summary = "구매 현황 목록 조회 API", description = "사용자의 구매 현황 목록을 조회하는 API 입니다.")
+    @Operation(summary = "구매 현황 목록 조회 API",
+            description = "사용자의 모든 or 상태에 맞는 구매 현황 목록을 조회하는 API 입니다. " +
+                    "/ ALL, PENDING, PROCESSING, START, SHIPPED, DELIVERED, CANCELLED"
+    )
     public ApiResponse<PurchaseResponse> findAll(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam("status") String status
     ) {
         Member loggedInmember = customUserDetails.getMember();
-        return new ApiResponse<>(purchaseService.findAll(loggedInmember));
+        if(status.equals("ALL")) {
+            return new ApiResponse<>(purchaseService.findAll(loggedInmember));
+        }
+        return new ApiResponse<>(purchaseService.findByStatus(loggedInmember,status));
     }
 
     @GetMapping("/{purchaseId}")

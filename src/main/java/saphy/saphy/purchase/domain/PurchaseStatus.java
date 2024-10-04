@@ -1,5 +1,10 @@
 package saphy.saphy.purchase.domain;
 
+import saphy.saphy.global.exception.ErrorCode;
+import saphy.saphy.global.exception.SaphyException;
+
+import java.util.Arrays;
+
 public enum PurchaseStatus {
     PENDING("처리 대기 중"),
     PROCESSING("처리 중"),
@@ -16,5 +21,13 @@ public enum PurchaseStatus {
 
     public String getDescription() {
         return description;
+    }
+
+    public static PurchaseStatus findByName(String name) {
+        try {
+            return PurchaseStatus.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw SaphyException.from(ErrorCode.PURCHASE_STATUS_NOT_FOUND);
+        }
     }
 }
