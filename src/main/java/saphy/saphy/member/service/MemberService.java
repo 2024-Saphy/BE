@@ -168,6 +168,10 @@ public class MemberService {
     /**
      * 계좌
      */
+    public MemberAccountResponse findMemberAccount(Member member) {
+        return MemberAccountResponse.toDto(member);
+    }
+
     @Transactional
     public void addMemberAccount(Member member, MemberAccountAddRequest request) {
         Account account = Account.of(request.getBankName(), request.getAccountNumber());
