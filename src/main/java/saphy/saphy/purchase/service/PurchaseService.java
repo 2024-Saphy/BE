@@ -37,4 +37,7 @@ public class PurchaseService {
 				.toList();
 	}
 
+	public PurchaseResponse findById(Member member, Long purchaseId) {
+		return PurchaseResponse.toDto(purchaseRepository.findByIdAndMember(purchaseId, member));
+	}
 }

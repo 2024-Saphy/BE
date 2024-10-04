@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import saphy.saphy.auth.domain.CustomUserDetails;
@@ -27,5 +28,15 @@ public class PurchaseController {
     ) {
         Member loggedInmember = customUserDetails.getMember();
         return new ApiResponse<>(purchaseService.findAll(loggedInmember));
+    }
+
+    @GetMapping("/{purchaseId}")
+    @Operation(summary = "구매 현황 단건 조회 API", description = "사용자의 구매 현황을 단건으로 조회하는 API 입니다.")
+    public ApiResponse<PurchaseResponse> findById(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long purchaseId
+    ) {
+        Member loggedInmember = customUserDetails.getMember();
+        return new ApiResponse<>(purchaseService.findById(loggedInmember, purchaseId));
     }
 }

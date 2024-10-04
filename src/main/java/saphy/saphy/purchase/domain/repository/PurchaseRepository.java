@@ -12,4 +12,6 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 
 	List<Purchase> findByMember(Member member);
 
+	Purchase findByIdAndMember(Long id, Member member);
+
 }
