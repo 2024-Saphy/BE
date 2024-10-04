@@ -36,13 +36,15 @@ public class Member extends BaseEntity {
     private String nickName;
 
     @Column
-    private String address; // 임베더블? 이거 해보면 좋을듯?
+    @Embedded
+    private Address address;
+
+    @Column
+    @Embedded
+    private Account account;
 
     @Column
     private String phoneNumber;
-
-    @Column
-    private String bankAccount; // 계좌 정보
 
     @Column
     private String email;
