@@ -16,6 +16,7 @@ import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.dto.request.MemberAddressAddRequest;
+import saphy.saphy.member.dto.request.MemberAddressUpdateRequest;
 import saphy.saphy.member.dto.request.MemberJoinRequest;
 import saphy.saphy.member.dto.request.MemberInfoUpdateRequest;
 import saphy.saphy.member.dto.response.MemberAccountResponse;
@@ -104,6 +105,18 @@ public class MemberController {
     ) {
         Member loggedInMember = customUserDetails.getMember();
         memberService.addMemberAddress(loggedInMember, request);
+
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
+
+    @PatchMapping("/info/address")
+    @Operation(summary = "회원 주소 수정 API", description = "회원의 주소를 수합니다.")
+    public ApiResponse<Void> updateAddress(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody MemberAddressUpdateRequest request
+    ) {
+        Member loggedInMember = customUserDetails.getMember();
+        memberService.updateMemberAddress(loggedInMember, request);
 
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
