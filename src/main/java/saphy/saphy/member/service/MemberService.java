@@ -158,4 +158,24 @@ public class MemberService {
     public void removeMemberAddress(Member member) {
         member.removeAddress();
     }
+
+    /**
+     * 계좌
+     */
+    @Transactional
+    public void addMemberAccount(Member member, MemberAccountAddRequest request) {
+        Account account = Account.of(request.getBankName(), request.getAccountNumber());
+        member.addAccount(account);
+    }
+
+    @Transactional
+    public void updateMemberAccount(Member member, MemberAccountUpdateRequest request) {
+        Account account = Account.of(request.getBankName(), request.getAccountNumber());
+        member.updateAccount(account);
+    }
+
+    @Transactional
+    public void removeMemberAccount(Member member) {
+        member.removeAccount();
+    }
 }
