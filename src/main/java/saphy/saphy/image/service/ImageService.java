@@ -19,17 +19,21 @@ import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.image.domain.ItemImage;
 import saphy.saphy.image.domain.ProfileImage;
 import saphy.saphy.image.domain.ReviewImage;
+import saphy.saphy.image.domain.SalesImage;
 import saphy.saphy.image.dto.StoreImageDto;
 import saphy.saphy.image.repository.ImageStoreProcessor;
 import saphy.saphy.image.repository.ItemImageRepository;
 import saphy.saphy.image.repository.ProfileImageRepository;
 import saphy.saphy.image.repository.ReviewImageRepository;
+import saphy.saphy.image.repository.SalesImageRepository;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.domain.repository.ItemRepository;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.repository.MemberRepository;
 import saphy.saphy.review.domain.Review;
 import saphy.saphy.review.domain.repository.ReviewRepository;
+import saphy.saphy.sales.domain.Sales;
+import saphy.saphy.sales.domain.repository.SalesRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,8 +42,10 @@ public class ImageService {
 	private final ItemImageRepository itemImageRepository;
 	private final ProfileImageRepository profileImageRepository;
 	private final ReviewImageRepository reviewImageRepository;
+	private final SalesImageRepository salesImageRepository;
 	private final ItemRepository<Item> itemRepository;
 	private final ReviewRepository reviewRepository;
+	private final SalesRepository salesRepository;
 	private final MemberRepository memberRepository;
 	private final ImageStoreProcessor imageStoreProcessor;
 	private final AmazonS3 amazonS3Client;
@@ -93,6 +99,21 @@ public class ImageService {
 	}
 
 	@Transactional
+	public void saveSalesImages(List<MultipartFile> imageFiles, Long salesId) {
+		Sales sales = salesRepository.findById(salesId)
+			.orElseThrow(() -> SaphyException.from(ErrorCode.SALES_NOT_FOUND));
+
+		List<StoreImageDto> storeImageDtos = imageStoreProcessor.storeImageFiles(imageFiles);
+
+		for (int i = 0; i < imageFiles.size(); i++) {
+			String imageUrl = uploadImageFile(imageFiles.get(i), storeImageDtos.get(i));
+
+			SalesImage salesImage = storeImageDtos.get(i).toSalesImageEntity(sales, imageUrl);
+			salesImageRepository.save(salesImage);
+		}
+	}
+
+	@Transactional
 	public void deleteItemImages(Long itemId) {
 		List<ItemImage> itemImages = itemImageRepository.findByItemId(itemId);
 
@@ -123,6 +144,18 @@ public class ImageService {
 			reviewImageRepository.delete(reviewImage);
 
 			String storeName = reviewImage.getImage().getStoreName();
+			amazonS3Client.deleteObject(bucket, storeName);
+		});
+	}
+
+	@Transactional
+	public void deleteSalesImages(Long salesId) {
+		List<SalesImage> salesImages = salesImageRepository.findBySalesId(salesId);
+
+		salesImages.forEach(salesImage -> {
+			salesImageRepository.delete(salesImage);
+
+			String storeName = salesImage.getImage().getStoreName();
 			amazonS3Client.deleteObject(bucket, storeName);
 		});
 	}
