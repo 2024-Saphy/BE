@@ -107,6 +107,9 @@ public enum ErrorCode {
 
     // sales
     SALES_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 판매 기록입니다."),
+  
+    //purchase_status
+    PURCHASE_STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 배송 상태입니다."),
 
 
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 요청입니다."),
