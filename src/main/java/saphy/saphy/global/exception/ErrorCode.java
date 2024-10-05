@@ -100,6 +100,9 @@ public enum ErrorCode {
     PAY_INVALID_METHOD(HttpStatus.BAD_REQUEST, "유효하지 않은 결제 방법입니다."),
     PAY_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 결제 내역을 찾을 수 없습니다."),
 
+    //purchase_status
+    PURCHASE_STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 배송 상태입니다."),
+
 
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 요청입니다."),
     NOT_ENOUGH_PERMISSION(HttpStatus.FORBIDDEN, "해당 권한이 없습니다."),
