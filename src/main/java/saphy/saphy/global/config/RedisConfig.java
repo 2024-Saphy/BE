@@ -35,8 +35,12 @@ public class RedisConfig {
         // JedisConnectionFactory를 통한 Redis 연결 생성
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisConfig);
 
-        // 설정을 통해 Redis 연결 생성
-        return new JedisConnectionFactory(redisConfig);
+        // JedisConnectionFactory 연결 풀 설정
+        jedisConnectionFactory.getPoolConfig().setMaxTotal(50);  // 최대 커넥션 수
+        jedisConnectionFactory.getPoolConfig().setMaxIdle(30);   // 최대 유휴 커넥션 수
+        jedisConnectionFactory.getPoolConfig().setMinIdle(10);   // 최소 유휴 커넥션 수
+
+        return jedisConnectionFactory;
     }
 
     @Bean // RedisTemplate 빈 생성: Redis 서버와 상호작용하기 위한 템플릿 객체
