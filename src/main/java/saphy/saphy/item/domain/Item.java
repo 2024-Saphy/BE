@@ -61,7 +61,7 @@ public class Item extends BaseEntity {
 	private List<ItemImage> images = new ArrayList<>();
 
 	public boolean canOrder() {
-		return stock < 0;
+		return stock > 0;
 	}
 
 	public void decreaseStock(int i) {
