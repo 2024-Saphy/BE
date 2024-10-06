@@ -16,7 +16,7 @@ services:
       - --collation-server=utf8mb4_unicode_ci
 
   redis:
-    image: redis:6.2.4
+    image: redis:6.2.4-alpine
     container_name: saphy-redis-container
     restart: always
     ports:
