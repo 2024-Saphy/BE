@@ -105,6 +105,9 @@ public enum ErrorCode {
     PAY_INVALID_METHOD(HttpStatus.BAD_REQUEST, "유효하지 않은 결제 방법입니다."),
     PAY_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 결제 내역을 찾을 수 없습니다."),
 
+    // sales
+    SALES_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 판매 기록입니다."),
+  
     //purchase_status
     PURCHASE_STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 배송 상태입니다."),
 

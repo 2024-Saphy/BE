@@ -29,7 +29,7 @@ public class PhoneResponse extends ItemResponse {
 		response.brand = phone.getBrand().getName();
 		response.color = phone.getColor().getName();
 		response.storage = phone.getStorage().getName();
-		response.grade = phone.getGrade().getName();
+		response.grade = phone.getGrade().name();
 		response.price = phone.getPrice().intValue();
 		response.stock = phone.getStock();
 		response.images = item.getImages().stream()

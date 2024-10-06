@@ -1,19 +1,40 @@
 package saphy.saphy.sales.domain;
 
-import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import saphy.saphy.global.entity.BaseEntity;
+import saphy.saphy.image.domain.SalesImage;
+import saphy.saphy.item.domain.Item;
 import saphy.saphy.member.domain.Member;
-import saphy.saphy.purchase.domain.Purchase;
 import saphy.saphy.sales.SalesStatus;
 
 @Entity
-@Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@Builder
 @Table(name = "sales")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Sales extends BaseEntity {
 
     @Id
@@ -24,11 +45,17 @@ public class Sales extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SalesStatus salesStatus;
 
+    @Embedded
+    private Defect defect;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY) //여기 애매하긴 한데, 일단 1:1관계로 생각함.
-    @JoinColumn(name = "order_id") // 여기 이름 바꿔야 함
-    private Purchase purchase;
+    @OneToMany(mappedBy = "sales", cascade = CascadeType.ALL)
+    private List<SalesImage> images = new ArrayList<>();
 }

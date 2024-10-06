@@ -3,9 +3,11 @@ package saphy.saphy.image.dto;
 import saphy.saphy.image.domain.ItemImage;
 import saphy.saphy.image.domain.ProfileImage;
 import saphy.saphy.image.domain.ReviewImage;
+import saphy.saphy.image.domain.SalesImage;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.review.domain.Review;
+import saphy.saphy.sales.domain.Sales;
 
 public record StoreImageDto(String uploadName, String storeName) {
 
@@ -19,5 +21,9 @@ public record StoreImageDto(String uploadName, String storeName) {
 
 	public ReviewImage toReviewImageEntity(Review review, String url) {
 		return ReviewImage.createReviewImage(uploadName, storeName, url, review);
+	}
+
+	public SalesImage toSalesImageEntity(Sales sales, String url) {
+		return SalesImage.createSalesImage(uploadName, storeName, url, sales);
 	}
 }

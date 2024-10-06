@@ -38,7 +38,7 @@ public class LaptopResponse extends ItemResponse {
 		response.processor = laptop.getProcessor().getName();
 		response.memory = laptop.getMemory().getName();
 		response.graphics = laptop.getGraphics().getName();
-		response.grade = laptop.getGrade().getName();
+		response.grade = laptop.getGrade().name();
 		response.price = laptop.getPrice().intValue();
 		response.stock = laptop.getStock();
 		response.images = item.getImages().stream()
