@@ -20,13 +20,17 @@ public class RedisConfig {
     @Value("${spring.jwt.redis.password}")
     private String password;
 
-    @Bean // RedisConnectionFactory 빈 생성: Redis 서버와 연결을 위한 설정을 관리하는 객체
+    // Redis 서버 연결 설정을 관리하는 객체
+    @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        // RedisStandaloneConfiguration 객체를 생성하고 호스트, 포트, 비밀번호 설정
+        // Redis 객체 생성 후 Redis 서버의 호스트, 포트, 비밀번호를 설정
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(port);
-        config.setPassword(password);
+        // 비밀번호가 설정되어 있으면 이를 적용합니다. 비밀번호가 없을 경우 이 코드는 비밀번호 설정을 건너뜁니다.
+        if (password != null && !password.isEmpty()) {
+            config.setPassword(password);
+        }
         // 설정을 통해 Redis 연결 생성
         return new JedisConnectionFactory(config);
     }
