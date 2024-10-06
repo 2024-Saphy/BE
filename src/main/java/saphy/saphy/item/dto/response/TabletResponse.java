@@ -29,7 +29,7 @@ public class TabletResponse extends ItemResponse{
 		response.brand = tablet.getBrand().getName();
 		response.color = tablet.getColor().getName();
 		response.storage = tablet.getStorage().getName();
-		response.grade = tablet.getGrade().getName();
+		response.grade = tablet.getGrade().name();
 		response.price = tablet.getPrice().intValue();
 		response.stock = tablet.getStock();
 		response.images = item.getImages().stream()
