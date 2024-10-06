@@ -32,6 +32,9 @@ public class RedisConfig {
             redisConfig.setPassword(password);
         }
 
+        // JedisConnectionFactory를 통한 Redis 연결 생성
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisConfig);
+
         // 설정을 통해 Redis 연결 생성
         return new JedisConnectionFactory(redisConfig);
     }
