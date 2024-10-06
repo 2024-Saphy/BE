@@ -27,7 +27,7 @@ public class RedisConfig {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(port);
-        // 비밀번호가 설정되어 있으면 이를 적용합니다. 비밀번호가 없을 경우 이 코드는 비밀번호 설정을 건너뜁니다.
+        // 비밀번호가 설정되어 있으면 적용
         if (password != null && !password.isEmpty()) {
             config.setPassword(password);
         }
