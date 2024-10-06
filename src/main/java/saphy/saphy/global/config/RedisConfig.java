@@ -24,15 +24,16 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         // Redis 객체 생성 후 Redis 서버의 호스트, 포트, 비밀번호를 설정
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        config.setHostName(host);
-        config.setPort(port);
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration();
+        redisConfig.setHostName(host);
+        redisConfig.setPort(port);
         // 비밀번호가 설정되어 있으면 적용
         if (password != null && !password.isEmpty()) {
-            config.setPassword(password);
+            redisConfig.setPassword(password);
         }
+
         // 설정을 통해 Redis 연결 생성
-        return new JedisConnectionFactory(config);
+        return new JedisConnectionFactory(redisConfig);
     }
 
     @Bean // RedisTemplate 빈 생성: Redis 서버와 상호작용하기 위한 템플릿 객체
