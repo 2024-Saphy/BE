@@ -48,4 +48,15 @@ public class PurchaseService {
 		return PurchaseResponse.toDto(purchaseRepository.findByIdAndMember(purchaseId, member));
 	}
 
+	public List<PurchaseResponse> findDeliveries(Member member) {
+		return purchaseRepository.findByStatusesAndMember(List.of(
+					PurchaseStatus.START,
+					PurchaseStatus.SHIPPED,
+					PurchaseStatus.DELIVERED
+				), member)
+				.stream()
+				.map(PurchaseResponse::toDto)
+				.toList();
+	}
+
 }
