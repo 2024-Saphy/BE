@@ -26,5 +26,3 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_PORT=${REDIS_PORT}
       - TZ=Asia/Seoul
-    command: >
-      sh -c "redis-server --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT:-6379}"
