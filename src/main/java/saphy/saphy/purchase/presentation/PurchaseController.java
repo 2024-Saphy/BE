@@ -43,4 +43,14 @@ public class PurchaseController {
         Member loggedInmember = customUserDetails.getMember();
         return new ApiResponse<>(purchaseService.findById(loggedInmember, purchaseId));
     }
+
+    @GetMapping("/deliveries")
+    @Operation(summary = "배송 현황 조회 API", description = "사용자의 모든 배송 현황을 조회하는 API 입니다.")
+    public ApiResponse<PurchaseResponse> findDeliveries(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        Member loggedInmember = customUserDetails.getMember();
+        return new ApiResponse<>(purchaseService.findDeliveries(loggedInmember));
+    }
+
 }
