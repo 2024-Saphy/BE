@@ -47,13 +47,15 @@ public class ItemController {
 	@PostMapping("/items/phones")
 	@Operation(summary = "휴대폰 생성 API", description = "상품을 생성하는 API 입니다.")
 	public ApiResponse<Void> save(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails,
-			@RequestPart("request") PhoneCreateRequest request,
-			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
-	){
+		@AuthenticationPrincipal CustomUserDetails customUserDetails,
+		@RequestPart("request") PhoneCreateRequest request,
+		@RequestPart("imageFiles") List<MultipartFile> imageFiles,
+		@RequestPart("descriptionImageFiles") List<MultipartFile> descriptionImageFiles
+	) {
 		Member loggedInMember = customUserDetails.getMember();
 		Item item = itemService.savePhone(loggedInMember, request);
-		imageService.saveItemImages(multipartFiles, item.getId());
+		imageService.saveItemImages(imageFiles, item.getId());
+		imageService.saveItemDescriptionImages(descriptionImageFiles, item.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
@@ -61,13 +63,15 @@ public class ItemController {
 	@PostMapping("/items/tablets")
 	@Operation(summary = "태블릿 생성 API", description = "상품을 생성하는 API 입니다.")
 	public ApiResponse<Void> save(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails,
-			@RequestPart("request") TabletCreateRequest request,
-			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+		@AuthenticationPrincipal CustomUserDetails customUserDetails,
+		@RequestPart("request") TabletCreateRequest request,
+		@RequestPart("imageFiles") List<MultipartFile> multipartFiles,
+		@RequestPart("descriptionImageFiles") List<MultipartFile> descriptionImageFiles
 	) {
 		Member loggedInMember = customUserDetails.getMember();
 		Item item = itemService.saveTablet(loggedInMember, request);
 		imageService.saveItemImages(multipartFiles, item.getId());
+		imageService.saveItemDescriptionImages(descriptionImageFiles, item.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
@@ -75,13 +79,15 @@ public class ItemController {
 	@PostMapping("/items/laptops")
 	@Operation(summary = "노트북 생성 API", description = "상품을 생성하는 API 입니다.")
 	public ApiResponse<Void> save(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails,
-			@RequestPart("request") LaptopCreateRequest request,
-			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+		@AuthenticationPrincipal CustomUserDetails customUserDetails,
+		@RequestPart("request") LaptopCreateRequest request,
+		@RequestPart("imageFiles") List<MultipartFile> imageFiles,
+		@RequestPart("descriptionImageFiles") List<MultipartFile> descriptionImageFiles
 	) {
 		Member loggedInMember = customUserDetails.getMember();
 		Item item = itemService.saveLaptop(loggedInMember, request);
-		imageService.saveItemImages(multipartFiles, item.getId());
+		imageService.saveItemImages(imageFiles, item.getId());
+		imageService.saveItemDescriptionImages(descriptionImageFiles, item.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
@@ -126,10 +132,10 @@ public class ItemController {
 	@PatchMapping("/items/phones/{itemId}")
 	@Operation(summary = "핸드폰 수정 API", description = "상품을 수정하는 API 입니다.")
 	public ApiResponse<Void> update(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails,
-			@PathVariable Long itemId,
-			@RequestPart("request") PhoneUpdateRequest request,
-			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+		@AuthenticationPrincipal CustomUserDetails customUserDetails,
+		@PathVariable Long itemId,
+		@RequestPart("request") PhoneUpdateRequest request,
+		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
 	) {
 		Member loggedInMember = customUserDetails.getMember();
 		itemService.updatePhone(loggedInMember, itemId, request);
@@ -143,10 +149,10 @@ public class ItemController {
 	@PatchMapping("/items/tablets/{itemId}")
 	@Operation(summary = "태블릿 수정 API", description = "상품을 수정하는 API 입니다.")
 	public ApiResponse<Void> update(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails,
-			@PathVariable Long itemId,
-			@RequestPart("request") TabletUpdateRequest request,
-			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+		@AuthenticationPrincipal CustomUserDetails customUserDetails,
+		@PathVariable Long itemId,
+		@RequestPart("request") TabletUpdateRequest request,
+		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
 	) {
 		Member loggedInMember = customUserDetails.getMember();
 		itemService.updateTablet(loggedInMember, itemId, request);
@@ -160,10 +166,10 @@ public class ItemController {
 	@PatchMapping("/items/laptops/{itemId}")
 	@Operation(summary = "노트북 수정 API", description = "상품을 수정하는 API 입니다.")
 	public ApiResponse<Void> update(
-			@AuthenticationPrincipal CustomUserDetails customUserDetails,
-			@PathVariable Long itemId,
-			@RequestPart("request") LaptopUpdateRequest request,
-			@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+		@AuthenticationPrincipal CustomUserDetails customUserDetails,
+		@PathVariable Long itemId,
+		@RequestPart("request") LaptopUpdateRequest request,
+		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
 	) {
 		Member loggedInMember = customUserDetails.getMember();
 		itemService.updateLaptop(loggedInMember, itemId, request);
