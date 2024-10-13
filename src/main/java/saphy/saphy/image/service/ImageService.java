@@ -16,12 +16,14 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
+import saphy.saphy.image.domain.ItemDescriptionImage;
 import saphy.saphy.image.domain.ItemImage;
 import saphy.saphy.image.domain.ProfileImage;
 import saphy.saphy.image.domain.ReviewImage;
 import saphy.saphy.image.domain.SalesImage;
 import saphy.saphy.image.dto.StoreImageDto;
 import saphy.saphy.image.repository.ImageStoreProcessor;
+import saphy.saphy.image.repository.ItemDescriptionImageRepository;
 import saphy.saphy.image.repository.ItemImageRepository;
 import saphy.saphy.image.repository.ProfileImageRepository;
 import saphy.saphy.image.repository.ReviewImageRepository;
@@ -40,6 +42,7 @@ import saphy.saphy.sales.domain.repository.SalesRepository;
 @RequiredArgsConstructor
 public class ImageService {
 	private final ItemImageRepository itemImageRepository;
+	private final ItemDescriptionImageRepository itemDescriptionImageRepository;
 	private final ProfileImageRepository profileImageRepository;
 	private final ReviewImageRepository reviewImageRepository;
 	private final SalesImageRepository salesImageRepository;
@@ -65,6 +68,21 @@ public class ImageService {
 
 			ItemImage itemImage = storeImageDtos.get(i).toItemImageEntity(item, imageUrl);
 			itemImageRepository.save(itemImage);
+		}
+	}
+
+	@Transactional
+	public void saveItemDescriptionImages(List<MultipartFile> imageFiles, Long itemId) {
+		Item item = itemRepository.findById(itemId)
+			.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
+
+		List<StoreImageDto> storeImageDtos = imageStoreProcessor.storeImageFiles(imageFiles);
+
+		for (int i = 0; i < imageFiles.size(); i++) {
+			String imageUrl = uploadImageFile(imageFiles.get(i), storeImageDtos.get(i));
+
+			ItemDescriptionImage itemDescriptionImage = storeImageDtos.get(i).toItemDescriptionImageEntity(item, imageUrl);
+			itemDescriptionImageRepository.save(itemDescriptionImage);
 		}
 	}
 
@@ -123,6 +141,17 @@ public class ImageService {
 			String storeName = itemImage.getImage().getStoreName();
 			amazonS3Client.deleteObject(bucket, storeName);
 		});
+	}
+
+	@Transactional
+	public void deleteItemDescriptionImage(Long itemId) {
+		ItemDescriptionImage profileImage = itemDescriptionImageRepository.findByItemId(itemId)
+			.orElseThrow(() -> SaphyException.from(ErrorCode.PROFILE_IMAGE_NOT_FOUND));
+
+		itemDescriptionImageRepository.delete(profileImage);
+
+		String storeName = profileImage.getImage().getStoreName();
+		amazonS3Client.deleteObject(bucket, storeName);
 	}
 
 	@Transactional
