@@ -1,5 +1,6 @@
 package saphy.saphy.image.dto;
 
+import saphy.saphy.image.domain.ItemDescriptionImage;
 import saphy.saphy.image.domain.ItemImage;
 import saphy.saphy.image.domain.ProfileImage;
 import saphy.saphy.image.domain.ReviewImage;
@@ -17,6 +18,10 @@ public record StoreImageDto(String uploadName, String storeName) {
 
 	public ItemImage toItemImageEntity(Item item, String url) {
 		return ItemImage.createItemImage(uploadName, storeName, url, item);
+	}
+
+	public ItemDescriptionImage toItemDescriptionImageEntity(Item item, String url) {
+		return ItemDescriptionImage.createItemDescriptionImage(uploadName, storeName, url, item);
 	}
 
 	public ReviewImage toReviewImageEntity(Review review, String url) {
