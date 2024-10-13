@@ -27,6 +27,8 @@ public class ItemResponse {
 
 	protected List<ImageResponse> images;
 
+	protected ImageResponse descriptionImage;
+
 	public ItemResponse(Item item) {
 		this.id = item.getId();
 		this.deviceType = item.getDeviceType().getName();
@@ -38,6 +40,7 @@ public class ItemResponse {
 		this.images = item.getImages().stream()
 			.map(itemImage -> ImageResponse.from(itemImage.getImage()))
 			.toList();
+		this.descriptionImage = ImageResponse.from(item.getItemDescriptionImage().getImage());
 	}
 
 	public static ItemResponse from(Item item) {
