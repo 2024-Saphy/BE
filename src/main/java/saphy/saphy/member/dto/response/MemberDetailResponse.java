@@ -27,10 +27,6 @@ public class MemberDetailResponse {
 			.nickName(member.getNickName())
 			.phoneNumber(member.getPhoneNumber())
 			.email(member.getEmail())
-			.address(member.getAddress().getAddress())
-			.detailAddress(member.getAddress().getDetailAddress())
-			.bankName(member.getAccount().getBankName())
-			.accountNumber(member.getAccount().getAccountNumber())
 			.build();
 	}
 }
