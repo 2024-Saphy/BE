@@ -3,6 +3,7 @@ package saphy.saphy.item.dto.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import saphy.saphy.image.domain.Image;
 import saphy.saphy.image.dto.response.ImageResponse;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.domain.Laptop;
@@ -24,6 +25,8 @@ public class LaptopResponse extends ItemResponse {
 
 	private String grade;
 
+	private ImageResponse descriptionImage;
+
 	public static LaptopResponse from(Item item) {
 		LaptopResponse response = new LaptopResponse();
 
@@ -44,6 +47,7 @@ public class LaptopResponse extends ItemResponse {
 		response.images = item.getImages().stream()
 			.map(itemImage -> ImageResponse.from(itemImage.getImage()))
 			.toList();
+		response.descriptionImage = ImageResponse.from(Image.of("1", "1", "https://www.frisbeekorea.com/webfile/webedit/202409/20240910174241_w32uchi6j2.jpg"));
 
 		return response;
 	}
