@@ -17,12 +17,14 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import saphy.saphy.global.entity.BaseEntity;
+import saphy.saphy.image.domain.ItemDescriptionImage;
 import saphy.saphy.image.domain.ItemImage;
 import saphy.saphy.item.domain.enumeration.DeviceType;
 
@@ -60,6 +62,9 @@ public class Item extends BaseEntity {
 	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
 	private List<ItemImage> images = new ArrayList<>();
 
+	@OneToOne(mappedBy = "item", cascade = CascadeType.ALL)
+	private ItemDescriptionImage itemDescriptionImage;
+
 	public boolean canOrder() {
 		return stock > 0;
 	}
@@ -73,5 +78,9 @@ public class Item extends BaseEntity {
 		this.description = item.getDescription();
 		this.price = item.getPrice();
 		this.stock = item.getStock();
+	}
+
+	public void setItemDescriptionImage(ItemDescriptionImage itemDescriptionImage) {
+		this.itemDescriptionImage = itemDescriptionImage;
 	}
 }
