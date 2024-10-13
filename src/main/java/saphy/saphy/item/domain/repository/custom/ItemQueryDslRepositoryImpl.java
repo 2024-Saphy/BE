@@ -1,6 +1,7 @@
 package saphy.saphy.item.domain.repository.custom;
 
 import static org.springframework.util.StringUtils.*;
+import static saphy.saphy.image.domain.QItemDescriptionImage.*;
 import static saphy.saphy.item.domain.QItem.*;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class ItemQueryDslRepositoryImpl implements ItemQueryDslRepository {
 
 		JPAQuery<Item> basicQuery = queryFactory
 			.selectFrom(item)
+			.leftJoin(item.itemDescriptionImage, itemDescriptionImage).fetchJoin()
 			.where(
 				titleContains(searchParam.getQuery()),
 				descriptionContains(searchParam.getQuery()),
