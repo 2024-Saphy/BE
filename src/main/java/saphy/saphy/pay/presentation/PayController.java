@@ -5,10 +5,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.response.ApiResponse;
 import saphy.saphy.pay.dto.request.PayPrepareRequest;
 import saphy.saphy.pay.dto.response.PayPrepareResponse;
@@ -25,13 +27,17 @@ public class PayController {
     private final PayService payService;
 
     @PostMapping("/prepare")
-    public ApiResponse<PayPrepareResponse> preparePayment(@RequestBody PayPrepareRequest request) {
-        PayPrepareResponse response = payService.preparePay(request);
+    public ApiResponse<PayPrepareResponse> preparePayment(
+            @RequestBody PayPrepareRequest request,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        PayPrepareResponse response = payService.preparePay(request, customUserDetails);
         return new ApiResponse<>(response);
     }
 
     @PostMapping("/complete")
-    public ApiResponse<PayCompleteResponse> completePayment(@RequestBody PayCompleteRequest request)
+    public ApiResponse<PayCompleteResponse> completePayment(
+            @RequestBody PayCompleteRequest request,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails)
         throws IamportResponseException, IOException {
         PayCompleteResponse response = payService.completePay(request);
         return new ApiResponse<>(response);

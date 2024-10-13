@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import saphy.saphy.global.entity.BaseEntity;
 import saphy.saphy.item.domain.Item;
+import saphy.saphy.member.domain.Member;
 
 @Entity
 @Getter
@@ -25,6 +26,10 @@ public class Pay extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(name = "merchant_id", unique = true)
     private String merchantUid;

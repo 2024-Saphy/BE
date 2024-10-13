@@ -17,6 +17,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.domain.repository.ItemRepository;
@@ -38,7 +39,7 @@ public class PayService {
 
 
     @Transactional
-    public PayPrepareResponse preparePay(PayPrepareRequest request) {
+    public PayPrepareResponse preparePay(PayPrepareRequest request, CustomUserDetails customUserDetails) {
         // Item을 상속받는 엔티티들이 존재하기에, Optional로 받아옴
         Optional<Item> optionalItem = itemRepository.findById(request.getItemId());
 
@@ -54,7 +55,7 @@ public class PayService {
         }
 
         String merchantUid = generateMerchantUid();
-        Pay pay = request.toEntity(item, merchantUid, calculatedAmount, request.getPayMethod());
+        Pay pay = request.toEntity(item, merchantUid, calculatedAmount, request.getPayMethod(), customUserDetails.getMember());
         payRepository.save(pay);
 
         item.decreaseStock(request.getQuantity());
