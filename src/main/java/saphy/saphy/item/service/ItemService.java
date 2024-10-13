@@ -30,7 +30,7 @@ public class ItemService {
 	 */
 	// deviceType 에 따라 각기 다른 응답을 반환하지만, 최종 반환형은 ItemResponse 로 통일. 이후 다시 자식 클래스로 형변환하여 자세한 정보를 전달
 	public ItemResponse findById(Long itemId) {
-		Item item = itemRepository.findById(itemId)
+		Item item = itemRepository.findWithImagesById(itemId)
 			.orElseThrow(() -> SaphyException.from(ErrorCode.ITEM_NOT_FOUND));
 
 		return item.getDeviceType().mapResponse(item);
