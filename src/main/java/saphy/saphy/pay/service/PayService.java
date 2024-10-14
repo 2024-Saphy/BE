@@ -28,6 +28,9 @@ import saphy.saphy.pay.dto.request.PayCompleteRequest;
 import saphy.saphy.pay.dto.request.PayPrepareRequest;
 import saphy.saphy.pay.dto.response.PayCompleteResponse;
 import saphy.saphy.pay.dto.response.PayPrepareResponse;
+import saphy.saphy.purchase.domain.Purchase;
+import saphy.saphy.purchase.domain.repository.PurchaseRepository;
+import saphy.saphy.purchase.service.PurchaseService;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,8 @@ import saphy.saphy.pay.dto.response.PayPrepareResponse;
 public class PayService {
     private final PayRepository payRepository;
     private final ItemRepository itemRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final PurchaseService purchaseService;
     private final IamportClient iamportClient;
 
 
@@ -73,6 +78,9 @@ public class PayService {
         if (payResponse.getResponse().getAmount().equals(pay.getAmount())) {
             pay.setStatus(PayStatus.PAID);
             pay.setImpUid(request.getImpUid());
+
+            Purchase purchase = purchaseService.toEntity(pay.getAmount(), pay.getPayMethod(), pay.getMember(), pay.getItem());
+            purchaseRepository.save(purchase);
             payRepository.save(pay);
 
             return new PayCompleteResponse(PayStatus.PAID);
