@@ -35,7 +35,7 @@ public class PurchaseService {
 		return statusCounts;
 	}
 
-	public Purchase toEntity(BigDecimals amount, PayMethod payMethod, Member member, Item item){
+	public Purchase toEntity(BigDecimal amount, PayMethod payMethod, Member member, Item item){
 		LocalDateTime now = LocalDateTime.now();
 
 		return Purchase.builder()
