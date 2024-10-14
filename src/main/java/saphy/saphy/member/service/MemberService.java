@@ -17,9 +17,17 @@ import lombok.RequiredArgsConstructor;
 import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
+import saphy.saphy.member.domain.Account;
+import saphy.saphy.member.domain.Address;
 import saphy.saphy.member.domain.Member;
+import saphy.saphy.member.dto.request.MemberAccountAddRequest;
+import saphy.saphy.member.dto.request.MemberAccountUpdateRequest;
+import saphy.saphy.member.dto.request.MemberAddressAddRequest;
+import saphy.saphy.member.dto.request.MemberAddressUpdateRequest;
 import saphy.saphy.member.dto.request.MemberJoinRequest;
 import saphy.saphy.member.dto.request.MemberInfoUpdateRequest;
+import saphy.saphy.member.dto.response.MemberAccountResponse;
+import saphy.saphy.member.dto.response.MemberAddressResponse;
 import saphy.saphy.member.dto.response.MemberDetailResponse;
 import saphy.saphy.member.dto.response.MemberInfoResponse;
 import saphy.saphy.member.domain.repository.MemberRepository;
@@ -88,7 +96,6 @@ public class MemberService {
         updateIfPresent(request.getPassword(), member::setPassword);
         updateIfPresent(request.getName(), member::setName);
         updateIfPresent(request.getNickName(), member::setNickName);
-        updateIfPresent(request.getAddress(), member::setAddress);
         updateIfPresent(request.getPhoneNumber(), member::setPhoneNumber);
         updateIfPresent(request.getEmail(), member::setEmail);
 
@@ -132,5 +139,53 @@ public class MemberService {
         if (memberRepository.existsByLoginId(loginId)) {
             throw SaphyException.from(ErrorCode.DUPLICATE_MEMBER_LOGIN_ID);
         }
+    }
+
+    /**
+     * 회원 주소
+     */
+    public MemberAddressResponse findMemberAddress(Member member) {
+        return MemberAddressResponse.toDto(member);
+    }
+
+    @Transactional
+    public void addMemberAddress(Member member, MemberAddressAddRequest request) {
+        Address address = Address.of(request.getAddress(), request.getDetailAddress());
+        member.addAddress(address);
+    }
+
+    @Transactional
+    public void updateMemberAddress(Member member, MemberAddressUpdateRequest request) {
+        Address address = Address.of(request.getAddress(), request.getDetailAddress());
+        member.updateAddress(address);
+    }
+
+    @Transactional
+    public void deleteMemberAddress(Member member) {
+        member.removeAddress();
+    }
+
+    /**
+     * 계좌
+     */
+    public MemberAccountResponse findMemberAccount(Member member) {
+        return MemberAccountResponse.toDto(member);
+    }
+
+    @Transactional
+    public void addMemberAccount(Member member, MemberAccountAddRequest request) {
+        Account account = Account.of(request.getBankName(), request.getAccountNumber());
+        member.addAccount(account);
+    }
+
+    @Transactional
+    public void updateMemberAccount(Member member, MemberAccountUpdateRequest request) {
+        Account account = Account.of(request.getBankName(), request.getAccountNumber());
+        member.updateAccount(account);
+    }
+
+    @Transactional
+    public void deleteMemberAccount(Member member) {
+        member.removeAccount();
     }
 }

@@ -18,7 +18,12 @@ public enum ErrorCode {
     DUPLICATE_MEMBER_PHONE_NUMBER(HttpStatus.CONFLICT, "중복된 전화번호입니다"),
     PROFILE_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "프로필 이미지를 찾을 수 없습니다"),
     MEMBER_NOT_ADMIN(HttpStatus.FORBIDDEN, "관리자가 아닙니다"),
-
+    ADDRESS_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 주소가 등록되어 있습니다"),
+    DUPLICATE_ADDRESS(HttpStatus.CONFLICT, "이미 동일한 주소가 등록되어 있습니다"),
+    ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 주소가 존재하지 않습니다."),
+    ACCOUNT_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 계좌가 등록되어 있습니다"),
+    DUPLICATE_ACCOUNT(HttpStatus.CONFLICT, "이미 동일한 계좌가 등록되어 있습니다"),
+    ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 계좌가 존재하지 않습니다."),
 
     // auth
     MEMBER_JOIN_REQUIRED(HttpStatus.MULTIPLE_CHOICES, "회원가입이 필요합니다."),
@@ -99,6 +104,12 @@ public enum ErrorCode {
     PAY_PRICE_MISMATCH(HttpStatus.BAD_REQUEST, "상품 금액과 결제 금액이 일치하지 않습니다."),
     PAY_INVALID_METHOD(HttpStatus.BAD_REQUEST, "유효하지 않은 결제 방법입니다."),
     PAY_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 결제 내역을 찾을 수 없습니다."),
+
+    // sales
+    SALES_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 판매 기록입니다."),
+  
+    //purchase_status
+    PURCHASE_STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 배송 상태입니다."),
 
 
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 요청입니다."),

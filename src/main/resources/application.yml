@@ -17,8 +17,20 @@ spring:
       ddl-auto: update
     open-in-view: 'false'
     database-platform: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        format_sql: true # SQL 포맷팅
+        highlight_sql: true # ANSI 코드에 색을 나타낸다
+        use_sql_comments: true # SQL 내부에 /* */ 주석 추가
 
-  # JWT 설정 추가
+  # 페이징 설정
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true # 기본 0부터 시작하는 페이징 번호를 1로 설정
+        default-page-size: 40 # 한 페이지당 기본 아이템 수
+
+  # JWT 설정
   jwt:
     secret-key: ${JWT_SECRET}
     access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
@@ -36,12 +48,6 @@ spring:
       key: ${PORTONE_KEY}
       secretkey: ${PORTONE_SECRETKEY}
 
-# p6spy log
-decorator:
-  datasource:
-    p6spy:
-      enable-logging: 'true'
-
 # logging
 logging:
   level:
@@ -51,8 +57,15 @@ logging:
           LocalVariableTableParameterNameDiscoverer: error
       hibernate:
         sql: debug
-      hibernate.sql.results.internal.ResultsHelper: INFO
-    p6spy: info
+        type.descriptor.sql: trace # 파라미터 값 출력
+        sql.results.internal.ResultsHelper: INFO # OneToMany 조회 관련 로그 숨김
+    p6spy:
+
+# p6spy log
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
 
 # Swagger 설정 추가
 springdoc:
