@@ -41,6 +41,7 @@ import saphy.saphy.sales.service.SalesService;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ProfileImageRepository profileImageRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PurchaseService purchaseService;
     private final SalesService salesService;
@@ -113,6 +114,14 @@ public class MemberService {
         updateIfPresent(request.getEmail(), member::setEmail);
 
         memberRepository.save(member);  // 변경된 내용을 저장합니다.
+    }
+
+    @Transactional
+    public void updateProfileImage(Member member, ProfileImage profileImage) {
+        profileImageRepository.findByMemberId(member.getId())
+            .ifPresent(profileImageRepository::delete);
+
+        member.updateProfileImage(profileImage);
     }
 
     // 회원 탈퇴
