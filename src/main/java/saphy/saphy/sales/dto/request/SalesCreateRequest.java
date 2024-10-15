@@ -9,13 +9,11 @@ import saphy.saphy.sales.domain.Sales;
 
 @Getter
 public class SalesCreateRequest {
-	private Long id;
 	private Long itemId;
 	private DefectRequest defect;
 
 	public Sales toEntity(Member member, Item item) {
 		return Sales.builder()
-				.id(id)
 				.salesStatus(SalesStatus.IN_PROGRESS)
 				.defect(defect.toEntity())
 				.item(item)
