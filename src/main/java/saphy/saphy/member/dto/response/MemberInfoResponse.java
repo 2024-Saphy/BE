@@ -2,6 +2,8 @@ package saphy.saphy.member.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import saphy.saphy.image.domain.ProfileImage;
+import saphy.saphy.image.dto.response.ImageResponse;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.purchase.domain.PurchaseStatus;
 import saphy.saphy.sales.SalesStatus;
@@ -12,7 +14,7 @@ import java.util.Map;
 @Builder
 public class MemberInfoResponse {
     private String nickname;
-    private String profileImgUrl;
+    private ImageResponse profileImage;
 
     //구매 상태 개수들
     private Long purchasePendingCount;
@@ -27,10 +29,10 @@ public class MemberInfoResponse {
     private Long salesInProgressCount;
     private Long salesCompletedCount;
 
-    public static MemberInfoResponse toDto(Member member, Map<PurchaseStatus, Long> purchaseCounts, Map<SalesStatus, Long> salesCounts) {
+    public static MemberInfoResponse toDto(Member member, ProfileImage profileImage, Map<PurchaseStatus, Long> purchaseCounts, Map<SalesStatus, Long> salesCounts) {
                 return MemberInfoResponse.builder()
                         .nickname(member.getNickName())
-                        //.profileImgUrl(findMember.getProfileImgUrl)
+                        .profileImage(ImageResponse.from(profileImage.getImage()))
                         .deliveryStartedCount(purchaseCounts.get(PurchaseStatus.START))
                         .deliveryGoingCount(purchaseCounts.get(PurchaseStatus.SHIPPED))
                         .deliveryDeliveredCount(purchaseCounts.get(PurchaseStatus.DELIVERED))

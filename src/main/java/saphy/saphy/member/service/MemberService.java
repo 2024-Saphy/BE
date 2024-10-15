@@ -5,7 +5,6 @@ import static saphy.saphy.global.exception.ErrorCode.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -89,7 +88,7 @@ public class MemberService {
                 .findAll()
                 .stream()
                 .map(MemberDetailResponse::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // 회원 정보 조회
@@ -97,8 +96,11 @@ public class MemberService {
     public MemberInfoResponse getInfo(Member member) {
         Map<PurchaseStatus, Long> purchaseCounts = purchaseService.getPurchaseCounts(member.getId());
         Map<SalesStatus, Long> salesCounts = salesService.getPurchaseCounts(member.getId());
+        ProfileImage profileImage = profileImageRepository.findByMemberId(member.getId())
+            .orElseThrow(() -> SaphyException.from(PROFILE_IMAGE_NOT_FOUND));
+        Member findMember = profileImage.getMember();
 
-        return MemberInfoResponse.toDto(member, purchaseCounts, salesCounts);
+        return MemberInfoResponse.toDto(findMember, profileImage, purchaseCounts, salesCounts);
     }
 
     // 회원 정보 수정
