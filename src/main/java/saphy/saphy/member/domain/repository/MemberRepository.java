@@ -1,6 +1,7 @@
 package saphy.saphy.member.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.domain.SocialType;
 

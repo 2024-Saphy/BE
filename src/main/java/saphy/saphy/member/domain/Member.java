@@ -58,9 +58,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemWish> itemWishes = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "profile_image_id")
-    private ProfileImage profileImage;
+    public void updateProfileImage(ProfileImage profileImage) {
+        profileImage.setMember(this);
+    }
 
     /**
      * 주소

@@ -5,7 +5,6 @@ import static saphy.saphy.global.exception.ErrorCode.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
+import saphy.saphy.image.domain.ProfileImage;
+import saphy.saphy.image.repository.ProfileImageRepository;
 import saphy.saphy.member.domain.Account;
 import saphy.saphy.member.domain.Address;
 import saphy.saphy.member.domain.Member;
@@ -40,6 +41,7 @@ import saphy.saphy.sales.service.SalesService;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ProfileImageRepository profileImageRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PurchaseService purchaseService;
     private final SalesService salesService;
@@ -59,7 +61,16 @@ public class MemberService {
     public void join(MemberJoinRequest request) {
         validateExistMember(request);
         String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
+
         Member member = request.toEntity(encodedPassword);
+        ProfileImage defaultProfileImage = ProfileImage.createProfileImage(
+            "default_profile_image.png",
+            "default_profile_image.png",
+            "https://w7.pngwing.com/pngs/665/132/png-transparent-user-defult-avatar.png",
+                member
+            );
+        profileImageRepository.save(defaultProfileImage);
+        member.updateProfileImage(defaultProfileImage);
 
         memberRepository.save(member);
     }
@@ -78,7 +89,7 @@ public class MemberService {
                 .findAll()
                 .stream()
                 .map(MemberDetailResponse::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // 회원 정보 조회
@@ -86,8 +97,11 @@ public class MemberService {
     public MemberInfoResponse getInfo(Member member) {
         Map<PurchaseStatus, Long> purchaseCounts = purchaseService.getPurchaseCounts(member.getId());
         Map<SalesStatus, Long> salesCounts = salesService.getPurchaseCounts(member.getId());
+        ProfileImage profileImage = profileImageRepository.findByMemberId(member.getId())
+            .orElseThrow(() -> SaphyException.from(PROFILE_IMAGE_NOT_FOUND));
+        Member findMember = profileImage.getMember();
 
-        return MemberInfoResponse.toDto(member, purchaseCounts, salesCounts);
+        return MemberInfoResponse.toDto(findMember, profileImage, purchaseCounts, salesCounts);
     }
 
     // 회원 정보 수정
@@ -100,6 +114,14 @@ public class MemberService {
         updateIfPresent(request.getEmail(), member::setEmail);
 
         memberRepository.save(member);  // 변경된 내용을 저장합니다.
+    }
+
+    @Transactional
+    public void updateProfileImage(Member member, ProfileImage profileImage) {
+        profileImageRepository.findByMemberId(member.getId())
+            .ifPresent(profileImageRepository::delete);
+
+        member.updateProfileImage(profileImage);
     }
 
     // 회원 탈퇴

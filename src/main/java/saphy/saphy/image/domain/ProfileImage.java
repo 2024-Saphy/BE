@@ -7,11 +7,13 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import saphy.saphy.member.domain.Member;
 
 @Entity
@@ -29,6 +31,7 @@ public class ProfileImage {
 	private Image image;
 
 	@OneToOne(fetch = FetchType.LAZY)
+	@Setter
 	private Member member;
 
 	/**
@@ -46,5 +49,9 @@ public class ProfileImage {
 		profileImage.member = member;
 
 		return profileImage;
+	}
+
+	public void updateMember(Member member) {
+		this.member = member;
 	}
 }

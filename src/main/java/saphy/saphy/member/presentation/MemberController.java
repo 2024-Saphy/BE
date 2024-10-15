@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +15,8 @@ import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.auth.utils.AccessTokenUtils;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.response.ApiResponse;
+import saphy.saphy.image.domain.ProfileImage;
+import saphy.saphy.image.service.ImageService;
 import saphy.saphy.member.domain.Member;
 import saphy.saphy.member.dto.request.MemberAccountAddRequest;
 import saphy.saphy.member.dto.request.MemberAccountUpdateRequest;
@@ -33,6 +36,7 @@ import saphy.saphy.member.service.MemberService;
 @Tag(name = "MemberController", description = "회원 관련 API")
 public class MemberController {
     private final MemberService memberService;
+    private final ImageService imageService;
 
     @GetMapping("/test")
     @Operation(summary = "로그인 유지 test", description = "member가 SecurityContext에 저장되었는지 확인하는 API 입니다.")
@@ -78,6 +82,20 @@ public class MemberController {
         @RequestBody MemberInfoUpdateRequest updateRequest) {
         Member loggedInMember = customUserDetails.getMember();
         memberService.updateMemberInfo(loggedInMember, updateRequest);
+        return new ApiResponse<>(ErrorCode.REQUEST_OK);
+    }
+
+    @PatchMapping("/profileImage")
+    @Operation(summary = "회원 프로필 이미지 설정 API", description = "회원의 프로필 이미지를 설정합니다.")
+    public ApiResponse<Void> updateProfileImage(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestPart("profileImage") MultipartFile profileImageFile
+    ) {
+        Member loggedInMember = customUserDetails.getMember();
+        imageService.deleteProfileImage(loggedInMember.getId());
+        ProfileImage profileImage = imageService.saveProfileImage(profileImageFile, loggedInMember.getId());
+        memberService.updateProfileImage(loggedInMember, profileImage);
+
         return new ApiResponse<>(ErrorCode.REQUEST_OK);
     }
 

@@ -2,7 +2,6 @@ package saphy.saphy.image.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -81,24 +80,23 @@ public class ImageService {
 		for (int i = 0; i < imageFiles.size(); i++) {
 			String imageUrl = uploadImageFile(imageFiles.get(i), storeImageDtos.get(i));
 
-			ItemDescriptionImage itemDescriptionImage = storeImageDtos.get(i).toItemDescriptionImageEntity(item, imageUrl);
+			ItemDescriptionImage itemDescriptionImage = storeImageDtos.get(i)
+				.toItemDescriptionImageEntity(item, imageUrl);
 			itemDescriptionImageRepository.save(itemDescriptionImage);
 		}
 	}
 
 	@Transactional
-	public void saveProfileImages(List<MultipartFile> imageFiles, Long memberId) {
-		 Member member = memberRepository.findById(memberId)
+	public ProfileImage saveProfileImage(MultipartFile imageFile, Long memberId) {
+		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> SaphyException.from(ErrorCode.MEMBER_NOT_FOUND));
 
-		List<StoreImageDto> storeImageDtos = imageStoreProcessor.storeImageFiles(imageFiles);
+		StoreImageDto storeImageDtos = imageStoreProcessor.storeImageFile(imageFile);
+		String imageUrl = uploadImageFile(imageFile, storeImageDtos);
+		ProfileImage profileImage = storeImageDtos.toProfileImageEntity(member, imageUrl);
+		profileImageRepository.save(profileImage);
 
-		for (int i = 0; i < imageFiles.size(); i++) {
-			String imageUrl = uploadImageFile(imageFiles.get(i), storeImageDtos.get(i));
-
-			ProfileImage profileImage = storeImageDtos.get(i).toProfileImageEntity(member, imageUrl);
-			profileImageRepository.save(profileImage);
-		}
+		return profileImage;
 	}
 
 	@Transactional
@@ -156,13 +154,13 @@ public class ImageService {
 
 	@Transactional
 	public void deleteProfileImage(Long memberId) {
-		ProfileImage profileImage = profileImageRepository.findByMemberId(memberId)
-			.orElseThrow(() -> SaphyException.from(ErrorCode.PROFILE_IMAGE_NOT_FOUND));
-
-			profileImageRepository.delete(profileImage);
-
-			String storeName = profileImage.getImage().getStoreName();
-			amazonS3Client.deleteObject(bucket, storeName);
+		profileImageRepository.findByMemberId(memberId)
+			.ifPresent(findProfileImage -> {
+				profileImageRepository.delete(findProfileImage);
+				profileImageRepository.flush();
+				String storeName = findProfileImage.getImage().getStoreName();
+				amazonS3Client.deleteObject(bucket, storeName);
+			});
 	}
 
 	@Transactional
@@ -187,27 +185,6 @@ public class ImageService {
 			String storeName = salesImage.getImage().getStoreName();
 			amazonS3Client.deleteObject(bucket, storeName);
 		});
-	}
-
-	@Transactional
-	public void deleteProfileImages(Long memberId) {
-		Optional<ProfileImage> optionalProfileImage = profileImageRepository.findByMemberId(memberId);
-		Optional<Member> optionalMember = memberRepository.findById(memberId);
-		if (optionalProfileImage.isEmpty()) {
-			throw SaphyException.from(ErrorCode.EMPTY_IMAGE);
-		}
-		if (optionalMember.isEmpty()) {
-			throw SaphyException.from(ErrorCode.MEMBER_NOT_FOUND);
-		}
-    
-		Member member = optionalMember.get();
-		member.setProfileImage(null);
-		memberRepository.save(member);
-
-		ProfileImage profileImage = optionalProfileImage.get();
-		profileImageRepository.delete(profileImage);
-		String storeName = profileImage.getImage().getStoreName();
-		amazonS3Client.deleteObject(bucket, storeName);
 	}
 
 	private String uploadImageFile(MultipartFile multipartFile, StoreImageDto storeImageDto) {
