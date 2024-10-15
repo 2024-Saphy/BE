@@ -1,13 +1,9 @@
 package saphy.saphy.purchase.dto.response;
 
-import lombok.AccessLevel;
+import java.math.BigDecimal;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.dto.response.ItemResponse;
-import saphy.saphy.purchase.domain.PaymentType;
 import saphy.saphy.purchase.domain.Purchase;
-import saphy.saphy.purchase.domain.PurchaseStatus;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +13,7 @@ public class PurchaseResponse {
 
     private String status;
 
-    private Long totalPrice;
+    private BigDecimal amount;
 
     private String paymentType;
 
@@ -26,8 +22,8 @@ public class PurchaseResponse {
     private PurchaseResponse(Purchase purchase) {
         this.orderDate = purchase.getOrderDate();
         this.status = purchase.getStatus().name();
-        this.totalPrice = purchase.getTotalPrice();
-        this.paymentType = purchase.getPaymentType().name();
+        this.amount = purchase.getAmount();
+        this.paymentType = purchase.getPayMethod().name();
         this.item = ItemResponse.from(purchase.getItem());
     }
 

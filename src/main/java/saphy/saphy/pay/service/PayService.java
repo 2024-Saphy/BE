@@ -17,6 +17,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.SaphyException;
 import saphy.saphy.item.domain.Item;
 import saphy.saphy.item.domain.repository.ItemRepository;
@@ -27,6 +28,9 @@ import saphy.saphy.pay.dto.request.PayCompleteRequest;
 import saphy.saphy.pay.dto.request.PayPrepareRequest;
 import saphy.saphy.pay.dto.response.PayCompleteResponse;
 import saphy.saphy.pay.dto.response.PayPrepareResponse;
+import saphy.saphy.purchase.domain.Purchase;
+import saphy.saphy.purchase.domain.repository.PurchaseRepository;
+import saphy.saphy.purchase.service.PurchaseService;
 
 @Service
 @RequiredArgsConstructor
@@ -34,11 +38,13 @@ import saphy.saphy.pay.dto.response.PayPrepareResponse;
 public class PayService {
     private final PayRepository payRepository;
     private final ItemRepository itemRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final PurchaseService purchaseService;
     private final IamportClient iamportClient;
 
 
     @Transactional
-    public PayPrepareResponse preparePay(PayPrepareRequest request) {
+    public PayPrepareResponse preparePay(PayPrepareRequest request, CustomUserDetails customUserDetails) {
         // Item을 상속받는 엔티티들이 존재하기에, Optional로 받아옴
         Optional<Item> optionalItem = itemRepository.findById(request.getItemId());
 
@@ -54,7 +60,7 @@ public class PayService {
         }
 
         String merchantUid = generateMerchantUid();
-        Pay pay = request.toEntity(item, merchantUid, calculatedAmount, request.getPayMethod());
+        Pay pay = request.toEntity(item, merchantUid, calculatedAmount, request.getPayMethod(), customUserDetails.getMember());
         payRepository.save(pay);
 
         item.decreaseStock(request.getQuantity());
@@ -72,6 +78,9 @@ public class PayService {
         if (payResponse.getResponse().getAmount().equals(pay.getAmount())) {
             pay.setStatus(PayStatus.PAID);
             pay.setImpUid(request.getImpUid());
+
+            Purchase purchase = purchaseService.toEntity(pay.getAmount(), pay.getPayMethod(), pay.getMember(), pay.getItem());
+            purchaseRepository.save(purchase);
             payRepository.save(pay);
 
             return new PayCompleteResponse(PayStatus.PAID);
