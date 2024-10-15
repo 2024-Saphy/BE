@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import saphy.saphy.auth.domain.CustomUserDetails;
 import saphy.saphy.global.exception.ErrorCode;
 import saphy.saphy.global.exception.SaphyException;
+import saphy.saphy.image.domain.ProfileImage;
+import saphy.saphy.image.repository.ProfileImageRepository;
 import saphy.saphy.member.domain.Account;
 import saphy.saphy.member.domain.Address;
 import saphy.saphy.member.domain.Member;
@@ -59,7 +61,16 @@ public class MemberService {
     public void join(MemberJoinRequest request) {
         validateExistMember(request);
         String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
+
         Member member = request.toEntity(encodedPassword);
+        ProfileImage defaultProfileImage = ProfileImage.createProfileImage(
+            "default_profile_image.png",
+            "default_profile_image.png",
+            "https://w7.pngwing.com/pngs/665/132/png-transparent-user-defult-avatar.png",
+                member
+            );
+        profileImageRepository.save(defaultProfileImage);
+        member.updateProfileImage(defaultProfileImage);
 
         memberRepository.save(member);
     }
