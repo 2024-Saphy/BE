@@ -33,7 +33,7 @@ public class ImageStoreProcessor {
 		return storeImageDtos;
 	}
 
-	private StoreImageDto storeImageFile(MultipartFile imageFile) {
+	public StoreImageDto storeImageFile(MultipartFile imageFile) {
 		String originalImageFileName = imageFile.getOriginalFilename();
 		String storeImageFileName = createStoreImageFileName(originalImageFileName); // 랜덤한 UUID를 통해 이미지 이름 설정
 
