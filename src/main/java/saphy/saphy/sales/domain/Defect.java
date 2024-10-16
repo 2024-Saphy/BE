@@ -1,5 +1,6 @@
 package saphy.saphy.sales.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,6 +13,7 @@ public class Defect {
 	private String display;
 	private String appearance;
 	private String batteryEfficiency;
+	@Column(name = "`function`")
 	private String function;
 	private String purchaseDate;
 	private String isRepaired;
