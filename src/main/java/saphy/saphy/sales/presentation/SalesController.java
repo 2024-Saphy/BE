@@ -35,11 +35,11 @@ public class SalesController {
 	public ApiResponse<Void> save(
 		@AuthenticationPrincipal CustomUserDetails customUserDetails,
 		@RequestPart("request") SalesCreateRequest request,
-		@RequestPart("imageFiles") List<MultipartFile> multipartFiles
+		@RequestPart("imageFiles") List<MultipartFile> imageFiles
 	) {
 		Member member = customUserDetails.getMember();
 		Sales sales = salesService.save(member, request);
-		imageService.saveSalesImages(multipartFiles, sales.getId());
+		imageService.saveSalesImages(imageFiles, sales.getId());
 
 		return new ApiResponse<>(ErrorCode.REQUEST_OK);
 	}
