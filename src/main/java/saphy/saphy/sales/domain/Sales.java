@@ -48,7 +48,7 @@ public class Sales extends BaseEntity {
     @Embedded
     private Defect defect;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
